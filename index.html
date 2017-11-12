@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>秦悦明的运维笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="秦悦明的运维笔记">
+<meta property="og:url" content="http://qinyueming.cc/index.html">
+<meta property="og:site_name" content="秦悦明的运维笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="秦悦明的运维笔记">
+  
+    <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83411325-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class="active"
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">秦悦明的运维笔记</h1>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          
+  
+    <article id="post-asm-test" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/11/12/asm-test/" class="article-date"><time datetime="2017-11-12T10:55:57.000Z" itemprop="datePublished">2017-11-12</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-一般套路"><a href="#1-一般套路" class="headerlink" title="1. 一般套路"></a>1. 一般套路</h3><p>分两布，编译，linux下有两种常用的编译器，gnu的as和nasm，两者的区别是前者用AT&amp;T语法，后者用了intel的语法，个人更喜欢gnu的语法一些。链接，链接分静态链接和动态链接两种。再加一个gdb调试器，基本上齐活了。</p>
+<h3 id="2-nasm例子"><a href="#2-nasm例子" class="headerlink" title="2. nasm例子"></a>2. nasm例子</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">SECTION .data</div><div class="line"></div><div class="line">EatMsg: db &quot;Eat at Joe&apos;s&quot;,10</div><div class="line">EatLen: equ $-EatMsg</div><div class="line"></div><div class="line"></div><div class="line">SECTION .bss</div><div class="line">SECTION .text</div><div class="line"></div><div class="line">global _start</div><div class="line"></div><div class="line">_start:</div><div class="line">	nop</div><div class="line">	mov eax,4 </div><div class="line">	mov ebx,1</div><div class="line">	mov ecx,EatMsg</div><div class="line">	mov edx,EatLen</div><div class="line">	int 80H</div><div class="line">	mov eax,1</div><div class="line">	mov ebx,0</div><div class="line">    int 80H</div></pre></td></tr></table></figure>
+<p>直接抄&lt;汇编语言基于linux环境&gt;第五章的例子，调用了linux的systemcall ，也就是系统调用，eax是4，就是write系统调用。write的参数如下:</p>
+<ul>
+<li>EAX contains the system call value.</li>
+<li>EBX contains the file descriptor to write to.</li>
+<li>ECX contains the start of the string.</li>
+<li>EDX contains the length of the string.</li>
+</ul>
+<p>ebx是文件句柄，1就是标准输出。<br>ecx是字符串的开始位置，这里是将EatMsg的地址传进去<br>edx是字符串的长度，这里也是用了equ的伪指令EatLen</p>
+<p>全部传进去调用int 80H就调用传说中的的write系统调用了。<br>之后再调用退出系统调用，结束程序运行。ebx存储返回值，shell 里面可以用echo $?来查看。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">编译:</div><div class="line">nasm -f elf -g -F stabs eatsyscall.asm</div></pre></td></tr></table></figure>
+<p>-g 用于生成调试信息，-F 指定stabs格式，可以方便的用gdb调试。</p>
+<p>之后是链接，用标准链接工具ld:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ld -o eatsyscall eatsyscall.o</div></pre></td></tr></table></figure>
+<p>运行就是一个标准输出:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# ./eatsyscall </div><div class="line">Eat at Joe&apos;s</div></pre></td></tr></table></figure>
+<h3 id="3-as例子"><a href="#3-as例子" class="headerlink" title="3.as例子"></a>3.as例子</h3><p>跟nasm差不多:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">#cpuid.s Sample program to extract the processor Vendor ID</div><div class="line">.section .data</div><div class="line">output:</div><div class="line">.ascii &quot;The processor Vendor ID is &apos;xxxxxxxxxxxx&apos;\n&quot;</div><div class="line">.section .text</div><div class="line">.globl _start</div><div class="line">_start:</div><div class="line">	movl $0, %eax</div><div class="line">	cpuid</div><div class="line">	movl $output, %edi</div><div class="line">	movl %ebx, 28(%edi)</div><div class="line">	movl %edx, 32(%edi)</div><div class="line">	movl %ecx, 36(%edi)</div><div class="line">	movl $4, %eax</div><div class="line">	movl $1, %ebx</div><div class="line">	movl $output, %ecx</div><div class="line">	movl $42, %edx</div><div class="line">	int $0x80</div><div class="line">	movl $1, %eax</div><div class="line">	movl $0, %ebx</div><div class="line">	int $0x80</div></pre></td></tr></table></figure>
+<p>这里再抄一下&lt;汇编语言程序设计&gt;里面的例子,cpuid ,可以看到gas的语法明显和intel的不一样，最明显的差别是源操作数和目的操作数的位置是相反的。<br>这个调用了cpuid 的1号指令。将cpuid信息返回在ebx，ecx，edx三个寄存器中。</p>
+<ul>
+<li>EBX contains the low 4 bytes of the string.</li>
+<li>EDX contains the middle 4 bytes of the string.</li>
+<li>ECX contains the last 4 bytes of the string.</li>
+</ul>
+<p>movl将三个值分别送到output的指定位置，也就是’xxxxxxxxxxxx’中去。然后调用write系统调用来输出。最后是一个退出的系统调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">编译:</div><div class="line">[root@localhost ~]# as -gstabs -o cpuid.o cpuid.s </div><div class="line">链接:</div><div class="line">[root@localhost ~]# ld -o cpuid cpuid.o </div><div class="line">运行:</div><div class="line">[root@localhost ~]# ./cpuid </div><div class="line">The processor Vendor ID is &apos;AuthenticAMD&apos;</div><div class="line">[root@localhost ~]#</div></pre></td></tr></table></figure>
+<h3 id="4-section区域"><a href="#4-section区域" class="headerlink" title="4.section区域"></a>4.section区域</h3><p>一般linux程序需要定义三个区域，</p>
+<ol>
+<li>.data区域，定义已初始化变量</li>
+<li>.bss 定义为初始化变量</li>
+<li>.text 正文区域，里面要用.globl 指定开始点。</li>
+</ol>
+<p>区域根据elf格式而来，不止这三个。linux下nasm和as都适用~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">.section .data</div><div class="line">&lt; initialized data here&gt;</div><div class="line">.section .bss</div><div class="line">&lt; uninitialized data here&gt;</div><div class="line">.section .text</div><div class="line">.globl _start</div><div class="line">_start:</div><div class="line">&lt;instruction code goes here&gt;</div></pre></td></tr></table></figure>
+<h3 id="5-ia32下编程"><a href="#5-ia32下编程" class="headerlink" title="5.ia32下编程"></a>5.ia32下编程</h3><p>上面提到的环境都能在ia32的模式下运行的很好，也就是说不用再切到dos下去调试。开个虚拟机就可以愉快的玩耍，很适合汇编的学习。实模式和保护模式一个最大的区别就是内存寻址是一个flat方式，可以直接引用内存。不用加段。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/11/12/asm-test/" data-id="cj9wth6f40007a8uangnjolyr" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ensp-install" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/11/ensp-install/">ensp安装</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/10/11/ensp-install/" class="article-date"><time datetime="2017-10-11T01:59:58.000Z" itemprop="datePublished">2017-10-11</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-why"><a href="#1-why" class="headerlink" title="1.why"></a>1.why</h3><p>一个windows软件安装有啥好写的，因为这个软件有点反人类，各种bug，出错了以后一脸懵逼。完全没有cisco的模拟机简单好用。</p>
+<h3 id="2-版本"><a href="#2-版本" class="headerlink" title="2.版本"></a>2.版本</h3><p>最好按照下面的版本来搞，操作系统我是win10的，win7的可能不需要这么安装我没试过。</p>
+<table>
+<thead>
+<tr>
+<th>软件</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ensp</td>
+<td>1.2.00.500</td>
+</tr>
+<tr>
+<td>virtualbox</td>
+<td>VirtualBox-5.1.26-117224-Win</td>
+</tr>
+<tr>
+<td>wireshark</td>
+<td>ensp自带版本</td>
+</tr>
+<tr>
+<td>WinPcap</td>
+<td>ensp自带版本</td>
+</tr>
+<tr>
+<td>操作系统</td>
+<td>win10 ,据说win7</td>
+</tr>
+</tbody>
+</table>
+<p>关键是virtualbox的版本有点妖。有对应关系，我用下来，500版本的配5.1.26的使用没问题。<br>ensp的ar系列路由需要使用virtualbox的固定版本才能正常运行。</p>
+<h3 id="3-常见问题"><a href="#3-常见问题" class="headerlink" title="3.常见问题"></a>3.常见问题</h3><p>1.路由器交换机不能多开，只能开一个，这个据说是win10跟ensp有些不兼容。官方出了个补丁，不过你得在论坛才能找到。 <a href="http://forum.huawei.com/enterprise/thread-412811.html" target="_blank" rel="external">win10 1703系统无法启动多台设备解决方案</a></p>
+<p>然后进行下面三步</p>
+<ul>
+<li>下载附件ensp_patch_500.rar，并解压；</li>
+<li>拷贝解压后的data和ensp_patch_500.exe文件至ensp安装目录\eNSP\vboxserver文件夹中</li>
+<li>双击ensp_patch_500.exe即可，重新打开ensp运行多台设备。</li>
+</ul>
+<p>2.ar路由器无法启动<br>启动报40错误，这个是由于ar系列路由器的启动需要依赖virtualbox，而且对版本还有要求，试下来26版本的可用。</p>
+<p>首先是BIOS开启虚拟化，amd系列的叫svm，不会的google搜一下。安装好了以后在ensp里面 菜单-工具-注册设备，勾选三个，三个都注册成功的话ok。</p>
+<p>3.ar路由器启动报错41<br>这个应该是ar的虚拟化文件有问题，需要卸载ensp，然后删干净里面的vboxserver目录，重装即可。</p>
+<h3 id="4-如果还有问题"><a href="#4-如果还有问题" class="headerlink" title="4.如果还有问题"></a>4.如果还有问题</h3><p>google搜索，ensp论坛搜索。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/10/11/ensp-install/" data-id="cj9wth6fw000ia8ua0qvvy06d" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/">network</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-arp" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/14/arp/">arp协议</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/08/14/arp/" class="article-date"><time datetime="2017-08-14T06:57:25.000Z" itemprop="datePublished">2017-08-14</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h3><p>地址解析协议（Address Resolution Protocol）,其基本功能为透过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。它是IPv4中网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（NDP）所替代。 </p>
+<h3 id="2-格式"><a href="#2-格式" class="headerlink" title="2. 格式"></a>2. 格式</h3><img src="/2017/08/14/arp/package.png" alt="arp包格式" title="arp包格式">
+<p>注意，arp包不是ip包，没有ip层。字段比较简单，看着就知道了。</p>
+<h3 id="3-arp-request包"><a href="#3-arp-request包" class="headerlink" title="3. arp request包:"></a>3. arp request包:</h3><img src="/2017/08/14/arp/request.png" alt="arp request" title="arp request">
+<p>arp requst是一个广播包，可以被交换机广播。</p>
+<h3 id="4-arp-reply包"><a href="#4-arp-reply包" class="headerlink" title="4.arp reply包:"></a>4.arp reply包:</h3><img src="/2017/08/14/arp/reply.png" alt="arp reply" title="arp reply">
+<p>arp reply是一个单播包。</p>
+<h3 id="5-arp应用场景"><a href="#5-arp应用场景" class="headerlink" title="5. arp应用场景"></a>5. arp应用场景</h3><p>在以太网协议中规定，同一局域网中的一台主机要和另一台主机进行直接通信，必须要知道目标主机的MAC地址。而在TCP/IP协议中，网络层和传输层只关心目标主机的IP地址。这就导致在以太网中使用IP协议时，数据链路层的以太网协议接到上层IP协议提供的数据中，只包含目的主机的IP地址。于是需要一种方法，根据目的主机的IP地址，获得其MAC地址。这就是ARP协议要做的事情。所谓地址解析（address resolution）就是主机在发送帧前将目标IP地址转换成目标MAC地址的过程。</p>
+<h3 id="6-arp-proxy"><a href="#6-arp-proxy" class="headerlink" title="6. arp proxy"></a>6. arp proxy</h3><p>arp代理，这个用的也不多，典型用法是<a href="https://www.cisco.com/c/en/us/support/docs/ip/dynamic-address-allocation-resolution/13718-5.html" target="_blank" rel="external">https://www.cisco.com/c/en/us/support/docs/ip/dynamic-address-allocation-resolution/13718-5.html</a> cisco 这个例子，路由器不能转发二层广播，所以host d 不会收到arp 请求，但是路由器知道host d的mac地址，而且默认开了arp proxy，所以路由器将自己接口的mac地址回复给了host a，这样a就能和d通信。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/08/14/arp/" data-id="cj9wth6fh000aa8uajar0mabx" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/">network</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-tcp-status" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/08/tcp-status/">tcp状态</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/08/08/tcp-status/" class="article-date"><time datetime="2017-08-08T05:52:04.000Z" itemprop="datePublished">2017-08-08</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-状态图"><a href="#1-状态图" class="headerlink" title="1. 状态图"></a>1. 状态图</h3><img src="/2017/08/08/tcp-status/tcp1.gif" alt="tcp 状态图" title="tcp 状态图">
+<h3 id="2-参考资料"><a href="#2-参考资料" class="headerlink" title="2. 参考资料"></a>2. 参考资料</h3><p><a href="http://www.cs.northwestern.edu/~agupta/cs340/project2/TCPIP_State_Transition_Diagram.pdf" target="_blank" rel="external">http://www.cs.northwestern.edu/~agupta/cs340/project2/TCPIP_State_Transition_Diagram.pdf</a></p>
+<h3 id="3-timewait"><a href="#3-timewait" class="headerlink" title="3. timewait"></a>3. timewait</h3><p>这里说下timewait到close，需要经过2MSL的时间，一个msl是60s，所以需要2分钟才能close掉，如果大量短连接访问服务器的话，server是存在大量timewait的(可以用netstate或者ss查看tcp状态)，这个是正常状况。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/08/08/tcp-status/" data-id="cj9wth6ib002ca8uab6g4slsm" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp/">tcp</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-lvm1" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/04/lvm1/">lvm日常操作</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/07/04/lvm1/" class="article-date"><time datetime="2017-07-04T06:02:24.000Z" itemprop="datePublished">2017-07-04</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-增加pv"><a href="#1-增加pv" class="headerlink" title="1.增加pv"></a>1.增加pv</h3><p>操作相对简单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">pvcreate /dev/sde</div><div class="line">pvdisplay</div><div class="line"></div><div class="line">vgextend volgroup0 /dev/sde</div><div class="line">lvextend -l +100%FREE /dev/volgroup0/lveastmoney</div><div class="line"></div><div class="line">resize2fs /dev/volgroup0/lveastmoney</div></pre></td></tr></table></figure>
+<p>操作均在线执行,不需要执行umount操作，扩起来很方便。</p>
+<h3 id="2-缩减pv"><a href="#2-缩减pv" class="headerlink" title="2. 缩减pv"></a>2. 缩减pv</h3><p>首先要做的是umount操作，你得先卸载lv。他是个停机操作。所以得预估时间，基本上这种操作很少，加了以后不会再动了。</p>
+<p>之后是resize2fs，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">e2fsck -f /dev/volgroup0/lveastmoney</div><div class="line">resize2fs /dev/volgroup0/lveastmoney 1000G</div><div class="line"></div><div class="line">lvreduce -L 1000G /dev/volgroup0/lveastmoney</div><div class="line"></div><div class="line">pvchange  -xn /dev/sdd</div><div class="line">#每秒输出一次进度:</div><div class="line"></div><div class="line">pvmove -i 1 /dev/sdd</div><div class="line">pvremove /dev/sdd</div></pre></td></tr></table></figure>
+<p>pvmove 很重要，将数据move出来。知道他100%free了，就可以pvmove了。</p>
+<h3 id="3-应用场景"><a href="#3-应用场景" class="headerlink" title="3. 应用场景"></a>3. 应用场景</h3><p>我觉得最适用的场景就是数据库类型的，或者说是存储型的服务器，原先有一块数据盘，后来感觉不够用了就增加一块，这里用lvm是特别好用的，不需要停机，对应用来说是无感知的。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/07/04/lvm1/" data-id="cj9wth6gw0017a8ua66402ap6" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <div id="page-nav">
+    <nav><ul class="pagination"><li class="disabled"><span class="page-prev"><i class="fa fa-chevron-left"></i> Prev</a></li><li class="active"><span class="page-number">1</span></li><li><a class="page-number" href="/page/2/">2</a></li><li><a class="page-number" href="/page/3/">3</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-next" rel="next" href="/page/2/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+  </div>
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>weclome to qym's blog</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+        </li>
+      
+        <li>
+          <a href="/2017/10/11/ensp-install/">ensp安装</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/14/arp/">arp协议</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/08/tcp-status/">tcp状态</a>
+        </li>
+      
+        <li>
+          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2017 QinYueming<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>

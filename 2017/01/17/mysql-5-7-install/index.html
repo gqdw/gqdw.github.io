@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>mysql-5.7编译安装 | 秦悦明的运维笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. 编译下载:直接用国内的源，速度杠杠的: 1http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.17.tar.gz 最新源码包是 12http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-5.7.18.tar.gzhttp://mirrors.sohu.com/mysql/MySQL-5.7/my">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql-5.7编译安装">
+<meta property="og:url" content="http://qinyueming.cc/2017/01/17/mysql-5-7-install/index.html">
+<meta property="og:site_name" content="秦悦明的运维笔记">
+<meta property="og:description" content="1. 编译下载:直接用国内的源，速度杠杠的: 1http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.17.tar.gz 最新源码包是 12http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-5.7.18.tar.gzhttp://mirrors.sohu.com/mysql/MySQL-5.7/my">
+<meta property="og:updated_time" content="2017-10-13T11:56:08.360Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql-5.7编译安装">
+<meta name="twitter:description" content="1. 编译下载:直接用国内的源，速度杠杠的: 1http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.17.tar.gz 最新源码包是 12http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-5.7.18.tar.gzhttp://mirrors.sohu.com/mysql/MySQL-5.7/my">
+  
+    <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83411325-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">秦悦明的运维笔记</h1>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          <article id="post-mysql-5-7-install" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 class="article-title" itemprop="name">
+      mysql-5.7编译安装
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/01/17/mysql-5-7-install/" class="article-date"><time datetime="2017-01-17T05:54:20.000Z" itemprop="datePublished">2017-01-17</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-编译"><a href="#1-编译" class="headerlink" title="1. 编译"></a>1. 编译</h3><p>下载:<br>直接用国内的源，速度杠杠的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.17.tar.gz</div></pre></td></tr></table></figure>
+<p>最新源码包是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-5.7.18.tar.gz</div><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.18.tar.gz</div></pre></td></tr></table></figure>
+<p>依赖(centos7为例):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum -y install make gcc-c++ cmake bison-devel bison ncurses-devel</div></pre></td></tr></table></figure>
+<p>编译跟5.6稍微有点不一样，依赖新版的boost了。不要cmake时候自动下载，会被墙掉。直接下载boost版本的源码包就行了，剩下的套路跟5.6的一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd BUILD</div><div class="line">cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql57  -DWITH_BOOST=../boost ..</div><div class="line">make </div><div class="line">make install</div></pre></td></tr></table></figure>
+<h3 id="2-单实例初始化和运行"><a href="#2-单实例初始化和运行" class="headerlink" title="2.单实例初始化和运行"></a>2.单实例初始化和运行</h3><p>mysql_install_db已经被废弃了。直接用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># bin/mysqld --initialize --user=mysql --datadir=/vdb/mysql1</div><div class="line">2017-06-19T01:18:19.299580Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).</div><div class="line">2017-06-19T01:18:19.458771Z 0 [Warning] InnoDB: New log files created, LSN=45790</div><div class="line">2017-06-19T01:18:19.482412Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.</div><div class="line">2017-06-19T01:18:19.537139Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 2de7b52f-548d-11e7-b57b-52560acdcad4.</div><div class="line">2017-06-19T01:18:19.537944Z 0 [Warning] Gtid table is not ready to be used. Table &apos;mysql.gtid_executed&apos; cannot be opened.</div><div class="line">2017-06-19T01:18:19.538602Z 1 [Note] A temporary password is generated for root@localhost: C#lF1kb*KkV/</div></pre></td></tr></table></figure></p>
+<p>运行，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># cp support-files/mysql.server .</div><div class="line">修改mysql.server中的</div><div class="line">basedir=xxx</div><div class="line">datadir=xxx</div><div class="line"></div><div class="line">修改 /etc/my.cnf 中配置。</div><div class="line">vim /etc/my.cnf</div><div class="line"></div><div class="line"></div><div class="line"># ./mysql.server start </div><div class="line">Starting MySQL.Logging to &apos;/vdb/mysql1/10-205-202-212.err&apos;.  [  OK  ]</div></pre></td></tr></table></figure></p>
+<p>用上面系统生成的随机密码进去，然后修改成自己的密码完成整个初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter user root@localhost identified by &apos;123123&apos;;</div></pre></td></tr></table></figure>
+<h3 id="3-多实例部署"><a href="#3-多实例部署" class="headerlink" title="3.多实例部署"></a>3.多实例部署</h3><p>主要是用到了mysqld_multi,要在my.cnf里面填上多个实例的信息，格式如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[mysqld_multi]</div><div class="line">mysqld     = /usr/local/mysql57/bin/mysqld_safe</div><div class="line">mysqladmin = /usr/local/mysql57/bin/mysqladmin</div><div class="line">user       = multi_admin</div><div class="line">password   = my_password</div><div class="line"></div><div class="line">[mysqld2]</div><div class="line">socket     = /tmp/mysql.sock2</div><div class="line">port       = 3307</div><div class="line">pid-file   = /usr/local/mysql57/data2/hostname.pid2</div><div class="line">datadir    = /usr/local/mysql57/data2</div><div class="line">language   = /usr/local/mysql57/share/mysql/english</div><div class="line">user       = unix_user1</div><div class="line"></div><div class="line">[mysqld3]</div><div class="line">mysqld     = /path/to/mysqld_safe</div><div class="line">ledir      = /path/to/mysqld-binary/</div><div class="line">mysqladmin = /path/to/mysqladmin</div><div class="line">socket     = /tmp/mysql.sock3</div><div class="line">port       = 3308</div><div class="line">pid-file   = /usr/local/mysql57/data3/hostname.pid3</div><div class="line">datadir    = /usr/local/mysql57/data3</div><div class="line">language   = /usr/local/mysql57/share/mysql/swedish</div><div class="line">user       = unix_user2</div></pre></td></tr></table></figure>
+<p>用 mysqld_multi –example可以直接查看。很方便,mysqld_multi里面的user和password 主要是用来关闭实例时候用的mysql 用户，所以先要附权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GRANT SHUTDOWN ON *.* TO multi_admin@localhost IDENTIFIED BY &apos;password&apos;</div></pre></td></tr></table></figure>
+<p>然后配置上就可以了~很方便。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/01/17/mysql-5-7-install/" data-id="cj9wth6h2001ba8uaf55ua9uw" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2017/01/16/mysql-gtid/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">mysql-GTID</span>
+    </a>
+  </li>
+  
+  
+  <li role="presentation">
+    <a href="/2017/02/26/sre-job/" id="article-nav-newer" class="article-nav-link-wrap">
+      <span class="article-nav-link-title">SRE职责</span>
+      <i class="fa fa-chevron-right pull-right"></i>
+    </a>
+  </li>
+  
+</ul>
+
+
+  
+</article>
+
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>weclome to qym's blog</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+        </li>
+      
+        <li>
+          <a href="/2017/10/11/ensp-install/">ensp安装</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/14/arp/">arp协议</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/08/tcp-status/">tcp状态</a>
+        </li>
+      
+        <li>
+          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2017 QinYueming<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>

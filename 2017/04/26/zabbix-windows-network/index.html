@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>zabbix监控windows网络流量的坑点 | 秦悦明的运维笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.zabbix监控windows网络流量的坑点坑点就是会自动发现一堆网络接口出来，大部分是无用的，不想linux那样干净，就eth0,eth1。 2.究竟该看哪个？首先排除一堆无用的接口信息，比如说microsoft开头的，redhat开头的，但这个不绝对，跟底层虚拟化做法有关系。阿里云上面定位的是2个相对正常的图   Network traffic on Net Device PV Drive">
+<meta name="keywords" content="zabbix">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zabbix监控windows网络流量的坑点">
+<meta property="og:url" content="http://qinyueming.cc/2017/04/26/zabbix-windows-network/index.html">
+<meta property="og:site_name" content="秦悦明的运维笔记">
+<meta property="og:description" content="1.zabbix监控windows网络流量的坑点坑点就是会自动发现一堆网络接口出来，大部分是无用的，不想linux那样干净，就eth0,eth1。 2.究竟该看哪个？首先排除一堆无用的接口信息，比如说microsoft开头的，redhat开头的，但这个不绝对，跟底层虚拟化做法有关系。阿里云上面定位的是2个相对正常的图   Network traffic on Net Device PV Drive">
+<meta property="og:image" content="http://qinyueming.cc/2017/04/26/zabbix-windows-network/chart1.png">
+<meta property="og:image" content="http://qinyueming.cc/2017/04/26/zabbix-windows-network/chart2.png">
+<meta property="og:image" content="http://qinyueming.cc/2017/04/26/zabbix-windows-network/chart3.png">
+<meta property="og:updated_time" content="2017-10-13T11:56:08.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zabbix监控windows网络流量的坑点">
+<meta name="twitter:description" content="1.zabbix监控windows网络流量的坑点坑点就是会自动发现一堆网络接口出来，大部分是无用的，不想linux那样干净，就eth0,eth1。 2.究竟该看哪个？首先排除一堆无用的接口信息，比如说microsoft开头的，redhat开头的，但这个不绝对，跟底层虚拟化做法有关系。阿里云上面定位的是2个相对正常的图   Network traffic on Net Device PV Drive">
+<meta name="twitter:image" content="http://qinyueming.cc/2017/04/26/zabbix-windows-network/chart1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83411325-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">秦悦明的运维笔记</h1>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          <article id="post-zabbix-windows-network" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 class="article-title" itemprop="name">
+      zabbix监控windows网络流量的坑点
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/04/26/zabbix-windows-network/" class="article-date"><time datetime="2017-04-26T02:47:35.000Z" itemprop="datePublished">2017-04-26</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-zabbix监控windows网络流量的坑点"><a href="#1-zabbix监控windows网络流量的坑点" class="headerlink" title="1.zabbix监控windows网络流量的坑点"></a>1.zabbix监控windows网络流量的坑点</h3><p>坑点就是会自动发现一堆网络接口出来，大部分是无用的，不想linux那样干净，就eth0,eth1。</p>
+<h3 id="2-究竟该看哪个？"><a href="#2-究竟该看哪个？" class="headerlink" title="2.究竟该看哪个？"></a>2.究竟该看哪个？</h3><p>首先排除一堆无用的接口信息，比如说microsoft开头的，redhat开头的，但这个不绝对，跟底层虚拟化做法有关系。阿里云上面定位的是2个相对正常的图 </p>
+<ol>
+<li>Network traffic on Net Device PV Driver</li>
+<li>Network traffic on Net Device PV Driver #2</li>
+</ol>
+<p>PV Driver的图:<br><img src="/2017/04/26/zabbix-windows-network/chart1.png" alt="PV Driver" title="PV Driver"></p>
+<p>PV Driver #2的图:<br><img src="/2017/04/26/zabbix-windows-network/chart2.png" alt="PV Driver #2" title="PV Driver #2"></p>
+<p>看上去都挺像回事的，但是应该看哪个呢? </p>
+<p>这个不能靠猜，找阿里云的图做对比:</p>
+<img src="/2017/04/26/zabbix-windows-network/chart3.png" alt="阿里云监控图" title="阿里云监控图">
+<p>可以看出流量应该看 Network traffic on Net Device PV Driver #2</p>
+<h3 id="3-hexo引用图"><a href="#3-hexo引用图" class="headerlink" title="3.hexo引用图"></a>3.hexo引用图</h3><p>文档:<br><a href="https://hexo.io/zh-cn/docs/asset-folders.html" target="_blank" rel="external">https://hexo.io/zh-cn/docs/asset-folders.html</a></p>
+<p>_config.yml配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">post_asset_folder: true</div></pre></td></tr></table></figure>
+<p>正确的引用图片方式是使用下列的标签插件而不是 markdown ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;% asset_img example.jpg This is an example image %&#125;</div></pre></td></tr></table></figure>
+<p>通过这种方式，图片将会同时出现在文章和主页以及归档页中。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/04/26/zabbix-windows-network/" data-id="cj9wth6j0002qa8ua1mltty17" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zabbix/">zabbix</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2017/04/08/salt初探/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">自动化工具saltstack初探</span>
+    </a>
+  </li>
+  
+  
+  <li role="presentation">
+    <a href="/2017/05/01/tcp1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <span class="article-nav-link-title">tcp连接建立和断开</span>
+      <i class="fa fa-chevron-right pull-right"></i>
+    </a>
+  </li>
+  
+</ul>
+
+
+  
+</article>
+
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>weclome to qym's blog</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+        </li>
+      
+        <li>
+          <a href="/2017/10/11/ensp-install/">ensp安装</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/14/arp/">arp协议</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/08/tcp-status/">tcp状态</a>
+        </li>
+      
+        <li>
+          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2017 QinYueming<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>

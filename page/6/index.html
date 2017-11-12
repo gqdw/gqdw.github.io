@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>秦悦明的运维笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="秦悦明的运维笔记">
+<meta property="og:url" content="http://qinyueming.cc/page/6/index.html">
+<meta property="og:site_name" content="秦悦明的运维笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="秦悦明的运维笔记">
+  
+    <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83411325-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">秦悦明的运维笔记</h1>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          
+  
+    <article id="post-spring-helloworld" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/13/spring-helloworld/">spring-helloworld</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/10/13/spring-helloworld/" class="article-date"><time datetime="2016-10-13T06:57:39.000Z" itemprop="datePublished">2016-10-13</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-创建一个java项目"><a href="#1-创建一个java项目" class="headerlink" title="1.创建一个java项目"></a>1.创建一个java项目</h3><p>最好是maven项目，可以自己下载包，比较方便。</p>
+<h3 id="2-添加spring库"><a href="#2-添加spring库" class="headerlink" title="2.添加spring库"></a>2.添加spring库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<h3 id="3-创建源文件"><a href="#3-创建源文件" class="headerlink" title="3.创建源文件"></a>3.创建源文件</h3><p>HelloWord.java<br>一个普通的class</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">package com.tutorialspoint;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Created by gqdw on 13/10/2016.</div><div class="line"> */</div><div class="line">public class HelloWorld &#123;</div><div class="line">    private String message;</div><div class="line">    public void setMessage(String m)&#123;</div><div class="line">        message = m;</div><div class="line">    &#125;</div><div class="line">    public void getMessage()&#123;</div><div class="line">        System.out.println(&quot;your Message : &quot; + message);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>MainApp.java<br>MainApp通过spring bean来获取对接，然后调用他的方法，bean通过xml文件来配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">package com.tutorialspoint;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Created by gqdw on 13/10/2016.</div><div class="line"> */</div><div class="line">import org.springframework.context.ApplicationContext;</div><div class="line">import org.springframework.context.support.ClassPathXmlApplicationContext;</div><div class="line"></div><div class="line">public class MainApp &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        ApplicationContext context =</div><div class="line">                new ClassPathXmlApplicationContext(&quot;Beans.xml&quot;);</div><div class="line">        HelloWorld obj = (HelloWorld) context.getBean(&quot;HelloWorld&quot;);</div><div class="line">        obj.getMessage();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ClassPathXmlApplicationContext来获取context，然后用context的getBean方法来获取HelloWorld对象。</p>
+<p>Beans.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;</div><div class="line"></div><div class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</div><div class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</div><div class="line">    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd&quot;&gt;</div><div class="line"></div><div class="line">&lt;bean id=&quot;HelloWorld&quot; class=&quot;com.tutorialspoint.HelloWorld&quot;&gt;</div><div class="line">    &lt;property name=&quot;message&quot; value=&quot;Hello World! aca&quot;/&gt;</div><div class="line">&lt;/bean&gt;</div><div class="line"></div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure>
+<p>Bean文件配置了一个id，class，相当于new了一个HelloWorld对象。value给message，</p>
+<h3 id="4-运行程序"><a href="#4-运行程序" class="headerlink" title="4.运行程序"></a>4.运行程序</h3><p>程序正常运行就能打印出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Your Message : Hello World! aca</div></pre></td></tr></table></figure>
+<p>简单的helloworld程序，演示了spring bean的装配。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/10/13/spring-helloworld/" data-id="cj9wth6i50027a8uaw9s8zmwo" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-使用celery做异步任务" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/09/使用celery做异步任务/">使用celery做异步任务</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/10/09/使用celery做异步任务/" class="article-date"><time datetime="2016-10-09T11:13:31.000Z" itemprop="datePublished">2016-10-09</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-选择broker"><a href="#1-选择broker" class="headerlink" title="1.选择broker"></a>1.选择broker</h3><p>可以选择的broker很多，一般选择rabbitmq。本身就是消息中间件。rabbitmq的安装略。</p>
+<h3 id="2-安装celery"><a href="#2-安装celery" class="headerlink" title="2.安装celery"></a>2.安装celery</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pip install celery</div></pre></td></tr></table></figure>
+<h3 id="3-创建tasks"><a href="#3-创建tasks" class="headerlink" title="3.创建tasks"></a>3.创建tasks</h3><p>创建tasks.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">from celery import Celery</div><div class="line"></div><div class="line">app = Celery(&apos;tasks&apos;, broker=&apos;amqp://guest@localhost//&apos;)</div><div class="line"></div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
+<h3 id="4-运行celery-worker"><a href="#4-运行celery-worker" class="headerlink" title="4.运行celery worker"></a>4.运行celery worker</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ celery -A tasks worker --loglevel=info</div></pre></td></tr></table></figure>
+<h3 id="5-调用tasks"><a href="#5-调用tasks" class="headerlink" title="5.调用tasks"></a>5.调用tasks</h3><p>很简单，import进来，然后调用delay函数即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">add.delay(1,2)</div></pre></td></tr></table></figure>
+<p>celery worker进程会收到这个消息并执行他</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Received task: proj.tasks.add[9e9ee3e8-1350-4858-9fbb-0fd62779c3e1]</div><div class="line">Task proj.tasks.add[9e9ee3e8-1350-4858-9fbb-0fd62779c3e1] succeeded in 0.00637572002597s: 3</div></pre></td></tr></table></figure>
+<p>注意，这里并没有记录结果。</p>
+<h3 id="6-保存结果"><a href="#6-保存结果" class="headerlink" title="6.保存结果"></a>6.保存结果</h3><p>celery里面做法也很简单，初始化app的时候加个backend就可以了。这里已redis为例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Celery(&apos;tasks&apos;, backend=&apos;redis://localhost&apos;, broker=&apos;amqp://&apos;)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">result = add.delay(4, 4)</div><div class="line">ret = result.get(timeout=1)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/10/09/使用celery做异步任务/" data-id="cj9wth6j4002va8uaha2n2dg8" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-java生成mysql分区语句" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/05/java生成mysql分区语句/">java生成mysql分区语句</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/10/05/java生成mysql分区语句/" class="article-date"><time datetime="2016-10-05T04:26:24.000Z" itemprop="datePublished">2016-10-05</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-分区"><a href="#1-分区" class="headerlink" title="1.分区"></a>1.分区</h3><p>之前介绍了分区，<br><a href="http://qinyueming.cc/2016/09/26/mysql-partitioning/">http://qinyueming.cc/2016/09/26/mysql-partitioning/</a>，可以很容易的写出range分区语句出来,但是最好别手写，手写容易出错。</p>
+<h3 id="2-程序"><a href="#2-程序" class="headerlink" title="2.程序"></a>2.程序</h3><p>最新学习java，顺便用java写了一个自动生成zabbix分区的程序出来。</p>
+<p>关键点在于用了StringBuilder. 参看 java编程思想 里面的UsingStringbuilder.java:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">import java.util.Random;</div><div class="line"></div><div class="line">public class UsingStringBuilder&#123;</div><div class="line">	public static Random rand = new Random(47);</div><div class="line">	public String toString()&#123;</div><div class="line">		StringBuilder result = new StringBuilder(&quot;[&quot;);</div><div class="line">		for(int i = 0; i &lt; 25; i++)&#123;</div><div class="line">			result.append(rand.nextInt(100));</div><div class="line">			result.append(&quot;, &quot;);</div><div class="line">		&#125;</div><div class="line">		result.delete(result.length()-2, result.length());</div><div class="line">		result.append(&quot;]&quot;);</div><div class="line">		return result.toString();</div><div class="line">	&#125;</div><div class="line">	public static void main(String[] args)&#123;</div><div class="line">		UsingStringBuilder usb = new UsingStringBuilder();</div><div class="line">		System.out.println(usb);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另一个关键点是日期转化为unix timestamp。用到了SimpleDateFormat,SimpleDateFormat的parse方法可以直接解析返回一个Date对象，Date对象的getTime()返回的是unix timestamp的毫秒数，除以1000就是mysql里面的unix timestamp了。用起来还是非常爽的。总觉得比python的类库要好用。下面是一个小例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by aca on 10/4/16.</div><div class="line"> */</div><div class="line">import java.text.ParseException;</div><div class="line">import java.text.SimpleDateFormat;</div><div class="line">import java.util.Date;</div><div class="line"></div><div class="line">public class DateTest &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</div><div class="line">        String s1 = &quot;2016-10-04&quot;;</div><div class="line">        String s2 = String.format(&quot;2016-%02d-01&quot;, 11);</div><div class="line">        System.out.println(s2);</div><div class="line">        try&#123;</div><div class="line">            Date d = df.parse(s2);</div><div class="line">            System.out.println(d.getTime() / 1000);</div><div class="line"></div><div class="line">        &#125;catch(ParseException pe)&#123;</div><div class="line">            System.out.println(&quot;parse error.&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-完整程序"><a href="#3-完整程序" class="headerlink" title="3.完整程序"></a>3.完整程序</h3><p>见<a href="https://gist.github.com/gqdw/97ca758d3d0866baa039eb4fd02bbda8" target="_blank" rel="external">https://gist.github.com/gqdw/97ca758d3d0866baa039eb4fd02bbda8</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by aca on 10/4/16.</div><div class="line"> */</div><div class="line"></div><div class="line">import java.text.ParseException;</div><div class="line">import java.text.SimpleDateFormat;</div><div class="line">import java.util.Date;</div><div class="line"></div><div class="line">public class Genpartition &#123;</div><div class="line">    // alter table xxx partition by range(id)</div><div class="line">    // (partition p0 values less than (xx) ,</div><div class="line">    // partition p1 values less than (yy));</div><div class="line">    static String Gensql(String tablename, String column)&#123;</div><div class="line">        StringBuilder result = new StringBuilder(&quot;alter table &quot;);</div><div class="line">//        String res = &quot;alter table &quot; + tablename + &quot; partition by range(&quot; + column + &quot;)&quot; ;</div><div class="line">        result.append(tablename);</div><div class="line">        result.append(&quot; partition by range(&quot;);</div><div class="line">        result.append(column);</div><div class="line">        result.append(&quot;)(\n&quot;);http://qinyueming.cc/2016/09/26/mysql-partitioning/</div><div class="line"></div><div class="line">        for (int i = 1; i &lt;= 12; i++) &#123;</div><div class="line">            SimpleDateFormat dateformat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</div><div class="line">            String txtdate = String.format(&quot;2016-%02d-01&quot;, i);</div><div class="line">            //= &quot;2016-%d-01&quot;.format(i);</div><div class="line">//            System.out.println(txtdate);</div><div class="line">            Date date = new Date();</div><div class="line">            try &#123;</div><div class="line">                date = dateformat.parse(txtdate);</div><div class="line"></div><div class="line">            &#125;catch(ParseException pe)&#123;</div><div class="line">                System.out.println(&quot;parse error.&quot;);</div><div class="line">            &#125;</div><div class="line">            result.append(&quot;partition p&quot; );</div><div class="line">            result.append(String.format(&quot;2016%02d&quot;, i));</div><div class="line">            result.append(&quot; values less than (&quot;);</div><div class="line">            result.append(date.getTime() / 1000);</div><div class="line">            result.append(&quot;),\n&quot;);</div><div class="line">        &#125;</div><div class="line">        result.delete(result.length()-2, result.length());</div><div class="line">        result.append(&quot;);\n&quot;);</div><div class="line">        return result.toString();</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        String[] tables = &#123;&quot;history_uint&quot;, &quot;trends_uint&quot;&#125;;</div><div class="line">        for(String t:tables)</div><div class="line">            System.out.println(Gensql(t, &quot;clock&quot;));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-生成结果"><a href="#4-生成结果" class="headerlink" title="4.生成结果"></a>4.生成结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">alter table history_uint partition by range(clock)(</div><div class="line">partition p201601 values less than (1451577600),</div><div class="line">partition p201602 values less than (1454256000),</div><div class="line">partition p201603 values less than (1456761600),</div><div class="line">partition p201604 values less than (1459440000),</div><div class="line">partition p201605 values less than (1462032000),</div><div class="line">partition p201606 values less than (1464710400),</div><div class="line">partition p201607 values less than (1467302400),</div><div class="line">partition p201608 values less than (1469980800),</div><div class="line">partition p201609 values less than (1472659200),</div><div class="line">partition p201610 values less than (1475251200),</div><div class="line">partition p201611 values less than (1477929600),</div><div class="line">partition p201612 values less than (1480521600));</div><div class="line"></div><div class="line">alter table trends_uint partition by range(clock)(</div><div class="line">partition p201601 values less than (1451577600),</div><div class="line">partition p201602 values less than (1454256000),</div><div class="line">partition p201603 values less than (1456761600),</div><div class="line">partition p201604 values less than (1459440000),</div><div class="line">partition p201605 values less than (1462032000),</div><div class="line">partition p201606 values less than (1464710400),</div><div class="line">partition p201607 values less than (1467302400),</div><div class="line">partition p201608 values less than (1469980800),</div><div class="line">partition p201609 values less than (1472659200),</div><div class="line">partition p201610 values less than (1475251200),</div><div class="line">partition p201611 values less than (1477929600),</div><div class="line">partition p201612 values less than (1480521600));</div></pre></td></tr></table></figure>
+<p>可以直接在mysql里面跑。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/10/05/java生成mysql分区语句/" data-id="cj9wth6gl000za8ualtox68pt" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zabbix/">zabbix</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-java-mysql操作" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/28/java-mysql操作/">java-mysql操作</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/09/28/java-mysql操作/" class="article-date"><time datetime="2016-09-28T09:56:19.000Z" itemprop="datePublished">2016-09-28</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-基本用法"><a href="#1-基本用法" class="headerlink" title="1.基本用法"></a>1.基本用法</h3><p>官网文档在这里了:<br><a href="https://dev.mysql.com/doc/connector-j/5.1/en/" target="_blank" rel="external">https://dev.mysql.com/doc/connector-j/5.1/en/</a></p>
+<p>DriverManager<br>Connection<br>Statement<br>ResultSet</p>
+<p>四个主要的对象。由DriverManager的getConnection方法获得一个连接，然后再用Connection的createStatement来创建一个Statement对象，之后用Statement对象的executeQuery来执行相关的SQL语句，返回一个ResultSet。套路基本跟PYTHON的差不多。</p>
+<p>需要注意的点是项目最好用maven来编译:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;mysql&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;5.1.39&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<h3 id="2-code"><a href="#2-code" class="headerlink" title="2.code"></a>2.code</h3><p>我照着写了个例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by gqdw on 9/28/16.</div><div class="line"> */</div><div class="line">import java.sql.Connection;</div><div class="line">import java.sql.DriverManager;</div><div class="line">import java.sql.SQLException;</div><div class="line">import java.sql.Statement;</div><div class="line">import java.sql.ResultSet;</div><div class="line"></div><div class="line">public class MyTest &#123;</div><div class="line"></div><div class="line">    static final String JDBC_DRIVER = &quot;com.mysql.jdbc.Driver&quot;;</div><div class="line">    static final String DB_URL = &quot;jdbc:mysql://xxx.27.199.225/myzb&quot;;</div><div class="line"></div><div class="line">    static final String USER = &quot;&quot;;</div><div class="line">    static final String PASS = &quot;&quot;;</div><div class="line"></div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        Connection conn = null;</div><div class="line">        Statement stmt = null;</div><div class="line">        try&#123;</div><div class="line">            Class.forName(&quot;com.mysql.jdbc.Driver1&quot;);</div><div class="line">            System.out.println(&quot;connecting to database...&quot;);</div><div class="line">            conn = DriverManager.getConnection(DB_URL,USER,PASS);</div><div class="line"></div><div class="line">            stmt = conn.createStatement();</div><div class="line">            String sql0;</div><div class="line">            sql0 = &quot;select eventid,clock from events limit 10&quot;;</div><div class="line">            ResultSet rs = stmt.executeQuery(sql0);</div><div class="line"></div><div class="line">            while(rs.next())&#123;</div><div class="line">                Integer eventid = rs.getInt(&quot;eventid&quot;);</div><div class="line">                Integer clock = rs.getInt(&quot;clock&quot;);</div><div class="line">                System.out.println(&quot;eventid: &quot; + eventid + &quot;\t&quot; + &quot;clock:&quot; + clock);</div><div class="line">            &#125;</div><div class="line">            rs.close();</div><div class="line">            stmt.close();</div><div class="line">            conn.close();</div><div class="line">        &#125;catch(ClassNotFoundException ce)&#123;</div><div class="line">            System.out.println(&quot;Class not found.&quot;);</div><div class="line">            ce.printStackTrace();</div><div class="line">            System.exit(1);</div><div class="line">        &#125;</div><div class="line">        catch(SQLException se)&#123;</div><div class="line">            se.printStackTrace();</div><div class="line">        &#125;catch(Exception e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上传到gist了:<br><a href="https://gist.github.com/gqdw/3fa9acf7f7fdb38b0fb1f04c6dfe0f96" target="_blank" rel="external">https://gist.github.com/gqdw/3fa9acf7f7fdb38b0fb1f04c6dfe0f96</a></p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/09/28/java-mysql操作/" data-id="cj9wth6gs0013a8uafvxoe7dx" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-mysql-partitioning" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/26/mysql-partitioning/">mysql分区</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/09/26/mysql-partitioning/" class="article-date"><time datetime="2016-09-26T01:30:58.000Z" itemprop="datePublished">2016-09-26</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-确认已安装"><a href="#1-确认已安装" class="headerlink" title="1.确认已安装"></a>1.确认已安装</h3><p>很多人动不动就想到要用分布式数据库，其实单库的性能随着MYSQL版本的提升越来越高，单表1000w数据应用优化的好的话用单库是完全没问题的。一个更优的做法是做表分区。也就是mysql partition。本文大量参考官网和<mysql技术内幕-sql编程>。</mysql技术内幕-sql编程></p>
+<p>这里以mysql5.7.15为例。确认有partition插件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SHOW PLUGINS;</div><div class="line">partition                  | ACTIVE   | STORAGE ENGINE     | NULL    | GPL</div></pre></td></tr></table></figure>
+<p>有partition就ok。<br>另外5.7有所不同的是mysql_install_db以后，会生成一个随便密码，在~/.mysql_secret,之后用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;new_password&apos;);</div><div class="line">或者:</div><div class="line">ALTER USER user IDENTIFIED BY &apos;new_password&apos;;</div></pre></td></tr></table></figure>
+<p>重置密码，然后就可以开始使用了。<br>5.7给我的感觉很不错。repo源很快，mysql被oracle买了以后运作的很规范，文档也是全的不行。</p>
+<h3 id="2-分区的类型"><a href="#2-分区的类型" class="headerlink" title="2.分区的类型"></a>2.分区的类型</h3><p>介绍常用的4中分区（当然不止这4个）:</p>
+<ol>
+<li>RANGE分区</li>
+<li>LIST分区</li>
+<li>HASH分区</li>
+<li>KEY分区</li>
+</ol>
+<h3 id="3-RANGE分区"><a href="#3-RANGE分区" class="headerlink" title="3.RANGE分区"></a>3.RANGE分区</h3><p>很好理解，就是安装区域来分。</p>
+<p>这里先看不用分区，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">create table t1(</div><div class="line">id INT</div><div class="line">)engine=innodb</div></pre></td></tr></table></figure>
+<p>默认生成一个ibd文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">t1.frm  t1.ibd</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">create table t2(</div><div class="line">id INT</div><div class="line">)engine=innodb</div><div class="line">partition by RANGE(id)(</div><div class="line">partition p0 values less than (10),</div><div class="line">partition p1 values less than (20));</div></pre></td></tr></table></figure>
+<p>t2用了分区，可以看到p0,p1分区信息的ibd文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">t2.frm  t2#P#p0.ibd  t2#P#p1.ibd</div></pre></td></tr></table></figure>
+<p>再插入几条数据试试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">insert into t2 select 9;</div><div class="line">insert into t2 select 10;</div><div class="line">insert into t2 select 15;</div></pre></td></tr></table></figure>
+<p>可以通过information_schema.partitions中的有相关分区信息:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from information_schema.partitions where table_name=&apos;t2&apos;\G</div><div class="line">*************************** 1. row ***************************</div><div class="line">                TABLE_CATALOG: def</div><div class="line">                 TABLE_SCHEMA: test</div><div class="line">                   TABLE_NAME: t2</div><div class="line">               PARTITION_NAME: p0</div><div class="line">            SUBPARTITION_NAME: NULL</div><div class="line">   PARTITION_ORDINAL_POSITION: 1</div><div class="line">SUBPARTITION_ORDINAL_POSITION: NULL</div><div class="line">             PARTITION_METHOD: RANGE</div><div class="line">          SUBPARTITION_METHOD: NULL</div><div class="line">         PARTITION_EXPRESSION: id</div><div class="line">      SUBPARTITION_EXPRESSION: NULL</div><div class="line">        PARTITION_DESCRIPTION: 10</div><div class="line">                   TABLE_ROWS: 1</div><div class="line">               AVG_ROW_LENGTH: 16384</div><div class="line">                  DATA_LENGTH: 16384</div><div class="line">              MAX_DATA_LENGTH: NULL</div><div class="line">                 INDEX_LENGTH: 0</div><div class="line">                    DATA_FREE: 0</div><div class="line">                  CREATE_TIME: 2016-09-26 15:34:03</div><div class="line">                  UPDATE_TIME: 2016-09-26 15:34:52</div><div class="line">                   CHECK_TIME: NULL</div><div class="line">                     CHECKSUM: NULL</div><div class="line">            PARTITION_COMMENT:</div><div class="line">                    NODEGROUP: default</div><div class="line">              TABLESPACE_NAME: NULL</div><div class="line">*************************** 2. row ***************************</div><div class="line">                TABLE_CATALOG: def</div><div class="line">                 TABLE_SCHEMA: test</div><div class="line">                   TABLE_NAME: t2</div><div class="line">               PARTITION_NAME: p1</div><div class="line">            SUBPARTITION_NAME: NULL</div><div class="line">   PARTITION_ORDINAL_POSITION: 2</div><div class="line">SUBPARTITION_ORDINAL_POSITION: NULL</div><div class="line">             PARTITION_METHOD: RANGE</div><div class="line">          SUBPARTITION_METHOD: NULL</div><div class="line">         PARTITION_EXPRESSION: id</div><div class="line">      SUBPARTITION_EXPRESSION: NULL</div><div class="line">        PARTITION_DESCRIPTION: 20</div><div class="line">                   TABLE_ROWS: 2</div><div class="line">               AVG_ROW_LENGTH: 8192</div><div class="line">                  DATA_LENGTH: 16384</div><div class="line">              MAX_DATA_LENGTH: NULL</div><div class="line">                 INDEX_LENGTH: 0</div><div class="line">                    DATA_FREE: 0</div><div class="line">                  CREATE_TIME: 2016-09-26 15:34:03</div><div class="line">                  UPDATE_TIME: 2016-09-26 15:34:58</div><div class="line">                   CHECK_TIME: NULL</div><div class="line">                     CHECKSUM: NULL</div><div class="line">            PARTITION_COMMENT:</div><div class="line">                    NODEGROUP: default</div><div class="line">              TABLESPACE_NAME: NULL</div><div class="line">2 rows in set (0.01 sec)</div></pre></td></tr></table></figure>
+<p>但是这存在一个问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; insert into t2 select 30;</div><div class="line">ERROR 1526 (HY000): Table has no partition for value 30</div></pre></td></tr></table></figure>
+<p>插入30时即会报错，分区range没有涵盖所以条件，当插入30这个值的时候MYSQL不知道插入到哪。我们可以增加一个小于MAXVALUE的分区来涵盖所以的区域:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">alter table t2</div><div class="line">add partition (partition p2 values less than MAXVALUE);</div><div class="line">Query OK, 0 rows affected (0.06 sec)</div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div><div class="line"></div><div class="line">mysql&gt; insert into t2 select 30;</div><div class="line">Query OK, 1 row affected (0.01 sec)</div><div class="line">Records: 1  Duplicates: 0  Warnings: 0</div><div class="line"></div><div class="line">mysql&gt; insert into t2 select 40;</div><div class="line">Query OK, 1 row affected (0.00 sec)</div><div class="line">Records: 1  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure>
+<p>再插入遍不会报错了。</p>
+<p>range分区主要用于日期列的分区。<br>mysql里面data type 格式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Data Type	“Zero” Value</div><div class="line">DATE	&apos;0000-00-00&apos;</div><div class="line">TIME	&apos;00:00:00&apos;</div><div class="line">DATETIME	&apos;0000-00-00 00:00:00&apos;</div><div class="line">TIMESTAMP	&apos;0000-00-00 00:00:00&apos;</div><div class="line">YEAR	0000</div></pre></td></tr></table></figure>
+<p>官网举了个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE members (</div><div class="line">    firstname VARCHAR(25) NOT NULL,</div><div class="line">    lastname VARCHAR(25) NOT NULL,</div><div class="line">    username VARCHAR(16) NOT NULL,</div><div class="line">    email VARCHAR(35),</div><div class="line">    joined DATE NOT NULL</div><div class="line">)</div><div class="line">PARTITION BY RANGE( YEAR(joined) ) (</div><div class="line">    PARTITION p0 VALUES LESS THAN (1960),</div><div class="line">    PARTITION p1 VALUES LESS THAN (1970),</div><div class="line">    PARTITION p2 VALUES LESS THAN (1980),</div><div class="line">    PARTITION p3 VALUES LESS THAN (1990),</div><div class="line">    PARTITION p4 VALUES LESS THAN MAXVALUE</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>按joined日期来的YEAR函数来分区，</p>
+<p>把上面的表格简化一下，变成t3:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE t3 (</div><div class="line">    firstname VARCHAR(25) NOT NULL,</div><div class="line">    joined DATE NOT NULL</div><div class="line">)</div><div class="line">PARTITION BY RANGE( YEAR(joined) ) (</div><div class="line">    PARTITION p0 VALUES LESS THAN (1960),</div><div class="line">    PARTITION p1 VALUES LESS THAN (1970),</div><div class="line">    PARTITION p2 VALUES LESS THAN (1980),</div><div class="line">    PARTITION p3 VALUES LESS THAN (1990),</div><div class="line">    PARTITION p4 VALUES LESS THAN MAXVALUE</div><div class="line">);</div><div class="line">mysql&gt; select * from t3;</div><div class="line">+-----------+------------+</div><div class="line">| firstname | joined     |</div><div class="line">+-----------+------------+</div><div class="line">| aaa       | 1955-01-01 |</div><div class="line">| bbb       | 1965-01-01 |</div><div class="line">| ccc       | 1966-02-02 |</div><div class="line">| ccc       | 1967-03-03 |</div><div class="line">| ccc       | 1977-03-03 |</div><div class="line">| ccc       | 1987-03-03 |</div><div class="line">+-----------+------------+</div></pre></td></tr></table></figure>
+<p>然后做select查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from t3 where joined&lt;&apos;1969-12-30&apos;;</div><div class="line">+-----------+------------+</div><div class="line">| firstname | joined     |</div><div class="line">+-----------+------------+</div><div class="line">| aaa       | 1955-01-01 |</div><div class="line">| bbb       | 1965-01-01 |</div><div class="line">| ccc       | 1966-02-02 |</div><div class="line">| ccc       | 1967-03-03 |</div><div class="line">+-----------+------------+</div><div class="line">4 rows in set (0.00 sec)</div><div class="line">mysql&gt; explain partitions select * from t3 where joined&lt;&apos;1969-12-30&apos;;</div><div class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</div><div class="line">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |</div><div class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</div><div class="line">|  1 | SIMPLE      | t3    | p0,p1      | ALL  | NULL          | NULL | NULL    | NULL |    4 |    33.33 | Using where |</div><div class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</div><div class="line">1 row in set, 2 warnings (0.00 sec)</div></pre></td></tr></table></figure>
+<p>year(‘1955-01-01’)返回1955，表格根据year做了分区，可以看到where子句只扫了p0,p1两个分区，提升了查询效率。这个叫partition pruning,官网地址 <a href="http://dev.mysql.com/doc/refman/5.7/en/partitioning-pruning.html" target="_blank" rel="external">http://dev.mysql.com/doc/refman/5.7/en/partitioning-pruning.html</a></p>
+<p>但并不是对所以的函数都能进行partition pruning,只是几个时间的函数，YEAR(),TO_DAYS(),TO_SECONDS(),UNIX_TIMESTAMP()这几个有效。</p>
+<h3 id="4-LIST分区"><a href="#4-LIST分区" class="headerlink" title="4.LIST分区"></a>4.LIST分区</h3><p>LIST分区跟RANGE特别类似，只是RANGE是连续的值，用less than 表达，LIST分区用VALUES IN(…)来表达，是离散的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">create table t4(</div><div class="line">a INT,</div><div class="line">b INT)engine=innodb</div><div class="line">partition by LIST(b)(</div><div class="line">partition p0 values in (1,3,5,7,9),</div><div class="line">partition p1 values in (2,4,6,8,0));</div></pre></td></tr></table></figure>
+<p>这时候你select * from t4 where b=1;那么只会扫p1分区。</p>
+<h3 id="5-HASH分区"><a href="#5-HASH分区" class="headerlink" title="5.HASH分区"></a>5.HASH分区</h3><p>hash目的将数据均匀分布到预设的分区中，保证各分区数据量大致一样。HASH分区也和之前的其他分区一样，需要制定分区的函数，以及HASH分区的个数。如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">create table t_hash(</div><div class="line">a INT,</div><div class="line">b DATETIME) engine=innodb</div><div class="line">partition by HASH (YEAR(b))</div><div class="line">partitions 4;</div></pre></td></tr></table></figure>
+<p>上面根据YEAR的结果进行hash分区，不是很科学，最好根据自增字段进行分区，如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">create table t_hash2(</div><div class="line">a INT AUTO_INCREMENT,</div><div class="line">b DATETIME,</div><div class="line">PRIMARY KEY (a)) engine=innodb</div><div class="line">partition by HASH(a)</div><div class="line">partitions 4;</div></pre></td></tr></table></figure>
+<h3 id="6-KEY分区"><a href="#6-KEY分区" class="headerlink" title="6.KEY分区"></a>6.KEY分区</h3><p>KEY分区跟HASH分区类似，不过HASH分区根据用户提供的函数进行分区，而KEY分区则使用MYSQL内部的散列函数进行分区。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">create table t_key(</div><div class="line">a INT,</div><div class="line">b DATETIME) engine=innodb</div><div class="line">partition by KEY(b)</div><div class="line">partitions 4;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/09/26/mysql-partitioning/" data-id="cj9wth6hd001ia8ua6asg1vze" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <div id="page-nav">
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/5/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/4/">4</a></li><li><a class="page-number" href="/page/5/">5</a></li><li class="active"><span class="page-number">6</span></li><li><a class="page-number" href="/page/7/">7</a></li><li><a class="page-number" href="/page/8/">8</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-next" rel="next" href="/page/7/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+  </div>
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>weclome to qym's blog</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+        </li>
+      
+        <li>
+          <a href="/2017/10/11/ensp-install/">ensp安装</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/14/arp/">arp协议</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/08/tcp-status/">tcp状态</a>
+        </li>
+      
+        <li>
+          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2017 QinYueming<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>

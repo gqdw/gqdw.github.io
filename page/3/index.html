@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>秦悦明的运维笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="秦悦明的运维笔记">
+<meta property="og:url" content="http://qinyueming.cc/page/3/index.html">
+<meta property="og:site_name" content="秦悦明的运维笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="秦悦明的运维笔记">
+  
+    <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83411325-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">秦悦明的运维笔记</h1>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          
+  
+    <article id="post-vector1" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/18/vector1/">c++ 标准库string和vector (c++ primer4th 读书笔记)</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/05/18/vector1/" class="article-date"><time datetime="2017-05-18T13:28:58.000Z" itemprop="datePublished">2017-05-18</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-string"><a href="#1-string" class="headerlink" title="1. string"></a>1. string</h3><p>字符串。相比c语言里面的char[]可是好用多了。</p>
+<h3 id="2-string的4种初始化"><a href="#2-string的4种初始化" class="headerlink" title="2. string的4种初始化"></a>2. string的4种初始化</h3><ol>
+<li>string s1;</li>
+<li>string s2(s1);</li>
+<li>string s3(“value”);</li>
+<li>string s4(n, ‘c’);</li>
+</ol>
+<h3 id="3-string的操作"><a href="#3-string的操作" class="headerlink" title="3. string的操作"></a>3. string的操作</h3><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s.empty()</td>
+<td>是否为空串，返回true或者false  if (st.emtyp()) ..</td>
+</tr>
+<tr>
+<td>s.size()</td>
+<td>字符串长度，相当于java里面的length()</td>
+</tr>
+<tr>
+<td>s[n]</td>
+<td>数组一样的用法</td>
+</tr>
+<tr>
+<td>s1 + s2</td>
+<td>连成一个新的字符串，返回</td>
+</tr>
+<tr>
+<td>s1 = s2</td>
+<td>s1的内容替换成s2的副本</td>
+</tr>
+<tr>
+<td>v1 == v2</td>
+<td>比较内容是否相等</td>
+</tr>
+<tr>
+<td>&gt; &lt; !=</td>
+<td>比较每个字符，比较字符串会像c语言里面的调用strcmp？不存在的。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-string-size-type类型"><a href="#4-string-size-type类型" class="headerlink" title="4. string::size_type类型"></a>4. string::size_type类型</h3><p>size()返回的是一个string::size_type类型的值，也就是说本质是用for(int i=0; i&lt; s.size();i++)是不精确的，因为size_type是一个unsigned型的值，int会丢失精度。</p>
+<h3 id="5-遍历string"><a href="#5-遍历string" class="headerlink" title="5. 遍历string"></a>5. 遍历string</h3><p>正确的姿势应该是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for(string::size_type ix = 0; ix != str.size() ;++ix)</div><div class="line">	str[ix] = &apos;*&apos;;</div></pre></td></tr></table></figure>
+<h3 id="6-vector类型"><a href="#6-vector类型" class="headerlink" title="6. vector类型"></a>6. vector类型</h3><p>可变数组，大小可以动态变化，用起来非常方便，个人感觉跟java里面的arraylist类似，而且还是一个模版，还是一个容器，可以包含其他对象。<br>使用之前先:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#include &lt;vector&gt;</div><div class="line">using std::vector;</div></pre></td></tr></table></figure>
+<h3 id="7-vector的4种初始化"><a href="#7-vector的4种初始化" class="headerlink" title="7 vector的4种初始化"></a>7 vector的4种初始化</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vector<t> v1;</t></td>
+<td>保存类型为T对象</td>
+</tr>
+<tr>
+<td>vector<t> v2(v1);</t></td>
+<td>v2是v1的一个副本</td>
+</tr>
+<tr>
+<td>vector<t> v3(n, i);</t></td>
+<td>v3包含n个i</td>
+</tr>
+<tr>
+<td>vector<t> v4(n)</t></td>
+<td>初始化n个副本的T</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vector&lt;int&gt; fvec(10);</div></pre></td></tr></table></figure>
+<p>创建了10个int的vector，每个是0，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vector&lt;string&gt; svec(10);</div></pre></td></tr></table></figure>
+<p>创建了10个string，同时调用默认的构造函数进行初始化，string默认的构造函数是空串。</p>
+<h3 id="8-vector对象的操作"><a href="#8-vector对象的操作" class="headerlink" title="8. vector对象的操作"></a>8. vector对象的操作</h3><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v.empty()</td>
+<td></td>
+</tr>
+<tr>
+<td>v.size()</td>
+<td></td>
+</tr>
+<tr>
+<td>v.push_back(t)</td>
+<td>末尾增加一个t的元素</td>
+</tr>
+<tr>
+<td>v[n]</td>
+<td>下标操作</td>
+</tr>
+<tr>
+<td>v1 = v2</td>
+<td>赋值，替换为v2的副本</td>
+</tr>
+<tr>
+<td>v1 == v2</td>
+<td></td>
+</tr>
+<tr>
+<td>!= ,&lt;, &lt;= ,&gt;=, &gt;</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="9-vector的size"><a href="#9-vector的size" class="headerlink" title="9. vector的size"></a>9. vector的size</h3><p>同样返回的是size_type类型: vector<int>::size_type。不过说实话我是经常写成int。。这个习惯要改。</int></p>
+<h3 id="10-添加元素"><a href="#10-添加元素" class="headerlink" title="10.添加元素"></a>10.添加元素</h3><p>要用push_back()，千万不能用下标操作:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vector&lt;int&gt; v;</div><div class="line">for(vector&lt;int&gt;::size_type ix=0;ix != 10; ++ix)</div><div class="line">	v[ix] = ix;</div></pre></td></tr></table></figure>
+<p>这是错误的，下标操作只能获取已存在的元素，正确应该写成:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for(vector&lt;int&gt;::size_type ix = 0; ix != 10; ++ix)</div><div class="line">	v.push_back(ix);</div></pre></td></tr></table></figure>
+<h3 id="11-迭代器"><a href="#11-迭代器" class="headerlink" title="11.迭代器"></a>11.迭代器</h3><p>除了用下标以外，标准库还提供了另一种访问元素的方法:使用迭代器 iterator</p>
+<h3 id="12-iterator类型"><a href="#12-iterator类型" class="headerlink" title="12.iterator类型"></a>12.iterator类型</h3><p>每种容器都有iterator类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vector&lt;int&gt;::iterator iter;</div></pre></td></tr></table></figure></p>
+<h3 id="13-begin和end操作"><a href="#13-begin和end操作" class="headerlink" title="13. begin和end操作"></a>13. begin和end操作</h3><p>分别指向第一个元素和末端元素的下一个，end()不指向任何元素，只是起到了哨兵的作用。</p>
+<h3 id="14-自增，解引用"><a href="#14-自增，解引用" class="headerlink" title="14.自增，解引用"></a>14.自增，解引用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">++iter ;</div></pre></td></tr></table></figure>
+<p>向前移动一个位置，</p>
+<p>*iter 用迭代器访问当前指向的元素.</p>
+<p>连起来，遍历vector就可以这样写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for(vector&lt;int&gt;::iterator iter = ivec.begin(); iter!= ivec.end();++iter)</div><div class="line">	*iter = 0;</div></pre></td></tr></table></figure>
+<p>c++11里面有个auto类型可以简化iter的定义工作:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for(auto iter = ivec.begin();iter!= ivec.end(); ++iter)</div><div class="line">	*iter = 0;</div></pre></td></tr></table></figure>
+<p>c++也发展迅猛，都发展到c++14了,17正在发展中。<br>以上就是string和vector的总结，内容跟c++ primer里面的相似度很高，哈哈，相信lippman是不会怪我的~</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/05/18/vector1/" data-id="cj9wth6iz002oa8uayn69wo0j" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c++</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-algs4" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/18/algs4/">algs4源码使用</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/05/18/algs4/" class="article-date"><time datetime="2017-05-18T01:10:59.000Z" itemprop="datePublished">2017-05-18</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-资源"><a href="#1-资源" class="headerlink" title="1. 资源"></a>1. 资源</h3><ol>
+<li><p>除了书以外，还有一个专门支持的网站<br><a href="http://algs4.cs.princeton.edu/home/" target="_blank" rel="external">http://algs4.cs.princeton.edu/home/</a></p>
+</li>
+<li><p>另一个是soursera上面的<br><a href="https://www.coursera.org/learn/algorithms-part1/home/week/1" target="_blank" rel="external">https://www.coursera.org/learn/algorithms-part1/home/week/1</a></p>
+</li>
+</ol>
+<h3 id="2-源码编译"><a href="#2-源码编译" class="headerlink" title="2. 源码编译"></a>2. 源码编译</h3><p>源码在github上面有一份，<a href="https://github.com/kevin-wayne/algs4" target="_blank" rel="external">https://github.com/kevin-wayne/algs4</a></p>
+<p>第四版是用java描述的，编译的话要用到mvn或者gradle ,可以比较熟悉mvn。</p>
+<p>mvn的一个注意点是需要设置JAVA_HOME环境变量。<br>mvn install就妥了。</p>
+<h3 id="3-class使用"><a href="#3-class使用" class="headerlink" title="3. class使用"></a>3. class使用</h3><p>编译完了以后是一个jar包，class无法直接使用。得这样引用:<br>如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -cp algs4-1.0.0.0.jar edu/princeton/cs/algs4/UF &lt; tinyUF.txt</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/05/18/algs4/" data-id="cj9wth6fb0008a8uag3geisya" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-tcp1" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/01/tcp1/">tcp连接建立和断开</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/05/01/tcp1/" class="article-date"><time datetime="2017-05-01T13:17:50.000Z" itemprop="datePublished">2017-05-01</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-建立连接"><a href="#1-建立连接" class="headerlink" title="1. 建立连接"></a>1. 建立连接</h3><p>又叫三次握手，老外叫three way handshake，很好记，分别发三个包，syn,syn+ack,ack<br>用tcpdump出来就是如下的形式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">10:24:00.265744 IP (tos 0x10, ttl 64, id 21567, offset 0, flags [DF], proto TCP (6), length 64)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [S], cksum 0xf35a (correct), seq 1754109131, win 65535, options [mss 1460,nop,wscale 5,nop,nop,TS val 811537995 ecr 0,sackOK,eol], length 0</div><div class="line"></div><div class="line">10:24:00.286693 IP (tos 0x0, ttl 52, id 0, offset 0, flags [DF], proto TCP (6), length 60)</div><div class="line">    114.215.206.177.5555 &gt; 192.168.3.10.58544: Flags [S.], cksum 0xafc3 (correct), seq 2349913793, ack 1754109132, win 28960, options [mss 1312,sackOK,TS val 2088043701 ecr 811537995,nop,wscale 7], length 0</div><div class="line"></div><div class="line">10:24:00.286749 IP (tos 0x10, ttl 64, id 762, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [.], cksum 0x3f00 (correct), seq 1, ack 1, win 4103, options [nop,nop,TS val 811538016 ecr 2088043701], length 0</div></pre></td></tr></table></figure>
+<h3 id="2-断开连接"><a href="#2-断开连接" class="headerlink" title="2.断开连接"></a>2.断开连接</h3><p>又叫4次挥手，多了一次是因为tcp是双向全双工的协议，要两边都关一下，然后确认。<br>但我用telnet测试的时候抓到的都是3个报文，并没有第二个的ack包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">10:24:13.326683 IP (tos 0x10, ttl 64, id 41433, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [F.], cksum 0x0c2b (correct), seq 1, ack 1, win 4103, options [nop,nop,TS val 811551028 ecr 2088043701], length 0</div><div class="line"></div><div class="line">10:24:13.347347 IP (tos 0x0, ttl 52, id 53768, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    114.215.206.177.5555 &gt; 192.168.3.10.58544: Flags [F.], cksum 0xe848 (correct), seq 1, ack 2, win 227, options [nop,nop,TS val 2088056762 ecr 811551028], length 0</div><div class="line">    </div><div class="line">10:24:13.347436 IP (tos 0x10, ttl 64, id 47236, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [.], cksum 0xd910 (correct), seq 2, ack 2, win 4103, options [nop,nop,TS val 811551048 ecr 2088056762], length 0</div></pre></td></tr></table></figure>
+<h3 id="3-tcp头部信息图"><a href="#3-tcp头部信息图" class="headerlink" title="3. tcp头部信息图"></a>3. tcp头部信息图</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> 0                            15                              31</div><div class="line">-----------------------------------------------------------------</div><div class="line">|          source port          |       destination port        |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|                        sequence number                        |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|                     acknowledgment number                     |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|  HL   | rsvd  |C|E|U|A|P|R|S|F|        window size            |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|         TCP checksum          |       urgent pointer          |</div><div class="line">-----------------------------------------------------------------</div></pre></td></tr></table></figure>
+<p>source port : 源端口, 1024~65535.<br>destination port : 目的端口,比如常见的80,22等。<br>sequence number: 序列号,用来将数据正确的顺序重新排序。<br>acknowledgment number: 确认号，tcp期望接下来收到的数据段。<br>rsvd: 用于建立和终止会话的控制功能。<br>window size: 窗口大小，发送方愿意接受窗口的大小。<br>tcp头部一共20个字节，相对udp还是复杂很多的，每次传数据之前要简历虚电路，就是上面的三次握手。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/05/01/tcp1/" data-id="cj9wth6if002ha8ua18q90zn9" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-zabbix-windows-network" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/26/zabbix-windows-network/">zabbix监控windows网络流量的坑点</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/04/26/zabbix-windows-network/" class="article-date"><time datetime="2017-04-26T02:47:35.000Z" itemprop="datePublished">2017-04-26</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-zabbix监控windows网络流量的坑点"><a href="#1-zabbix监控windows网络流量的坑点" class="headerlink" title="1.zabbix监控windows网络流量的坑点"></a>1.zabbix监控windows网络流量的坑点</h3><p>坑点就是会自动发现一堆网络接口出来，大部分是无用的，不想linux那样干净，就eth0,eth1。</p>
+<h3 id="2-究竟该看哪个？"><a href="#2-究竟该看哪个？" class="headerlink" title="2.究竟该看哪个？"></a>2.究竟该看哪个？</h3><p>首先排除一堆无用的接口信息，比如说microsoft开头的，redhat开头的，但这个不绝对，跟底层虚拟化做法有关系。阿里云上面定位的是2个相对正常的图 </p>
+<ol>
+<li>Network traffic on Net Device PV Driver</li>
+<li>Network traffic on Net Device PV Driver #2</li>
+</ol>
+<p>PV Driver的图:<br><img src="/2017/04/26/zabbix-windows-network/chart1.png" alt="PV Driver" title="PV Driver"></p>
+<p>PV Driver #2的图:<br><img src="/2017/04/26/zabbix-windows-network/chart2.png" alt="PV Driver #2" title="PV Driver #2"></p>
+<p>看上去都挺像回事的，但是应该看哪个呢? </p>
+<p>这个不能靠猜，找阿里云的图做对比:</p>
+<img src="/2017/04/26/zabbix-windows-network/chart3.png" alt="阿里云监控图" title="阿里云监控图">
+<p>可以看出流量应该看 Network traffic on Net Device PV Driver #2</p>
+<h3 id="3-hexo引用图"><a href="#3-hexo引用图" class="headerlink" title="3.hexo引用图"></a>3.hexo引用图</h3><p>文档:<br><a href="https://hexo.io/zh-cn/docs/asset-folders.html" target="_blank" rel="external">https://hexo.io/zh-cn/docs/asset-folders.html</a></p>
+<p>_config.yml配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">post_asset_folder: true</div></pre></td></tr></table></figure>
+<p>正确的引用图片方式是使用下列的标签插件而不是 markdown ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;% asset_img example.jpg This is an example image %&#125;</div></pre></td></tr></table></figure>
+<p>通过这种方式，图片将会同时出现在文章和主页以及归档页中。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/04/26/zabbix-windows-network/" data-id="cj9wth6j0002qa8ua1mltty17" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zabbix/">zabbix</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-salt初探" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/08/salt初探/">自动化工具saltstack初探</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/04/08/salt初探/" class="article-date"><time datetime="2017-04-08T06:07:53.000Z" itemprop="datePublished">2017-04-08</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-最早接触"><a href="#1-最早接触" class="headerlink" title="1. 最早接触"></a>1. 最早接触</h3><p>最早接触是在2012年左右，当时我记得是在epel包里，安装起来也很方便，当时就会一些简单的cmd.run，这很easy，相当于pssh那种批量执行命令的用法，如果是那样，就会发挥不出他的优势。</p>
+<h3 id="2-salt的优劣势"><a href="#2-salt的优劣势" class="headerlink" title="2. salt的优劣势"></a>2. salt的优劣势</h3><h4 id="2-1agent-need"><a href="#2-1agent-need" class="headerlink" title="2.1agent need."></a>2.1agent need.</h4><p>主要是和另一个优秀的自动化工具ansible相比的，salt最大的劣势是需要安装client，也就是salt minion，这会让他看起来比较重，当然现在salt里面有salt-ssh， 也有agentless 的应用。但是一般还是会安装他的客户端。</p>
+<h4 id="2-2-support-windows"><a href="#2-2-support-windows" class="headerlink" title="2.2 support windows."></a>2.2 support windows.</h4><p>还一个好处是对windows的支持较好。要让ansible支持windows需要安装powershell3.0 一般win2008都没有安装的，而且生产服务器不让重启，windows上面安装powershell是重启生效的。<br>salt在windows下面安装就比较easy，直接运行exe下一步下一步设置master地址，minion id然后启动服务就妥了，而且不需要重启服务器,服务起来以后会主动连master，salt-key accept即可，非常方便。</p>
+<h4 id="2-3-速度快"><a href="#2-3-速度快" class="headerlink" title="2.3 速度快"></a>2.3 速度快</h4><p>因为他安装minion以后就会保持一个长连接，master下发命令到zeromq，然后minion会受到这个订阅信息，之后执行操作，并非处理很快，在大并发下多了明显感觉比ansbile快很多。</p>
+<h3 id="3-配置文件"><a href="#3-配置文件" class="headerlink" title="3.配置文件"></a>3.配置文件</h3><p>之前就比较头痛他的配置文件sls，但是写贯了ansible的yml，发现他两真差不多。unless比when好用!</p>
+<h3 id="4-一些注意点"><a href="#4-一些注意点" class="headerlink" title="4.一些注意点"></a>4.一些注意点</h3><h4 id="4-1-防火墙配置"><a href="#4-1-防火墙配置" class="headerlink" title="4.1 防火墙配置"></a>4.1 防火墙配置</h4><p>只需要在master端开放4505，4506两个端口，minion的不需要做特别的限制，但是出口OUTPUT链别做限制，我以前在shopex，机器的OUTPUT都会做规则的。</p>
+<h4 id="4-2-文件位置"><a href="#4-2-文件位置" class="headerlink" title="4.2 文件位置"></a>4.2 文件位置</h4><p>比较强势，必须在/srv下面存放，并不会搜索当前目录下的sls。用惯ansible的要稍微注意一下。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/04/08/salt初探/" data-id="cj9wth6hz0020a8uaxrn029f2" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/salt/">salt</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <div id="page-nav">
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/2/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li><a class="page-number" href="/page/2/">2</a></li><li class="active"><span class="page-number">3</span></li><li><a class="page-number" href="/page/4/">4</a></li><li><a class="page-number" href="/page/5/">5</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-next" rel="next" href="/page/4/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+  </div>
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>weclome to qym's blog</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+        </li>
+      
+        <li>
+          <a href="/2017/10/11/ensp-install/">ensp安装</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/14/arp/">arp协议</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/08/tcp-status/">tcp状态</a>
+        </li>
+      
+        <li>
+          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2017 QinYueming<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>

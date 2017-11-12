@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>秦悦明的运维笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="秦悦明的运维笔记">
+<meta property="og:url" content="http://qinyueming.cc/page/5/index.html">
+<meta property="og:site_name" content="秦悦明的运维笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="秦悦明的运维笔记">
+  
+    <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83411325-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">秦悦明的运维笔记</h1>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          
+  
+    <article id="post-hbase-Standalone" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/19/hbase-Standalone/">hbase-Standalone单机模式</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/12/19/hbase-Standalone/" class="article-date"><time datetime="2016-12-19T07:07:00.000Z" itemprop="datePublished">2016-12-19</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-环境"><a href="#1-环境" class="headerlink" title="1. 环境"></a>1. 环境</h3><p>只用文件系统，不用hdfs，也就是说不需要之前安装好hadoop分布式环境。java必须安装好。</p>
+<h3 id="2-配置conf-hbase-site-xml"><a href="#2-配置conf-hbase-site-xml" class="headerlink" title="2. 配置conf/hbase-site.xml"></a>2. 配置conf/hbase-site.xml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">  &lt;property&gt;</div><div class="line">    &lt;name&gt;hbase.rootdir&lt;/name&gt;</div><div class="line">    &lt;value&gt;file:///home/testuser/hbase&lt;/value&gt;</div><div class="line">  &lt;/property&gt;</div><div class="line">  &lt;property&gt;</div><div class="line">    &lt;name&gt;hbase.zookeeper.property.dataDir&lt;/name&gt;</div><div class="line">    &lt;value&gt;/home/testuser/zookeeper&lt;/value&gt;</div><div class="line">  &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<p>目录不用创建，hbase会自动创建。</p>
+<h3 id="3-启动hbase"><a href="#3-启动hbase" class="headerlink" title="3. 启动hbase"></a>3. 启动hbase</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/start-hbase.sh</div></pre></td></tr></table></figure>
+<p>单机模式下会起一个jvm, 名字叫HMaster,会起一个web ui，端口是16010。</p>
+<h3 id="4-hbase使用"><a href="#4-hbase使用" class="headerlink" title="4. hbase使用"></a>4. hbase使用</h3><p>用shell：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ./bin/hbase shell</div><div class="line">hbase(main):001:0&gt;</div></pre></td></tr></table></figure>
+<p>创建table:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hbase(main):002:0&gt; create &apos;test&apos;, &apos;cf&apos;</div><div class="line">0 row(s) in 2.2080 seconds</div><div class="line"></div><div class="line">=&gt; Hbase::Table - test</div></pre></td></tr></table></figure>
+<p>list信息:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">hbase(main):003:0&gt; list &apos;test&apos;</div><div class="line">TABLE</div><div class="line">test</div><div class="line">1 row(s) in 0.0610 seconds</div><div class="line"></div><div class="line">=&gt; [&quot;test&quot;]</div></pre></td></tr></table></figure>
+<p>put数据:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">hbase(main):008:0* put &apos;test&apos;, &apos;row1&apos;, &apos;cf:a&apos;, &apos;value1&apos;</div><div class="line">0 row(s) in 0.6360 seconds</div><div class="line"></div><div class="line">hbase(main):009:0&gt; put &apos;test&apos;, &apos;row2&apos;, &apos;cf:b&apos;, &apos;value2&apos;</div><div class="line">0 row(s) in 0.0540 seconds</div><div class="line"></div><div class="line">hbase(main):010:0&gt; put &apos;test&apos;, &apos;row3&apos;, &apos;cf:c&apos;, &apos;value3&apos;</div><div class="line">0 row(s) in 0.0290 seconds</div></pre></td></tr></table></figure></p>
+<p>scan数据:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">hbase(main):012:0&gt; scan &apos;test&apos;</div><div class="line">ROW                                      COLUMN+CELL</div><div class="line"> row1                                    column=cf:a, timestamp=1482133616796, value=value1</div><div class="line"> row2                                    column=cf:b, timestamp=1482133663870, value=value2</div><div class="line"> row3                                    column=cf:c, timestamp=1482133670211, value=value3</div><div class="line">3 row(s) in 0.0930 seconds</div></pre></td></tr></table></figure>
+<p>获取一列数据:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hbase(main):021:0&gt; get &apos;test&apos;,&apos;row2&apos;</div><div class="line">COLUMN                                   CELL</div><div class="line"> cf:b                                    timestamp=1482133663870, value=value2</div><div class="line">1 row(s) in 0.0080 seconds</div></pre></td></tr></table></figure></p>
+<p>disable table:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hbase(main):022:0&gt; disable &apos;test&apos;</div><div class="line">0 row(s) in 2.2930 seconds</div></pre></td></tr></table></figure></p>
+<p>删除数据:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hbase(main):023:0&gt; drop &apos;test&apos;</div><div class="line">0 row(s) in 1.2720 seconds</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/12/19/hbase-Standalone/" data-id="cj9wth6ge000va8ua40alqwcy" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hadoop/">hadoop</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-spring-javabean" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/19/spring-javabean/">spring-javabean</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/12/19/spring-javabean/" class="article-date"><time datetime="2016-12-19T02:48:17.000Z" itemprop="datePublished">2016-12-19</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-通过java代码装配bean。"><a href="#1-通过java代码装配bean。" class="headerlink" title="1. 通过java代码装配bean。"></a>1. 通过java代码装配bean。</h3><p>比如将第三方库中的组件装配到你的应用中时，没法使用组件扫描和自动装配，这时候就需要用到显示配置了，<br>有两种选择:</p>
+<ol>
+<li>java</li>
+<li>XML</li>
+</ol>
+<p>javaConfig和java代码类似，使用简单。</p>
+<h3 id="2-创建配置类"><a href="#2-创建配置类" class="headerlink" title="2. 创建配置类"></a>2. 创建配置类</h3><p>关键在于添加@Configuration注解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import org.springframework.context.annotation.Configuration;</div><div class="line"></div><div class="line">@Configuration</div><div class="line">public class CDPlayerConfig &#123;</div><div class="line">...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>显示创建也就不需要之前的@ComponentScan注解了。</p>
+<h3 id="3-声明简单的bean"><a href="#3-声明简单的bean" class="headerlink" title="3. 声明简单的bean"></a>3. 声明简单的bean</h3><p>编写一个方法，这个方法创建所需类型的实例，然后给这个方法添加@Bean注解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CompactDisc compactDisc() &#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Bean</div><div class="line">public CompactDisc sgtPeppers()&#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-JavaConfig注入"><a href="#4-JavaConfig注入" class="headerlink" title="4. JavaConfig注入"></a>4. JavaConfig注入</h3><p>javaConfig最简单的方法是引用创建bean的方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CDPlayer cdPlayer() &#123;</div><div class="line">    return new CDPlayer(sgtPeppers());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>cdPlayer可以直接请求一个CompactDisc作为参数，调用cdPlayer()创建CDPlayer bean的时候，Spring就自动装配一个CompactDisc到配置方法之中。实现了DI。代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CompactDisc compactDisc() &#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div><div class="line">@Bean</div><div class="line">public CDPlayer cdPlayer(CompactDisc compactDisc) &#123;</div><div class="line">  return new CDPlayer(compactDisc);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/12/19/spring-javabean/" data-id="cj9wth6i80029a8uajge3dr9n" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Spring-组件扫描" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/18/Spring-组件扫描/">Spring-组件扫描</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/12/18/Spring-组件扫描/" class="article-date"><time datetime="2016-12-18T13:24:49.000Z" itemprop="datePublished">2016-12-18</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>spring会自动发现应用上下文中所创建的bean。</p>
+<p>创建一个CDPleaer类，让Spring发现它，并将CompactDisc bean注入进来。</p>
+<p>SgtPeppers.java<br>主要是用@Component注解，表明该类会作为一个组件类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line">import org.springframework.stereotype.Component;</div><div class="line"></div><div class="line">@Component</div><div class="line">public class SgtPeppers implements CompactDisc &#123;</div><div class="line"></div><div class="line">  private String title = &quot;Sgt. Pepper&apos;s Lonely Hearts Club Band&quot;;  </div><div class="line">  private String artist = &quot;The Beatles&quot;;</div><div class="line">  </div><div class="line">  public void play() &#123;</div><div class="line">    System.out.println(&quot;Playing &quot; + title + &quot; by &quot; + artist);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>不过组件扫描默认是不启用的，得配置一下Spring，让他去寻找带有@Component的组件，如下:<br>CDPlayerConfig.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line">import org.springframework.context.annotation.ComponentScan;</div><div class="line">import org.springframework.context.annotation.Configuration;</div><div class="line"></div><div class="line">@Configuration</div><div class="line">@ComponentScan</div><div class="line">public class CDPlayerConfig &#123; </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后通过CDPlayerTest.java类来测试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line"></div><div class="line">import static org.junit.Assert.*;</div><div class="line"></div><div class="line">import org.junit.Rule;</div><div class="line">import org.junit.Test;</div><div class="line">import org.junit.contrib.java.lang.system.StandardOutputStreamLog;</div><div class="line">import org.junit.runner.RunWith;</div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.test.context.ContextConfiguration;</div><div class="line">import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;</div><div class="line"></div><div class="line">@RunWith(SpringJUnit4ClassRunner.class)</div><div class="line">@ContextConfiguration(classes=CDPlayerConfig.class)</div><div class="line">public class CDPlayerTest &#123;</div><div class="line"></div><div class="line"></div><div class="line">  </div><div class="line">  @Autowired</div><div class="line">  private CompactDisc cd;</div><div class="line">  </div><div class="line">  @Test</div><div class="line">  public void cdShouldNotBeNull() &#123;</div><div class="line">    assertNotNull(cd);</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">:compileJava UP-TO-DATE</div><div class="line">:processResources UP-TO-DATE</div><div class="line">:classes UP-TO-DATE</div><div class="line">:compileTestJava</div><div class="line">:processTestResources UP-TO-DATE</div><div class="line">:testClasses</div><div class="line">:test</div><div class="line"></div><div class="line">BUILD SUCCESSFUL</div><div class="line"></div><div class="line">Total time: 16.894 secs</div></pre></td></tr></table></figure>
+<p>gradle测试通过，说明SgtPeppers被很好的创建出来了,不为空。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/12/18/Spring-组件扫描/" data-id="cj9wth6dy0001a8uasguajxw8" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-flask-bootstrap-form" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/03/flask-bootstrap-form/">flask-bootstrap和表单</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/11/03/flask-bootstrap-form/" class="article-date"><time datetime="2016-11-03T02:34:17.000Z" itemprop="datePublished">2016-11-03</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-bootstrap安装"><a href="#1-bootstrap安装" class="headerlink" title="1.bootstrap安装"></a>1.bootstrap安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install flask-bootstrap</div></pre></td></tr></table></figure>
+<h3 id="2-初始化bootstrap"><a href="#2-初始化bootstrap" class="headerlink" title="2.初始化bootstrap"></a>2.初始化bootstrap</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">from flask_bootstrap import Bootstrap</div><div class="line">...</div><div class="line">bootstrap = Bootstrap(app)</div></pre></td></tr></table></figure>
+<h3 id="3-制作自己的基模板"><a href="#3-制作自己的基模板" class="headerlink" title="3.制作自己的基模板"></a>3.制作自己的基模板</h3><p>初始化bootstarp以后就可以继承bootstrap文件的基模板了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;% extends &quot;bootstrap/base.html&quot; %&#125;</div><div class="line">&#123;% block title %&#125;Flasky&#123;% endblock %&#125;</div><div class="line">...</div></pre></td></tr></table></figure>
+<h3 id="4-Form表单"><a href="#4-Form表单" class="headerlink" title="4.Form表单"></a>4.Form表单</h3><p>主要用Flask-WTF包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install flask-wtf</div></pre></td></tr></table></figure>
+<p>Flask-WTF是wtforms的一个扩展，两个包都要引入。</p>
+<h3 id="5-设置SCRF保护"><a href="#5-设置SCRF保护" class="headerlink" title="5.设置SCRF保护"></a>5.设置SCRF保护</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">app = Flask(__name__)</div><div class="line">app.config[&apos;SECRET_KEY&apos;] = &apos;hard to guess string&apos;</div></pre></td></tr></table></figure>
+<h3 id="6-Form类"><a href="#6-Form类" class="headerlink" title="6.Form类"></a>6.Form类</h3><p>跟django的套路差不多，都要继承一个Form父类，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">from flask_wtf import Form</div><div class="line">from wtforms import StringField, SubmitField</div><div class="line">from wtforms.validators import Required</div><div class="line">class NameForm(Form):</div><div class="line">	name = StringField(&apos;What is your name?&apos;, validators=[Required()])</div><div class="line">    submit = SubmitField(&apos;Submit&apos;)</div></pre></td></tr></table></figure>
+<h3 id="7-模板"><a href="#7-模板" class="headerlink" title="7.模板"></a>7.模板</h3><p>可以直接写html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;form method=&quot;POST&quot;&gt;</div><div class="line">&#123;&#123; form.hidden_tag() &#125;&#125;</div><div class="line">&#123;&#123; form.name.label &#125;&#125; &#123;&#123; form.name() &#125;&#125;</div><div class="line">&#123;&#123; form.submit() &#125;&#125;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure>
+<p>或者直接用Flask-bootstrap的辅助函数一次生产这个form</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123;% import &quot;bootstrap/wtf.html&quot; as wtf %&#125;</div><div class="line">&#123;&#123; wtf.quick_form(form) &#125;&#125;</div></pre></td></tr></table></figure>
+<h3 id="8-处理表单"><a href="#8-处理表单" class="headerlink" title="8.处理表单"></a>8.处理表单</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@app.route(&apos;/&apos;, methods=[&apos;GET&apos;, &apos;POST&apos;])</div><div class="line">def index():</div><div class="line">    name = None</div><div class="line">    form = NameForm()</div><div class="line">    if form.validate_on_submit():</div><div class="line">        name = form.name.data</div><div class="line">        form.name.data = &apos;&apos;</div><div class="line">    return render_template(&apos;index.html&apos;, form=form, name=name)</div></pre></td></tr></table></figure>
+<p>methods里面加入POST请求。如果没有指定，只能路由GET请求。<br>如果提交的数据通过验证，则validate_on_submit返回True，把name字段清空，并且把数据传到模板里面去。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/11/03/flask-bootstrap-form/" data-id="cj9wth6fo000ea8uaws6kha54" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-flask模板" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/02/flask模板/">flask模板</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/11/02/flask模板/" class="article-date"><time datetime="2016-11-02T08:27:53.000Z" itemprop="datePublished">2016-11-02</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-简单实例"><a href="#1-简单实例" class="headerlink" title="1.简单实例"></a>1.简单实例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">from flask import Flask, render_template</div><div class="line">from flask_script import Manager</div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line">mamanger = Manager(app)</div><div class="line"></div><div class="line">@app.route(&apos;/&apos;)</div><div class="line">def index():</div><div class="line">    return render_template(&apos;index.html&apos;)</div><div class="line"></div><div class="line">@app.route(&apos;/user/&lt;name&gt;&apos;)</div><div class="line">def user(name):</div><div class="line">    return render_template(&apos;user.html&apos;, name=name)</div><div class="line"></div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    mamanger.run()</div></pre></td></tr></table></figure>
+<p>最简单的模板，render_template，跟django里面用法差不多。</p>
+<p>模板支持if，for等语句。<br>更能支持宏macro等强大用法。<br>还可以支持继承.</p>
+<h3 id="2-模板继承"><a href="#2-模板继承" class="headerlink" title="2.模板继承"></a>2.模板继承</h3><p>这里重点说说继承，extends</p>
+<p>base.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">	&#123;% block head %&#125;</div><div class="line">	&lt;title&gt;&#123;% block title %&#125; &#123;% endblock %&#125; - My application &lt;/title&gt;</div><div class="line">	&#123;% endblock %&#125;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">	&#123;% block body %&#125;</div><div class="line">	&#123;% endblock %&#125;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<p>user.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;% extends &quot;base.html&quot; %&#125;</div><div class="line">&#123;% block title %&#125; index &#123;% endblock %&#125;</div><div class="line">&#123;% block head %&#125;</div><div class="line">	&#123;&#123; super() &#125;&#125;</div><div class="line">	&lt;style&gt;</div><div class="line">	&lt;/style&gt;</div><div class="line">&#123;% endblock %&#125;</div><div class="line">&#123;% block body %&#125;</div><div class="line">&lt;h1&gt;hello, &#123;&#123; name &#125;&#125;!&lt;/h1&gt;</div><div class="line">&#123;% endblock %&#125;</div></pre></td></tr></table></figure></p>
+<p>block标签定义的元素可在衍生模板中修改。user.html里面重新定义了title，head，body。定义head的时候用到了base.html里面的内容，需要调用super()即可，跟面向对象语法里面的一模一样。<br>完整例子可以参看github <a href="https://github.com/gqdw/study-flk" target="_blank" rel="external">https://github.com/gqdw/study-flk</a> 里面的test-templates。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/11/02/flask模板/" data-id="cj9wth6g3000ka8uaexwru1sm" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <div id="page-nav">
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/4/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/3/">3</a></li><li><a class="page-number" href="/page/4/">4</a></li><li class="active"><span class="page-number">5</span></li><li><a class="page-number" href="/page/6/">6</a></li><li><a class="page-number" href="/page/7/">7</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-next" rel="next" href="/page/6/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+  </div>
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>weclome to qym's blog</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+        </li>
+      
+        <li>
+          <a href="/2017/10/11/ensp-install/">ensp安装</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/14/arp/">arp协议</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/08/tcp-status/">tcp状态</a>
+        </li>
+      
+        <li>
+          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2017 QinYueming<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>
