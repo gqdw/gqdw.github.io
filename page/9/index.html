@@ -88,6 +88,70 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-负载均衡-tengine和nginx" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/31/负载均衡-tengine和nginx/">[负载均衡]tengine和nginx</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/07/31/负载均衡-tengine和nginx/" class="article-date"><time datetime="2016-07-31T08:49:01.000Z" itemprop="datePublished">2016-07-31</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-nginx"><a href="#1-nginx" class="headerlink" title="1.nginx"></a>1.nginx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">	upstream backend</div><div class="line">	&#123;</div><div class="line">		server 127.0.0.1:6000;</div><div class="line">		server 127.0.0.1:6001;</div><div class="line">	&#125;</div><div class="line">server&#123;</div><div class="line">        location / &#123;</div><div class="line">		proxy_pass http://backend;</div><div class="line">		proxy_read_timeout 5s;</div><div class="line">    #        root   html;</div><div class="line">    #        index  index.html index.htm;</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里不用nginx,原因是nginx自带的健康检查,是以正常请求来试的,这会导致很多问题.这里不详细说.</p>
+<h3 id="2-tengine"><a href="#2-tengine" class="headerlink" title="2.tengine"></a>2.tengine</h3><p>tengine的非常简单.加个check语句就行了.</p>
+<p><a href="http://tengine.taobao.org/document_cn/http_upstream_check_cn.html" target="_blank" rel="external">http://tengine.taobao.org/document_cn/http_upstream_check_cn.html</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Syntax: check interval=milliseconds [fall=count] [rise=count] [timeout=milliseconds] [default_down=true|false] [type=tcp|http|ssl_hello|mysql|ajp] [port=check_port]</div><div class="line"></div><div class="line">Default: 如果没有配置参数，默认值是：interval=30000 fall=5 rise=2 timeout=1000 default_down=true type=tcp</div><div class="line"></div><div class="line">Context: upstream</div></pre></td></tr></table></figure></p>
+<p>该指令可以打开后端服务器的健康检查功能。<br>指令后面的参数意义是：<br>interval：向后端发送的健康检查包的间隔。<br>fall(fall_count): 如果连续失败次数达到fall_count，服务器就被认为是down。<br>rise(rise_count): 如果连续成功次数达到rise_count，服务器就被认为是up。<br>timeout: 后端健康请求的超时时间。<br>default_down: 设定初始时服务器的状态，如果是true，就说明默认是down的，如果是false，就是up的。默认值是true，也就是一开始服务器认为是不可用，要等健康检查包达到一定成功次数以后才会被认为是健康的。<br>type：健康检查包的类型，现在支持以下多种类型<br>tcp：简单的tcp连接，如果连接成功，就说明后端正常。<br>ssl_hello：发送一个初始的SSL hello包并接受服务器的SSL hello包。<br>http：发送HTTP请求，通过后端的回复包的状态来判断后端是否存活。<br>mysql: 向mysql服务器连接，通过接收服务器的greeting包来判断后端是否存活。<br>ajp：向后端发送AJP协议的Cping包，通过接收Cpong包来判断后端是否存活。<br>port: 指定后端服务器的检查端口。你可以指定不同于真实服务的后端服务器的端口，比如后端提供的是443端口的应用，你可以去检查80端口的状态来判断后端健康状况。默认是0，表示跟后端server提供真实服务的端口一样。该选项出现于Tengine-1.4.0。</p>
+<p>官方的解释非常荆楚了.<br>有个例子可以抄,就是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">check interval=3000 rise=2 fall=5 timeout=1000 type=http;</div></pre></td></tr></table></figure>
+<p>加了check以后服务器3秒一次的在check,有error的话会写在error log里面.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">2016/07/31 16:13:40 [error] 15940#0: send() failed (111: Connection refused)</div><div class="line"></div><div class="line">2016/07/31 16:07:47 [error] 15940#0: send() failed (111: Connection refused)</div></pre></td></tr></table></figure>
+<p>非常的爽.tengine的健康检查模块没有nginx的那种问题.</p>
+<p>其实阿里云的slb就是用tengine + lvs来做的,里面的健康检查配置是和tengine一模一样的.如图:</p>
+<p><img src="http://img.blog.csdn.net/20160821175622768" alt="这里写图片描述"></p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/07/31/负载均衡-tengine和nginx/" data-id="cjbam8baw002z4ouapw067uf2" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/负载均衡/">负载均衡</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-docker-使用阿里云上面的私仓" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -137,7 +201,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/07/27/docker-使用阿里云上面的私仓/" data-id="cj9wth6fm000da8uaeskybsx0" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/07/27/docker-使用阿里云上面的私仓/" data-id="cjbam8b7t000h4oua1tdg367r" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -192,7 +256,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/07/18/解决普通用户无法使用docker命令的问题/" data-id="cj9wth6j5002ya8uapd72y6a9" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/07/18/解决普通用户无法使用docker命令的问题/" data-id="cjbam8baz00324ouald1j87i0" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -246,7 +310,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/06/15/flask-hello/" data-id="cj9wth6g6000ma8ualu7f2pgc" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/06/15/flask-hello/" data-id="cjbam8b7w000k4oua5hgp2x7q" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -301,66 +365,11 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/05/30/python-线程与进程/" data-id="cj9wth6hw001ya8uattr1z58r" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/05/30/python-线程与进程/" data-id="cjbam8b9v00204ouazep79eul" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-django-发送邮件" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/25/django-发送邮件/">django 发送邮件</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/05/25/django-发送邮件/" class="article-date"><time datetime="2016-05-25T03:48:44.000Z" itemprop="datePublished">2016-05-25</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>不推荐用localhost自己架设邮件服务器发邮件，因为很大几率会被屏蔽。我们用第三方的邮件服务器，比如说腾讯的。<br>利用django框架发邮件很简单。</p>
-<h3 id="1-在setting-py中配置邮件服务器的信息，主要是smtp的信息。"><a href="#1-在setting-py中配置邮件服务器的信息，主要是smtp的信息。" class="headerlink" title="1. 在setting.py中配置邮件服务器的信息，主要是smtp的信息。"></a>1. 在setting.py中配置邮件服务器的信息，主要是smtp的信息。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">MAIL_HOST = &apos;smtp.qq.com&apos;</div><div class="line">EMAIL_HOST_USER = &apos;aca_jingru@qq.com&apos;</div><div class="line">EMAIL_HOST_PASSWORD = &apos;xxx&apos;</div><div class="line">EMAIL_PORT = 465</div><div class="line">EMAIL_USE_SSL = True</div></pre></td></tr></table></figure>
-<h3 id="2-项目文件中引入send-mail即可"><a href="#2-项目文件中引入send-mail即可" class="headerlink" title="2. 项目文件中引入send_mail即可."></a>2. 项目文件中引入send_mail即可.</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">from django.core.mail import send_mail</div><div class="line">send_mail(&apos;Subject here&apos;, &apos;test for django sendmail&apos;, &apos;aca_jingru@qq.com&apos;,</div><div class="line">   [&apos;xxx@163.com&apos;], fail_silently=False)</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/05/25/django-发送邮件/" data-id="cj9wth6fk000ca8uaidlpd21j" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/django/">django</a></li></ul>
-
 
     </footer>
   </div>
@@ -394,7 +403,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -403,7 +412,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
     </p>
   </div>
 
@@ -411,7 +420,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -420,6 +429,10 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
+        </li>
       
         <li>
           <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
@@ -435,10 +448,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/08/08/tcp-status/">tcp状态</a>
-        </li>
-      
-        <li>
-          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
         </li>
       
     </ul>

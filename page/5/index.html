@@ -88,6 +88,72 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-hadoop-oldapi" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/28/hadoop-oldapi/">hadoop-oldapi以及运行mapreduce程序</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/12/28/hadoop-oldapi/" class="article-date"><time datetime="2016-12-28T08:53:45.000Z" itemprop="datePublished">2016-12-28</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-程序"><a href="#1-程序" class="headerlink" title="1. 程序"></a>1. 程序</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">package c3;</div><div class="line"></div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.LongWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapred.*;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line">import java.util.Iterator;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Created by gqdw on 28/12/2016.</div><div class="line"> */</div><div class="line">public class WordCountOldApi &#123;</div><div class="line">    public static class MyMapper extends MapReduceBase implements</div><div class="line">            Mapper&lt;LongWritable, Text, Text, IntWritable&gt;&#123;</div><div class="line">        public void map(LongWritable key, Text value, OutputCollector&lt;Text, IntWritable&gt; output, Reporter reporter)</div><div class="line">                        throws IOException&#123;</div><div class="line">            output.collect(new Text(value.toString()), new IntWritable(1));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    public static class MyReducer extends MapReduceBase implements</div><div class="line">            Reducer&lt;Text, IntWritable, Text, IntWritable&gt;&#123;</div><div class="line">        public void reduce(Text key, Iterator&lt;IntWritable&gt; values,</div><div class="line">                           OutputCollector&lt;Text, IntWritable&gt; output, Reporter reporter) throws IOException&#123;</div><div class="line">            int sum = 0;</div><div class="line">            while(values.hasNext()) &#123;</div><div class="line">                sum += values.next().get();</div><div class="line">            &#125;</div><div class="line">            output.collect(key, new IntWritable(sum));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static void main(String[] args) throws Exception &#123;</div><div class="line">        JobConf conf = new JobConf(WordCountOldApi.class);</div><div class="line">        conf.setJobName(&quot;wordcount&quot;);</div><div class="line">        conf.setOutputKeyClass(Text.class);</div><div class="line">        conf.setOutputValueClass(IntWritable.class);</div><div class="line"></div><div class="line">        conf.setMapperClass(MyMapper.class);</div><div class="line">        conf.setCombinerClass(MyReducer.class);</div><div class="line">        conf.setNumReduceTasks(1);</div><div class="line">        conf.setInputFormat(TextInputFormat.class);</div><div class="line">        conf.setOutputFormat(TextOutputFormat.class);</div><div class="line">        FileInputFormat.setInputPaths(conf, new Path(args[0]));</div><div class="line">        FileOutputFormat.setOutputPath(conf, new Path(args[1]));</div><div class="line"></div><div class="line">        JobClient.runJob(conf);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>maven里面加上依赖:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<p>编译完了以后得到一个jar包，prohadoop-1.0-SNAPSHOT.jar</p>
+<h3 id="2-运行"><a href="#2-运行" class="headerlink" title="2. 运行"></a>2. 运行</h3><p>其实很简单:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop jar prohadoop-1.0-SNAPSHOT.jar c3.WordCountOldApi [input] [output]</div></pre></td></tr></table></figure>
+<p>input output是指hdfs上面的路径。<br>首先将文件上传到hdfs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hdfs dfs -put test.txt /test</div></pre></td></tr></table></figure>
+<p>之后即可运行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop jar prohadoop-1.0-SNAPSHOT.jar c3.WordCountOldApi  /test/test.txt /test/output</div></pre></td></tr></table></figure>
+<p>mapreduce程序将结果输出到了output目录，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-rw-r--r--   1 gqdw supergroup          0 2016-12-28 17:00 /test/output/_SUCCESS</div><div class="line">-rw-r--r--   1 gqdw supergroup         27 2016-12-28 17:00 /test/output/part-00000</div></pre></td></tr></table></figure>
+<p>part-00000里面既是结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">java	1</div><div class="line">job	1</div><div class="line">test	3</div><div class="line">word	1</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/12/28/hadoop-oldapi/" data-id="cjbam8b87000r4ouam03fhkv4" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-hbase-Standalone" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -141,7 +207,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/12/19/hbase-Standalone/" data-id="cj9wth6ge000va8ua40alqwcy" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/12/19/hbase-Standalone/" data-id="cjbam8b8e000y4oua9zzcmsw0" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -207,7 +273,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/12/19/spring-javabean/" data-id="cj9wth6i80029a8uajge3dr9n" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/12/19/spring-javabean/" data-id="cjbam8ba7002c4ouao5cg9zmg" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -267,7 +333,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/12/18/Spring-组件扫描/" data-id="cj9wth6dy0001a8uasguajxw8" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/12/18/Spring-组件扫描/" data-id="cjbam8b7400034ouar71icsx1" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -335,66 +401,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/11/03/flask-bootstrap-form/" data-id="cj9wth6fo000ea8uaws6kha54" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-flask模板" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/02/flask模板/">flask模板</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/11/02/flask模板/" class="article-date"><time datetime="2016-11-02T08:27:53.000Z" itemprop="datePublished">2016-11-02</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-简单实例"><a href="#1-简单实例" class="headerlink" title="1.简单实例"></a>1.简单实例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">from flask import Flask, render_template</div><div class="line">from flask_script import Manager</div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line">mamanger = Manager(app)</div><div class="line"></div><div class="line">@app.route(&apos;/&apos;)</div><div class="line">def index():</div><div class="line">    return render_template(&apos;index.html&apos;)</div><div class="line"></div><div class="line">@app.route(&apos;/user/&lt;name&gt;&apos;)</div><div class="line">def user(name):</div><div class="line">    return render_template(&apos;user.html&apos;, name=name)</div><div class="line"></div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    mamanger.run()</div></pre></td></tr></table></figure>
-<p>最简单的模板，render_template，跟django里面用法差不多。</p>
-<p>模板支持if，for等语句。<br>更能支持宏macro等强大用法。<br>还可以支持继承.</p>
-<h3 id="2-模板继承"><a href="#2-模板继承" class="headerlink" title="2.模板继承"></a>2.模板继承</h3><p>这里重点说说继承，extends</p>
-<p>base.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">	&#123;% block head %&#125;</div><div class="line">	&lt;title&gt;&#123;% block title %&#125; &#123;% endblock %&#125; - My application &lt;/title&gt;</div><div class="line">	&#123;% endblock %&#125;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">	&#123;% block body %&#125;</div><div class="line">	&#123;% endblock %&#125;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
-<p>user.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;% extends &quot;base.html&quot; %&#125;</div><div class="line">&#123;% block title %&#125; index &#123;% endblock %&#125;</div><div class="line">&#123;% block head %&#125;</div><div class="line">	&#123;&#123; super() &#125;&#125;</div><div class="line">	&lt;style&gt;</div><div class="line">	&lt;/style&gt;</div><div class="line">&#123;% endblock %&#125;</div><div class="line">&#123;% block body %&#125;</div><div class="line">&lt;h1&gt;hello, &#123;&#123; name &#125;&#125;!&lt;/h1&gt;</div><div class="line">&#123;% endblock %&#125;</div></pre></td></tr></table></figure></p>
-<p>block标签定义的元素可在衍生模板中修改。user.html里面重新定义了title，head，body。定义head的时候用到了base.html里面的内容，需要调用super()即可，跟面向对象语法里面的一模一样。<br>完整例子可以参看github <a href="https://github.com/gqdw/study-flk" target="_blank" rel="external">https://github.com/gqdw/study-flk</a> 里面的test-templates。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/11/02/flask模板/" data-id="cj9wth6g3000ka8uaexwru1sm" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/11/03/flask-bootstrap-form/" data-id="cjbam8b80000m4oua61jtzra0" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -434,7 +441,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -443,7 +450,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
     </p>
   </div>
 
@@ -451,7 +458,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -460,6 +467,10 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
+        </li>
       
         <li>
           <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
@@ -475,10 +486,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/08/08/tcp-status/">tcp状态</a>
-        </li>
-      
-        <li>
-          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
         </li>
       
     </ul>

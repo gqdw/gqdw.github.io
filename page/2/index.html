@@ -88,6 +88,66 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-lvm1" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/04/lvm1/">lvm日常操作</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/07/04/lvm1/" class="article-date"><time datetime="2017-07-04T06:02:24.000Z" itemprop="datePublished">2017-07-04</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-增加pv"><a href="#1-增加pv" class="headerlink" title="1.增加pv"></a>1.增加pv</h3><p>操作相对简单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">pvcreate /dev/sde</div><div class="line">pvdisplay</div><div class="line"></div><div class="line">vgextend volgroup0 /dev/sde</div><div class="line">lvextend -l +100%FREE /dev/volgroup0/lveastmoney</div><div class="line"></div><div class="line">resize2fs /dev/volgroup0/lveastmoney</div></pre></td></tr></table></figure>
+<p>操作均在线执行,不需要执行umount操作，扩起来很方便。</p>
+<h3 id="2-缩减pv"><a href="#2-缩减pv" class="headerlink" title="2. 缩减pv"></a>2. 缩减pv</h3><p>首先要做的是umount操作，你得先卸载lv。他是个停机操作。所以得预估时间，基本上这种操作很少，加了以后不会再动了。</p>
+<p>之后是resize2fs，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">e2fsck -f /dev/volgroup0/lveastmoney</div><div class="line">resize2fs /dev/volgroup0/lveastmoney 1000G</div><div class="line"></div><div class="line">lvreduce -L 1000G /dev/volgroup0/lveastmoney</div><div class="line"></div><div class="line">pvchange  -xn /dev/sdd</div><div class="line">#每秒输出一次进度:</div><div class="line"></div><div class="line">pvmove -i 1 /dev/sdd</div><div class="line">pvremove /dev/sdd</div></pre></td></tr></table></figure>
+<p>pvmove 很重要，将数据move出来。知道他100%free了，就可以pvmove了。</p>
+<h3 id="3-应用场景"><a href="#3-应用场景" class="headerlink" title="3. 应用场景"></a>3. 应用场景</h3><p>我觉得最适用的场景就是数据库类型的，或者说是存储型的服务器，原先有一块数据盘，后来感觉不够用了就增加一块，这里用lvm是特别好用的，不需要停机，对应用来说是无感知的。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/07/04/lvm1/" data-id="cjbam8b8k00134ouawhuixsoz" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-manage1" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -131,7 +191,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/07/02/manage1/" data-id="cj9wth6h7001ga8uau5pcxep6" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/07/02/manage1/" data-id="cjbam8b8p00194ouas89jdnbh" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -181,7 +241,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/06/24/zabbix-alert/" data-id="cj9wth6id002ea8ua1d8j3jv0" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/06/24/zabbix-alert/" data-id="cjbam8bak002q4oua5go1f5qk" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -257,7 +317,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/06/03/zabbix-module/" data-id="cj9wth6ix002la8ua4cz7jt4y" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/06/03/zabbix-module/" data-id="cjbam8bai002n4oua27x9rlx8" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -330,104 +390,12 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/05/28/zabbix-max-value/" data-id="cj9wth6iv002ja8uan70cfy0j" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/05/28/zabbix-max-value/" data-id="cjbam8bag002l4ouaekhsejgn" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zabbix/">zabbix</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-queue" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/21/queue/">c++队列 queue</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/05/21/queue/" class="article-date"><time datetime="2017-05-21T10:57:59.000Z" itemprop="datePublished">2017-05-21</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-队列"><a href="#1-队列" class="headerlink" title="1. 队列"></a>1. 队列</h3><p>类比生活中，就是排队的现象，先进先出。</p>
-<h3 id="2-c-中的队列"><a href="#2-c-中的队列" class="headerlink" title="2. c++中的队列"></a>2. c++中的队列</h3><p>不用自己实现，stl帮你实现了。只需要:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;quque&gt;</div></pre></td></tr></table></figure>
-<p>queue支持下面几种操作.</p>
-<table>
-<thead>
-<tr>
-<th>操作</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>q.empty()</td>
-<td>判断是否为空</td>
-</tr>
-<tr>
-<td>q.size()</td>
-<td>大小</td>
-</tr>
-<tr>
-<td>q.pop()</td>
-<td>头部删除元素</td>
-</tr>
-<tr>
-<td>q.front()</td>
-<td>返回头部的元素</td>
-</tr>
-<tr>
-<td>q.push(item)</td>
-<td>从尾部添加元素</td>
-</tr>
-</tbody>
-</table>
-<p>非常简洁。</p>
-<h3 id="3-计算机中的例子"><a href="#3-计算机中的例子" class="headerlink" title="3. 计算机中的例子"></a>3. 计算机中的例子</h3><p>最经典的莫过于cpu多进程模型了，n个进程，每消耗X的cpu时间，就切换到其他进程去执行，看上去计算机是多进程同时在跑的。</p>
-<p>aoj里面有个经典的例子:</p>
-<p><a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_B" target="_blank" rel="external">http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_B</a></p>
-<p>我自己的实现是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;queue&gt;</div><div class="line">using namespace std;</div><div class="line"></div><div class="line">struct pp</div><div class="line">&#123;</div><div class="line">	string name;</div><div class="line">	int time;	</div><div class="line">&#125;;</div><div class="line">int main(int argc, char const *argv[])</div><div class="line">&#123;</div><div class="line">	int n, q ;</div><div class="line">	cin&gt;&gt;n&gt;&gt;q;</div><div class="line">	queue&lt;pp&gt; que;</div><div class="line">	for (int i = 0; i &lt; n; ++i)</div><div class="line">	&#123;</div><div class="line">		pp x;</div><div class="line">		cin&gt;&gt;x.name&gt;&gt;x.time;</div><div class="line">		que.push(x);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// debug print it</div><div class="line">	int now=0;</div><div class="line">	while(!que.empty())</div><div class="line">	&#123;</div><div class="line">		pp a = que.front();</div><div class="line">		// &gt;100</div><div class="line">		if (a.time - q&gt;0 )</div><div class="line">		&#123;</div><div class="line">			now += q ;</div><div class="line">			a.time -= q;</div><div class="line">			// debug </div><div class="line">			// cout &lt;&lt; &quot;name: &quot;&lt;&lt;a.name&lt;&lt; &quot;\ta.spentime: &quot;&lt;&lt; a.time + now&lt;&lt; &quot; \n&quot;; </div><div class="line">			// cout &lt;&lt; &quot;now: &quot; &lt;&lt; now &lt;&lt; endl;</div><div class="line">			que.pop();</div><div class="line">			que.push(a);</div><div class="line">		&#125;</div><div class="line">		// &lt; 100</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			now += a.time;</div><div class="line">			// cout &lt;&lt; &quot;name: &quot;&lt;&lt;a.name&lt;&lt; &quot;\ta.spentime: &quot;&lt;&lt; now + a.time&lt;&lt; &quot; \n&quot;; </div><div class="line">			// cout &lt;&lt; &quot;now: &quot; &lt;&lt; now &lt;&lt; endl;</div><div class="line">			cout &lt;&lt; a.name &lt;&lt; &quot; &quot; &lt;&lt; now &lt;&lt; endl;</div><div class="line">			que.pop();</div><div class="line">		&#125;</div><div class="line">		// cout &lt;&lt; &quot;name: &quot; &lt;&lt; que.front().name &lt;&lt; &quot;\ttime: &quot; &lt;&lt; que.front().time&lt;&lt; endl;</div><div class="line">		// que.pop();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>算是一个queue的典型用法了。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/05/21/queue/" data-id="cj9wth6i20023a8uac2wdwkik" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c++</a></li></ul>
 
 
     </footer>
@@ -462,7 +430,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -471,7 +439,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 17.5px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/c/" style="font-size: 12.5px;">c++</a> <a href="/tags/django/" style="font-size: 15px;">django</a> <a href="/tags/flask/" style="font-size: 15px;">flask</a> <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12.5px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/network/" style="font-size: 12.5px;">network</a> <a href="/tags/nginx/" style="font-size: 17.5px;">nginx</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 17.5px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12.5px;">负载均衡</a>
     </p>
   </div>
 
@@ -479,7 +447,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -488,6 +456,10 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
+        </li>
       
         <li>
           <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
@@ -503,10 +475,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/08/08/tcp-status/">tcp状态</a>
-        </li>
-      
-        <li>
-          <a href="/2017/07/04/lvm1/">lvm日常操作</a>
         </li>
       
     </ul>
