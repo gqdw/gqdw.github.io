@@ -88,6 +88,138 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-spring-jdbcTemplate" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/12/25/spring-jdbcTemplate/" class="article-date"><time datetime="2017-12-25T08:44:51.000Z" itemprop="datePublished">2017-12-25</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-创建Account类和AccountDao接口"><a href="#1-创建Account类和AccountDao接口" class="headerlink" title="1. 创建Account类和AccountDao接口"></a>1. 创建Account类和AccountDao接口</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class Account &#123;</div><div class="line">    private long id;</div><div class="line">    private String ownerName;</div><div class="line">    private double balance;</div><div class="line">    private Date accessTime;</div><div class="line">    private boolean locked;</div><div class="line">    ...</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public interface AccountDao &#123;</div><div class="line">    public void insert(Account account);</div><div class="line">    public void update(Account account);</div><div class="line">    public void update(List&lt;Account&gt; accounts);</div><div class="line">    public void delete(long accountId);</div><div class="line">    public Account find(long accountId);</div><div class="line">    public List&lt;Account&gt; find(List&lt;Long&gt; accountIds);</div><div class="line">    public List&lt;Account&gt; find(String ownerName);</div><div class="line">    public List&lt;Account&gt; find(boolean locked);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-实现AccountDao接口的AccountDaoJdbcImpl类"><a href="#2-实现AccountDao接口的AccountDaoJdbcImpl类" class="headerlink" title="2. 实现AccountDao接口的AccountDaoJdbcImpl类"></a>2. 实现AccountDao接口的AccountDaoJdbcImpl类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class AccountDaoJdbcImpl implements AccountDao &#123;</div><div class="line"></div><div class="line">	private JdbcTemplate jdbcTemplate;</div><div class="line"></div><div class="line">	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) &#123;</div><div class="line">		this.jdbcTemplate = jdbcTemplate;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void insert(Account account) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-使用jdbcTemplate类定义jdbcTemplate-Bean-并使用dataSource-Bean-满足DataSource其依赖"><a href="#3-使用jdbcTemplate类定义jdbcTemplate-Bean-并使用dataSource-Bean-满足DataSource其依赖" class="headerlink" title="3. 使用jdbcTemplate类定义jdbcTemplate Bean,并使用dataSource Bean 满足DataSource其依赖"></a>3. 使用jdbcTemplate类定义jdbcTemplate Bean,并使用dataSource Bean 满足DataSource其依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public DataSource dataSource() &#123;</div><div class="line">    DriverManagerDataSource dataSource = new DriverManagerDataSource();</div><div class="line">    dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">    dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">    dataSource.setUsername(&quot;sa&quot;);</div><div class="line">    dataSource.setPassword(&quot;&quot;);</div><div class="line">    return dataSource;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Bean</div><div class="line">public JdbcTemplate jdbcTemplate() &#123;</div><div class="line">    JdbcTemplate jdbcTemplate = new JdbcTemplate();</div><div class="line">    jdbcTemplate.setDataSource(dataSource());</div><div class="line">    return jdbcTemplate;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-使用AccountDaoJdbcImpl创建accountDao-bean-并将jdbcTemplate-Bean注入其中"><a href="#4-使用AccountDaoJdbcImpl创建accountDao-bean-并将jdbcTemplate-Bean注入其中" class="headerlink" title="4. 使用AccountDaoJdbcImpl创建accountDao bean,并将jdbcTemplate Bean注入其中:"></a>4. 使用AccountDaoJdbcImpl创建accountDao bean,并将jdbcTemplate Bean注入其中:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public AccountDao accountDao() &#123;</div><div class="line">    AccountDaoJdbcImpl accountDao = new AccountDaoJdbcImpl();</div><div class="line">    accountDao.setJdbcTemplate(jdbcTemplate());</div><div class="line">    return accountDao;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5-main中查找accountDao-bean"><a href="#5-main中查找accountDao-bean" class="headerlink" title="5. main中查找accountDao bean"></a>5. main中查找accountDao bean</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AccountDao accountDao = applicationContext.getBean(AccountDao.class);</div></pre></td></tr></table></figure>
+<p>之后便意味着可以在accountdaojdbcimpl中使用jdbctemplate 了。</p>
+<h3 id="6-使用jdbctemplate运行查询"><a href="#6-使用jdbctemplate运行查询" class="headerlink" title="6. 使用jdbctemplate运行查询"></a>6. 使用jdbctemplate运行查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public Account find(long accountId) &#123;</div><div class="line">	return jdbcTemplate</div><div class="line">			.queryForObject(</div><div class="line">					&quot;select id,owner_name,balance,access_time,locked from account where id = ?&quot;,</div><div class="line">					new RowMapper&lt;Account&gt;() &#123;</div><div class="line">						public Account mapRow(ResultSet rs, int rowNum)</div><div class="line">								throws SQLException &#123;</div><div class="line">							Account account = new Account();</div><div class="line">							account.setId(rs.getLong(&quot;id&quot;));</div><div class="line">							account.setOwnerName(rs.getString(&quot;owner_name&quot;));</div><div class="line">							account.setBalance(rs.getDouble(&quot;balance&quot;));</div><div class="line">							account.setAccessTime(rs</div><div class="line">									.getTimestamp(&quot;access_time&quot;));</div><div class="line">							account.setLocked(rs.getBoolean(&quot;locked&quot;));</div><div class="line">							return account;</div><div class="line">						&#125;</div><div class="line"></div><div class="line">					&#125;, accountId);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用jdbctemplate的 queryforobject方法。</p>
+<p>调用参数是 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public &lt;T&gt; T queryForObject(String sql, RowMapper&lt;T&gt; rowMapper, Object... args) throws DataAccessException &#123;</div><div class="line">     List&lt;T&gt; results = (List)this.query((String)sql, (Object[])args, (ResultSetExtractor)(new RowMapperResultSetExtractor(rowMapper, 1)));</div><div class="line">     return DataAccessUtils.requiredSingleResult(results);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>第一个参数是string的sql 语句，sql语句里面用问号做了占位符。第二个是RowMapper的接口，这里创建了一个匿名类，第三个之后是可变参数列表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface RowMapper&lt;T&gt; &#123;</div><div class="line">    T mapRow(ResultSet var1, int var2) throws SQLException;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>RowMapper<t> 里面就一个函数，mapRow,从ResultSet对象中获取值填充属性。比如这里的，new了一个Account对象，然后把ResultSet里面的属性填充一下就行了。</t></p>
+<p>在main中这样调用即可:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">AccountDao accountDao = applicationContext.getBean(AccountDao.class);</div><div class="line">Account account = accountDao.find(100L);</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/12/25/spring-jdbcTemplate/" data-id="cjc0hj2dz00000kuaxe2p0tk9" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-spring-jdbc-datasource" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/12/25/spring-jdbc-datasource/" class="article-date"><time datetime="2017-12-25T06:39:32.000Z" itemprop="datePublished">2017-12-25</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0-所有jdbc的先决条件"><a href="#0-所有jdbc的先决条件" class="headerlink" title="0. 所有jdbc的先决条件"></a>0. 所有jdbc的先决条件</h3><p>配置数据源，spring里面是配置一个datasource bean。</p>
+<h3 id="1-maven依赖"><a href="#1-maven依赖" class="headerlink" title="1. maven依赖"></a>1. maven依赖</h3><p>需要导入jdbc包，spring包,h2包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;4.0.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line"></div><div class="line">	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-context&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;4.0.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line"></div><div class="line">   	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;com.h2database&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;h2&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.3.175&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<h3 id="2-运行h2数据库"><a href="#2-运行h2数据库" class="headerlink" title="2. 运行h2数据库"></a>2. 运行h2数据库</h3><p>可以网上找h2的二进制包运行，也可以直接在idea里面找到org.h2.tools.Console类运行。<br>用户名sa,密码为空。</p>
+<h3 id="3-创建一个spring-bean配置类，使用DriverManagerDataSource定义一个datasource-bean"><a href="#3-创建一个spring-bean配置类，使用DriverManagerDataSource定义一个datasource-bean" class="headerlink" title="3. 创建一个spring bean配置类，使用DriverManagerDataSource定义一个datasource bean"></a>3. 创建一个spring bean配置类，使用DriverManagerDataSource定义一个datasource bean</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">public class Ch4Configuration &#123;</div><div class="line">    @Bean</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        DriverManagerDataSource dataSource = new DriverManagerDataSource();</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>DriverManagerDataSource还有一个子类SingleConnectionDataSource，该类重复使用相同的连接。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Ch4Configuration &#123;</div><div class="line">    @Bean</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        SingleConnectionDataSource dataSource = new SingleConnectionDataSource();</div><div class="line">        dataSource.setSuppressClose(true);</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-生产环境下使用连接池化的datasource"><a href="#4-生产环境下使用连接池化的datasource" class="headerlink" title="4. 生产环境下使用连接池化的datasource"></a>4. 生产环境下使用连接池化的datasource</h3><p>比如C3P0,或者DBCP，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;commons-dbcp&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;commons-dbcp&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;1.4&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line"></div><div class="line">import org.apache.commons.dbcp.BasicDataSource;</div><div class="line">@Configuration</div><div class="line">public class Ch4ConfigurationForPooledDS1 &#123;</div><div class="line">    </div><div class="line">    @Bean(destroyMethod=&quot;close&quot;)</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        BasicDataSource dataSource = new BasicDataSource();</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;com.mchange&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;c3p0&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;0.9.2.1&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line"></div><div class="line"></div><div class="line">import com.mchange.v2.c3p0.ComboPooledDataSource;</div><div class="line">@Configuration</div><div class="line">public class Ch4ConfigurationForPooledDS2 &#123;</div><div class="line">    </div><div class="line">    @Bean(destroyMethod=&quot;close&quot;)</div><div class="line">    public DataSource dataSource() throws Exception &#123;</div><div class="line">        ComboPooledDataSource dataSource = new ComboPooledDataSource();</div><div class="line">        dataSource.setDriverClass(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setJdbcUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUser(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5-获取connection"><a href="#5-获取connection" class="headerlink" title="5. 获取connection"></a>5. 获取connection</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class Main &#123;</div><div class="line">	public static void main(String[] args) throws SQLException &#123;</div><div class="line">		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(Ch4Configuration.class);</div><div class="line">		DataSource dataSource = applicationContext.getBean(&quot;dataSource&quot;, DataSource.class);</div><div class="line">		</div><div class="line">		Connection connection = dataSource.getConnection();</div><div class="line">		System.out.println(connection.isClosed());</div><div class="line">		connection.close();</div><div class="line">		System.out.println(connection.isClosed());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所有datasource 都实现了getConnection()接口，直接调用即可。这样我们就通过jdbc 数据源，获取了数据库连接。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/12/25/spring-jdbc-datasource/" data-id="cjc0hj2e300010kua4g628s7q" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-spring-docker" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -304,167 +436,10 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-ensp-install" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/11/ensp-install/">ensp安装</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/10/11/ensp-install/" class="article-date"><time datetime="2017-10-11T01:59:58.000Z" itemprop="datePublished">2017-10-11</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-why"><a href="#1-why" class="headerlink" title="1.why"></a>1.why</h3><p>一个windows软件安装有啥好写的，因为这个软件有点反人类，各种bug，出错了以后一脸懵逼。完全没有cisco的模拟机简单好用。</p>
-<h3 id="2-版本"><a href="#2-版本" class="headerlink" title="2.版本"></a>2.版本</h3><p>最好按照下面的版本来搞，操作系统我是win10的，win7的可能不需要这么安装我没试过。</p>
-<table>
-<thead>
-<tr>
-<th>软件</th>
-<th>版本</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ensp</td>
-<td>1.2.00.500</td>
-</tr>
-<tr>
-<td>virtualbox</td>
-<td>VirtualBox-5.1.26-117224-Win</td>
-</tr>
-<tr>
-<td>wireshark</td>
-<td>ensp自带版本</td>
-</tr>
-<tr>
-<td>WinPcap</td>
-<td>ensp自带版本</td>
-</tr>
-<tr>
-<td>操作系统</td>
-<td>win10 ,据说win7</td>
-</tr>
-</tbody>
-</table>
-<p>关键是virtualbox的版本有点妖。有对应关系，我用下来，500版本的配5.1.26的使用没问题。<br>ensp的ar系列路由需要使用virtualbox的固定版本才能正常运行。</p>
-<h3 id="3-常见问题"><a href="#3-常见问题" class="headerlink" title="3.常见问题"></a>3.常见问题</h3><p>1.路由器交换机不能多开，只能开一个，这个据说是win10跟ensp有些不兼容。官方出了个补丁，不过你得在论坛才能找到。 <a href="http://forum.huawei.com/enterprise/thread-412811.html" target="_blank" rel="external">win10 1703系统无法启动多台设备解决方案</a></p>
-<p>然后进行下面三步</p>
-<ul>
-<li>下载附件ensp_patch_500.rar，并解压；</li>
-<li>拷贝解压后的data和ensp_patch_500.exe文件至ensp安装目录\eNSP\vboxserver文件夹中</li>
-<li>双击ensp_patch_500.exe即可，重新打开ensp运行多台设备。</li>
-</ul>
-<p>2.ar路由器无法启动<br>启动报40错误，这个是由于ar系列路由器的启动需要依赖virtualbox，而且对版本还有要求，试下来26版本的可用。</p>
-<p>首先是BIOS开启虚拟化，amd系列的叫svm，不会的google搜一下。安装好了以后在ensp里面 菜单-工具-注册设备，勾选三个，三个都注册成功的话ok。</p>
-<p>3.ar路由器启动报错41<br>这个应该是ar的虚拟化文件有问题，需要卸载ensp，然后删干净里面的vboxserver目录，重装即可。</p>
-<h3 id="4-如果还有问题"><a href="#4-如果还有问题" class="headerlink" title="4.如果还有问题"></a>4.如果还有问题</h3><p>google搜索，ensp论坛搜索。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/10/11/ensp-install/" data-id="cjbiys3dz000dy0ua948xuwir" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/">network</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-arp" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/14/arp/">arp协议</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/08/14/arp/" class="article-date"><time datetime="2017-08-14T06:57:25.000Z" itemprop="datePublished">2017-08-14</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h3><p>地址解析协议（Address Resolution Protocol）,其基本功能为透过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。它是IPv4中网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（NDP）所替代。 </p>
-<h3 id="2-格式"><a href="#2-格式" class="headerlink" title="2. 格式"></a>2. 格式</h3><img src="/2017/08/14/arp/package.png" alt="arp包格式" title="arp包格式">
-<p>注意，arp包不是ip包，没有ip层。字段比较简单，看着就知道了。</p>
-<h3 id="3-arp-request包"><a href="#3-arp-request包" class="headerlink" title="3. arp request包:"></a>3. arp request包:</h3><img src="/2017/08/14/arp/request.png" alt="arp request" title="arp request">
-<p>arp requst是一个广播包，可以被交换机广播。</p>
-<h3 id="4-arp-reply包"><a href="#4-arp-reply包" class="headerlink" title="4.arp reply包:"></a>4.arp reply包:</h3><img src="/2017/08/14/arp/reply.png" alt="arp reply" title="arp reply">
-<p>arp reply是一个单播包。</p>
-<h3 id="5-arp应用场景"><a href="#5-arp应用场景" class="headerlink" title="5. arp应用场景"></a>5. arp应用场景</h3><p>在以太网协议中规定，同一局域网中的一台主机要和另一台主机进行直接通信，必须要知道目标主机的MAC地址。而在TCP/IP协议中，网络层和传输层只关心目标主机的IP地址。这就导致在以太网中使用IP协议时，数据链路层的以太网协议接到上层IP协议提供的数据中，只包含目的主机的IP地址。于是需要一种方法，根据目的主机的IP地址，获得其MAC地址。这就是ARP协议要做的事情。所谓地址解析（address resolution）就是主机在发送帧前将目标IP地址转换成目标MAC地址的过程。</p>
-<h3 id="6-arp-proxy"><a href="#6-arp-proxy" class="headerlink" title="6. arp proxy"></a>6. arp proxy</h3><p>arp代理，这个用的也不多，典型用法是<a href="https://www.cisco.com/c/en/us/support/docs/ip/dynamic-address-allocation-resolution/13718-5.html" target="_blank" rel="external">https://www.cisco.com/c/en/us/support/docs/ip/dynamic-address-allocation-resolution/13718-5.html</a> cisco 这个例子，路由器不能转发二层广播，所以host d 不会收到arp 请求，但是路由器知道host d的mac地址，而且默认开了arp proxy，所以路由器将自己接口的mac地址回复给了host a，这样a就能和d通信。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/08/14/arp/" data-id="cjbiys3dx000by0ua8vk2xqy1" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/">network</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
-    <nav><ul class="pagination"><li class="disabled"><span class="page-prev"><i class="fa fa-chevron-left"></i> Prev</a></li><li class="active"><span class="page-number">1</span></li><li><a class="page-number" href="/page/2/">2</a></li><li><a class="page-number" href="/page/3/">3</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-next" rel="next" href="/page/2/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+    <nav><ul class="pagination"><li class="disabled"><span class="page-prev"><i class="fa fa-chevron-left"></i> Prev</a></li><li class="active"><span class="page-number">1</span></li><li><a class="page-number" href="/page/2/">2</a></li><li><a class="page-number" href="/page/3/">3</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/12/">12</a></li><li><a class="page-next" rel="next" href="/page/2/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
   </div>
 
 
@@ -485,7 +460,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -494,7 +469,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -502,7 +477,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -511,6 +486,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
+        </li>
       
         <li>
           <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
@@ -524,14 +507,6 @@ ga('send', 'pageview');
           <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
         </li>
       
-        <li>
-          <a href="/2017/10/11/ensp-install/">ensp安装</a>
-        </li>
-      
-        <li>
-          <a href="/2017/08/14/arp/">arp协议</a>
-        </li>
-      
     </ul>
   </div>
 
@@ -543,7 +518,7 @@ ga('send', 'pageview');
   <footer class="blog-footer">
   <div class="container">
     <div id="footer-info" class="inner">
-      &copy; 2017 QinYueming<br>
+      &copy; 2018 QinYueming<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

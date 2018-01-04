@@ -88,6 +88,132 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-spring-javabean" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/19/spring-javabean/">spring-javabean</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/12/19/spring-javabean/" class="article-date"><time datetime="2016-12-19T02:48:17.000Z" itemprop="datePublished">2016-12-19</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-通过java代码装配bean。"><a href="#1-通过java代码装配bean。" class="headerlink" title="1. 通过java代码装配bean。"></a>1. 通过java代码装配bean。</h3><p>比如将第三方库中的组件装配到你的应用中时，没法使用组件扫描和自动装配，这时候就需要用到显示配置了，<br>有两种选择:</p>
+<ol>
+<li>java</li>
+<li>XML</li>
+</ol>
+<p>javaConfig和java代码类似，使用简单。</p>
+<h3 id="2-创建配置类"><a href="#2-创建配置类" class="headerlink" title="2. 创建配置类"></a>2. 创建配置类</h3><p>关键在于添加@Configuration注解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import org.springframework.context.annotation.Configuration;</div><div class="line"></div><div class="line">@Configuration</div><div class="line">public class CDPlayerConfig &#123;</div><div class="line">...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>显示创建也就不需要之前的@ComponentScan注解了。</p>
+<h3 id="3-声明简单的bean"><a href="#3-声明简单的bean" class="headerlink" title="3. 声明简单的bean"></a>3. 声明简单的bean</h3><p>编写一个方法，这个方法创建所需类型的实例，然后给这个方法添加@Bean注解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CompactDisc compactDisc() &#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Bean</div><div class="line">public CompactDisc sgtPeppers()&#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-JavaConfig注入"><a href="#4-JavaConfig注入" class="headerlink" title="4. JavaConfig注入"></a>4. JavaConfig注入</h3><p>javaConfig最简单的方法是引用创建bean的方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CDPlayer cdPlayer() &#123;</div><div class="line">    return new CDPlayer(sgtPeppers());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>cdPlayer可以直接请求一个CompactDisc作为参数，调用cdPlayer()创建CDPlayer bean的时候，Spring就自动装配一个CompactDisc到配置方法之中。实现了DI。代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CompactDisc compactDisc() &#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div><div class="line">@Bean</div><div class="line">public CDPlayer cdPlayer(CompactDisc compactDisc) &#123;</div><div class="line">  return new CDPlayer(compactDisc);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/12/19/spring-javabean/" data-id="cjbiys3gz0025y0ua62rm11xg" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Spring-组件扫描" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/18/Spring-组件扫描/">Spring-组件扫描</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/12/18/Spring-组件扫描/" class="article-date"><time datetime="2016-12-18T13:24:49.000Z" itemprop="datePublished">2016-12-18</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>spring会自动发现应用上下文中所创建的bean。</p>
+<p>创建一个CDPleaer类，让Spring发现它，并将CompactDisc bean注入进来。</p>
+<p>SgtPeppers.java<br>主要是用@Component注解，表明该类会作为一个组件类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line">import org.springframework.stereotype.Component;</div><div class="line"></div><div class="line">@Component</div><div class="line">public class SgtPeppers implements CompactDisc &#123;</div><div class="line"></div><div class="line">  private String title = &quot;Sgt. Pepper&apos;s Lonely Hearts Club Band&quot;;  </div><div class="line">  private String artist = &quot;The Beatles&quot;;</div><div class="line">  </div><div class="line">  public void play() &#123;</div><div class="line">    System.out.println(&quot;Playing &quot; + title + &quot; by &quot; + artist);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>不过组件扫描默认是不启用的，得配置一下Spring，让他去寻找带有@Component的组件，如下:<br>CDPlayerConfig.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line">import org.springframework.context.annotation.ComponentScan;</div><div class="line">import org.springframework.context.annotation.Configuration;</div><div class="line"></div><div class="line">@Configuration</div><div class="line">@ComponentScan</div><div class="line">public class CDPlayerConfig &#123; </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后通过CDPlayerTest.java类来测试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line"></div><div class="line">import static org.junit.Assert.*;</div><div class="line"></div><div class="line">import org.junit.Rule;</div><div class="line">import org.junit.Test;</div><div class="line">import org.junit.contrib.java.lang.system.StandardOutputStreamLog;</div><div class="line">import org.junit.runner.RunWith;</div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.test.context.ContextConfiguration;</div><div class="line">import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;</div><div class="line"></div><div class="line">@RunWith(SpringJUnit4ClassRunner.class)</div><div class="line">@ContextConfiguration(classes=CDPlayerConfig.class)</div><div class="line">public class CDPlayerTest &#123;</div><div class="line"></div><div class="line"></div><div class="line">  </div><div class="line">  @Autowired</div><div class="line">  private CompactDisc cd;</div><div class="line">  </div><div class="line">  @Test</div><div class="line">  public void cdShouldNotBeNull() &#123;</div><div class="line">    assertNotNull(cd);</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">:compileJava UP-TO-DATE</div><div class="line">:processResources UP-TO-DATE</div><div class="line">:classes UP-TO-DATE</div><div class="line">:compileTestJava</div><div class="line">:processTestResources UP-TO-DATE</div><div class="line">:testClasses</div><div class="line">:test</div><div class="line"></div><div class="line">BUILD SUCCESSFUL</div><div class="line"></div><div class="line">Total time: 16.894 secs</div></pre></td></tr></table></figure>
+<p>gradle测试通过，说明SgtPeppers被很好的创建出来了,不为空。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/12/18/Spring-组件扫描/" data-id="cjbiys3d10001y0ua895g5e3h" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-flask-bootstrap-form" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -280,137 +406,10 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-使用celery做异步任务" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/09/使用celery做异步任务/">使用celery做异步任务</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/10/09/使用celery做异步任务/" class="article-date"><time datetime="2016-10-09T11:13:31.000Z" itemprop="datePublished">2016-10-09</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-选择broker"><a href="#1-选择broker" class="headerlink" title="1.选择broker"></a>1.选择broker</h3><p>可以选择的broker很多，一般选择rabbitmq。本身就是消息中间件。rabbitmq的安装略。</p>
-<h3 id="2-安装celery"><a href="#2-安装celery" class="headerlink" title="2.安装celery"></a>2.安装celery</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pip install celery</div></pre></td></tr></table></figure>
-<h3 id="3-创建tasks"><a href="#3-创建tasks" class="headerlink" title="3.创建tasks"></a>3.创建tasks</h3><p>创建tasks.py</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">from celery import Celery</div><div class="line"></div><div class="line">app = Celery(&apos;tasks&apos;, broker=&apos;amqp://guest@localhost//&apos;)</div><div class="line"></div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
-<h3 id="4-运行celery-worker"><a href="#4-运行celery-worker" class="headerlink" title="4.运行celery worker"></a>4.运行celery worker</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ celery -A tasks worker --loglevel=info</div></pre></td></tr></table></figure>
-<h3 id="5-调用tasks"><a href="#5-调用tasks" class="headerlink" title="5.调用tasks"></a>5.调用tasks</h3><p>很简单，import进来，然后调用delay函数即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">add.delay(1,2)</div></pre></td></tr></table></figure>
-<p>celery worker进程会收到这个消息并执行他</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Received task: proj.tasks.add[9e9ee3e8-1350-4858-9fbb-0fd62779c3e1]</div><div class="line">Task proj.tasks.add[9e9ee3e8-1350-4858-9fbb-0fd62779c3e1] succeeded in 0.00637572002597s: 3</div></pre></td></tr></table></figure>
-<p>注意，这里并没有记录结果。</p>
-<h3 id="6-保存结果"><a href="#6-保存结果" class="headerlink" title="6.保存结果"></a>6.保存结果</h3><p>celery里面做法也很简单，初始化app的时候加个backend就可以了。这里已redis为例:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Celery(&apos;tasks&apos;, backend=&apos;redis://localhost&apos;, broker=&apos;amqp://&apos;)</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">result = add.delay(4, 4)</div><div class="line">ret = result.get(timeout=1)</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/10/09/使用celery做异步任务/" data-id="cjbiys3ho002ry0ua0dp86i2o" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-java生成mysql分区语句" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/05/java生成mysql分区语句/">java生成mysql分区语句</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/10/05/java生成mysql分区语句/" class="article-date"><time datetime="2016-10-05T04:26:24.000Z" itemprop="datePublished">2016-10-05</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-分区"><a href="#1-分区" class="headerlink" title="1.分区"></a>1.分区</h3><p>之前介绍了分区，<br><a href="http://qinyueming.cc/2016/09/26/mysql-partitioning/">http://qinyueming.cc/2016/09/26/mysql-partitioning/</a>，可以很容易的写出range分区语句出来,但是最好别手写，手写容易出错。</p>
-<h3 id="2-程序"><a href="#2-程序" class="headerlink" title="2.程序"></a>2.程序</h3><p>最新学习java，顺便用java写了一个自动生成zabbix分区的程序出来。</p>
-<p>关键点在于用了StringBuilder. 参看 java编程思想 里面的UsingStringbuilder.java:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">import java.util.Random;</div><div class="line"></div><div class="line">public class UsingStringBuilder&#123;</div><div class="line">	public static Random rand = new Random(47);</div><div class="line">	public String toString()&#123;</div><div class="line">		StringBuilder result = new StringBuilder(&quot;[&quot;);</div><div class="line">		for(int i = 0; i &lt; 25; i++)&#123;</div><div class="line">			result.append(rand.nextInt(100));</div><div class="line">			result.append(&quot;, &quot;);</div><div class="line">		&#125;</div><div class="line">		result.delete(result.length()-2, result.length());</div><div class="line">		result.append(&quot;]&quot;);</div><div class="line">		return result.toString();</div><div class="line">	&#125;</div><div class="line">	public static void main(String[] args)&#123;</div><div class="line">		UsingStringBuilder usb = new UsingStringBuilder();</div><div class="line">		System.out.println(usb);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>另一个关键点是日期转化为unix timestamp。用到了SimpleDateFormat,SimpleDateFormat的parse方法可以直接解析返回一个Date对象，Date对象的getTime()返回的是unix timestamp的毫秒数，除以1000就是mysql里面的unix timestamp了。用起来还是非常爽的。总觉得比python的类库要好用。下面是一个小例子:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by aca on 10/4/16.</div><div class="line"> */</div><div class="line">import java.text.ParseException;</div><div class="line">import java.text.SimpleDateFormat;</div><div class="line">import java.util.Date;</div><div class="line"></div><div class="line">public class DateTest &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</div><div class="line">        String s1 = &quot;2016-10-04&quot;;</div><div class="line">        String s2 = String.format(&quot;2016-%02d-01&quot;, 11);</div><div class="line">        System.out.println(s2);</div><div class="line">        try&#123;</div><div class="line">            Date d = df.parse(s2);</div><div class="line">            System.out.println(d.getTime() / 1000);</div><div class="line"></div><div class="line">        &#125;catch(ParseException pe)&#123;</div><div class="line">            System.out.println(&quot;parse error.&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="3-完整程序"><a href="#3-完整程序" class="headerlink" title="3.完整程序"></a>3.完整程序</h3><p>见<a href="https://gist.github.com/gqdw/97ca758d3d0866baa039eb4fd02bbda8" target="_blank" rel="external">https://gist.github.com/gqdw/97ca758d3d0866baa039eb4fd02bbda8</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by aca on 10/4/16.</div><div class="line"> */</div><div class="line"></div><div class="line">import java.text.ParseException;</div><div class="line">import java.text.SimpleDateFormat;</div><div class="line">import java.util.Date;</div><div class="line"></div><div class="line">public class Genpartition &#123;</div><div class="line">    // alter table xxx partition by range(id)</div><div class="line">    // (partition p0 values less than (xx) ,</div><div class="line">    // partition p1 values less than (yy));</div><div class="line">    static String Gensql(String tablename, String column)&#123;</div><div class="line">        StringBuilder result = new StringBuilder(&quot;alter table &quot;);</div><div class="line">//        String res = &quot;alter table &quot; + tablename + &quot; partition by range(&quot; + column + &quot;)&quot; ;</div><div class="line">        result.append(tablename);</div><div class="line">        result.append(&quot; partition by range(&quot;);</div><div class="line">        result.append(column);</div><div class="line">        result.append(&quot;)(\n&quot;);http://qinyueming.cc/2016/09/26/mysql-partitioning/</div><div class="line"></div><div class="line">        for (int i = 1; i &lt;= 12; i++) &#123;</div><div class="line">            SimpleDateFormat dateformat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</div><div class="line">            String txtdate = String.format(&quot;2016-%02d-01&quot;, i);</div><div class="line">            //= &quot;2016-%d-01&quot;.format(i);</div><div class="line">//            System.out.println(txtdate);</div><div class="line">            Date date = new Date();</div><div class="line">            try &#123;</div><div class="line">                date = dateformat.parse(txtdate);</div><div class="line"></div><div class="line">            &#125;catch(ParseException pe)&#123;</div><div class="line">                System.out.println(&quot;parse error.&quot;);</div><div class="line">            &#125;</div><div class="line">            result.append(&quot;partition p&quot; );</div><div class="line">            result.append(String.format(&quot;2016%02d&quot;, i));</div><div class="line">            result.append(&quot; values less than (&quot;);</div><div class="line">            result.append(date.getTime() / 1000);</div><div class="line">            result.append(&quot;),\n&quot;);</div><div class="line">        &#125;</div><div class="line">        result.delete(result.length()-2, result.length());</div><div class="line">        result.append(&quot;);\n&quot;);</div><div class="line">        return result.toString();</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        String[] tables = &#123;&quot;history_uint&quot;, &quot;trends_uint&quot;&#125;;</div><div class="line">        for(String t:tables)</div><div class="line">            System.out.println(Gensql(t, &quot;clock&quot;));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="4-生成结果"><a href="#4-生成结果" class="headerlink" title="4.生成结果"></a>4.生成结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">alter table history_uint partition by range(clock)(</div><div class="line">partition p201601 values less than (1451577600),</div><div class="line">partition p201602 values less than (1454256000),</div><div class="line">partition p201603 values less than (1456761600),</div><div class="line">partition p201604 values less than (1459440000),</div><div class="line">partition p201605 values less than (1462032000),</div><div class="line">partition p201606 values less than (1464710400),</div><div class="line">partition p201607 values less than (1467302400),</div><div class="line">partition p201608 values less than (1469980800),</div><div class="line">partition p201609 values less than (1472659200),</div><div class="line">partition p201610 values less than (1475251200),</div><div class="line">partition p201611 values less than (1477929600),</div><div class="line">partition p201612 values less than (1480521600));</div><div class="line"></div><div class="line">alter table trends_uint partition by range(clock)(</div><div class="line">partition p201601 values less than (1451577600),</div><div class="line">partition p201602 values less than (1454256000),</div><div class="line">partition p201603 values less than (1456761600),</div><div class="line">partition p201604 values less than (1459440000),</div><div class="line">partition p201605 values less than (1462032000),</div><div class="line">partition p201606 values less than (1464710400),</div><div class="line">partition p201607 values less than (1467302400),</div><div class="line">partition p201608 values less than (1469980800),</div><div class="line">partition p201609 values less than (1472659200),</div><div class="line">partition p201610 values less than (1475251200),</div><div class="line">partition p201611 values less than (1477929600),</div><div class="line">partition p201612 values less than (1480521600));</div></pre></td></tr></table></figure>
-<p>可以直接在mysql里面跑。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/10/05/java生成mysql分区语句/" data-id="cjbiys3et0010y0uat0y9an2u" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zabbix/">zabbix</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
-    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/5/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/4/">4</a></li><li><a class="page-number" href="/page/5/">5</a></li><li class="active"><span class="page-number">6</span></li><li><a class="page-number" href="/page/7/">7</a></li><li><a class="page-number" href="/page/8/">8</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-next" rel="next" href="/page/7/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/5/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/4/">4</a></li><li><a class="page-number" href="/page/5/">5</a></li><li class="active"><span class="page-number">6</span></li><li><a class="page-number" href="/page/7/">7</a></li><li><a class="page-number" href="/page/8/">8</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/12/">12</a></li><li><a class="page-next" rel="next" href="/page/7/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
   </div>
 
 
@@ -431,7 +430,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -440,7 +439,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -448,7 +447,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -457,6 +456,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
+        </li>
       
         <li>
           <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
@@ -470,14 +477,6 @@ ga('send', 'pageview');
           <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
         </li>
       
-        <li>
-          <a href="/2017/10/11/ensp-install/">ensp安装</a>
-        </li>
-      
-        <li>
-          <a href="/2017/08/14/arp/">arp协议</a>
-        </li>
-      
     </ul>
   </div>
 
@@ -489,7 +488,7 @@ ga('send', 'pageview');
   <footer class="blog-footer">
   <div class="container">
     <div id="footer-info" class="inner">
-      &copy; 2017 QinYueming<br>
+      &copy; 2018 QinYueming<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

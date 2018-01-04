@@ -88,6 +88,135 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-mysql-5-7-install" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/17/mysql-5-7-install/">mysql-5.7编译安装</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/01/17/mysql-5-7-install/" class="article-date"><time datetime="2017-01-17T05:54:20.000Z" itemprop="datePublished">2017-01-17</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-编译"><a href="#1-编译" class="headerlink" title="1. 编译"></a>1. 编译</h3><p>下载:<br>直接用国内的源，速度杠杠的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.17.tar.gz</div></pre></td></tr></table></figure>
+<p>最新源码包是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-5.7.18.tar.gz</div><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.18.tar.gz</div></pre></td></tr></table></figure>
+<p>依赖(centos7为例):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum -y install make gcc-c++ cmake bison-devel bison ncurses-devel</div></pre></td></tr></table></figure>
+<p>编译跟5.6稍微有点不一样，依赖新版的boost了。不要cmake时候自动下载，会被墙掉。直接下载boost版本的源码包就行了，剩下的套路跟5.6的一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd BUILD</div><div class="line">cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql57  -DWITH_BOOST=../boost ..</div><div class="line">make </div><div class="line">make install</div></pre></td></tr></table></figure>
+<h3 id="2-单实例初始化和运行"><a href="#2-单实例初始化和运行" class="headerlink" title="2.单实例初始化和运行"></a>2.单实例初始化和运行</h3><p>mysql_install_db已经被废弃了。直接用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># bin/mysqld --initialize --user=mysql --datadir=/vdb/mysql1</div><div class="line">2017-06-19T01:18:19.299580Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).</div><div class="line">2017-06-19T01:18:19.458771Z 0 [Warning] InnoDB: New log files created, LSN=45790</div><div class="line">2017-06-19T01:18:19.482412Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.</div><div class="line">2017-06-19T01:18:19.537139Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 2de7b52f-548d-11e7-b57b-52560acdcad4.</div><div class="line">2017-06-19T01:18:19.537944Z 0 [Warning] Gtid table is not ready to be used. Table &apos;mysql.gtid_executed&apos; cannot be opened.</div><div class="line">2017-06-19T01:18:19.538602Z 1 [Note] A temporary password is generated for root@localhost: C#lF1kb*KkV/</div></pre></td></tr></table></figure></p>
+<p>运行，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># cp support-files/mysql.server .</div><div class="line">修改mysql.server中的</div><div class="line">basedir=xxx</div><div class="line">datadir=xxx</div><div class="line"></div><div class="line">修改 /etc/my.cnf 中配置。</div><div class="line">vim /etc/my.cnf</div><div class="line"></div><div class="line"></div><div class="line"># ./mysql.server start </div><div class="line">Starting MySQL.Logging to &apos;/vdb/mysql1/10-205-202-212.err&apos;.  [  OK  ]</div></pre></td></tr></table></figure></p>
+<p>用上面系统生成的随机密码进去，然后修改成自己的密码完成整个初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter user root@localhost identified by &apos;123123&apos;;</div></pre></td></tr></table></figure>
+<h3 id="3-多实例部署"><a href="#3-多实例部署" class="headerlink" title="3.多实例部署"></a>3.多实例部署</h3><p>主要是用到了mysqld_multi,要在my.cnf里面填上多个实例的信息，格式如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[mysqld_multi]</div><div class="line">mysqld     = /usr/local/mysql57/bin/mysqld_safe</div><div class="line">mysqladmin = /usr/local/mysql57/bin/mysqladmin</div><div class="line">user       = multi_admin</div><div class="line">password   = my_password</div><div class="line"></div><div class="line">[mysqld2]</div><div class="line">socket     = /tmp/mysql.sock2</div><div class="line">port       = 3307</div><div class="line">pid-file   = /usr/local/mysql57/data2/hostname.pid2</div><div class="line">datadir    = /usr/local/mysql57/data2</div><div class="line">language   = /usr/local/mysql57/share/mysql/english</div><div class="line">user       = unix_user1</div><div class="line"></div><div class="line">[mysqld3]</div><div class="line">mysqld     = /path/to/mysqld_safe</div><div class="line">ledir      = /path/to/mysqld-binary/</div><div class="line">mysqladmin = /path/to/mysqladmin</div><div class="line">socket     = /tmp/mysql.sock3</div><div class="line">port       = 3308</div><div class="line">pid-file   = /usr/local/mysql57/data3/hostname.pid3</div><div class="line">datadir    = /usr/local/mysql57/data3</div><div class="line">language   = /usr/local/mysql57/share/mysql/swedish</div><div class="line">user       = unix_user2</div></pre></td></tr></table></figure>
+<p>用 mysqld_multi –example可以直接查看。很方便,mysqld_multi里面的user和password 主要是用来关闭实例时候用的mysql 用户，所以先要附权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GRANT SHUTDOWN ON *.* TO multi_admin@localhost IDENTIFIED BY &apos;password&apos;</div></pre></td></tr></table></figure>
+<p>然后配置上就可以了~很方便。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/01/17/mysql-5-7-install/" data-id="cjbiys3ex0014y0uaz98xzkax" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-mysql-gtid" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/16/mysql-gtid/">mysql-GTID</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/01/16/mysql-gtid/" class="article-date"><time datetime="2017-01-16T10:25:18.000Z" itemprop="datePublished">2017-01-16</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-GTID概念"><a href="#1-GTID概念" class="headerlink" title="1. GTID概念"></a>1. GTID概念</h3><p>简化了很多主从复制上面的问题。不需要像之前版本需要通过binlog的pos来确定从哪开始复制。<br>GTID = source_id:transaction_id<br>source_id是一个mysql自动生成的uuid，在datadir下面的auto.cnf里面,例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">server-uuid=6cdd37fa-d3d8-11e6-b843-00163e0030cf</div></pre></td></tr></table></figure></p>
+<p>transaction_id是事务id，递增的一个序列。连起来标识一个事务。</p>
+<h3 id="2-master上面设置"><a href="#2-master上面设置" class="headerlink" title="2. master上面设置"></a>2. master上面设置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">binlog-format=ROW</div><div class="line">log-slave-updates=true</div><div class="line">gtid-mode=on</div><div class="line">enforce-gtid-consistency=true</div><div class="line">log-bin=master-bin</div><div class="line">log-bin-index=master-bin.index</div><div class="line">server_id = 1</div></pre></td></tr></table></figure>
+<p>主要就是加了gtid-mode,enforce-gtid-consistency</p>
+<h3 id="3-slave设置"><a href="#3-slave设置" class="headerlink" title="3. slave设置"></a>3. slave设置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">server_id = 222</div><div class="line">gtid-mode=on</div><div class="line">log-bin=slave-bin</div><div class="line">log-slave-updates=true</div><div class="line">enforce-gtid-consistency=true</div><div class="line">binlog-format=ROW</div><div class="line">log-bin-index=slave-bin.index</div><div class="line">relay-log=slave1-relay-bin</div></pre></td></tr></table></figure>
+<h3 id="4-grant权限"><a href="#4-grant权限" class="headerlink" title="4. grant权限"></a>4. grant权限</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">CREATE USER &apos;repl&apos;@&apos;%&apos; IDENTIFIED BY &apos;slavepass&apos;;</div><div class="line">grant REPLICATION SLAVE ON *.* TO &apos;repl&apos;@&apos;%&apos;;</div></pre></td></tr></table></figure>
+<h3 id="5-change-master"><a href="#5-change-master" class="headerlink" title="5. change master"></a>5. change master</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">change master to master_host=&apos;10.168.105.153&apos;, master_user=&apos;repl&apos;,master_password=&apos;slavepass&apos;,master_auto_position=1;</div></pre></td></tr></table></figure>
+<h3 id="6-启动slave"><a href="#6-启动slave" class="headerlink" title="6. 启动slave"></a>6. 启动slave</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">start slave;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/01/16/mysql-gtid/" data-id="cjbiys3ez0016y0ua5hk2ubrh" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Alisql安装与压测" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -284,136 +413,10 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-spring-javabean" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/19/spring-javabean/">spring-javabean</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/12/19/spring-javabean/" class="article-date"><time datetime="2016-12-19T02:48:17.000Z" itemprop="datePublished">2016-12-19</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-通过java代码装配bean。"><a href="#1-通过java代码装配bean。" class="headerlink" title="1. 通过java代码装配bean。"></a>1. 通过java代码装配bean。</h3><p>比如将第三方库中的组件装配到你的应用中时，没法使用组件扫描和自动装配，这时候就需要用到显示配置了，<br>有两种选择:</p>
-<ol>
-<li>java</li>
-<li>XML</li>
-</ol>
-<p>javaConfig和java代码类似，使用简单。</p>
-<h3 id="2-创建配置类"><a href="#2-创建配置类" class="headerlink" title="2. 创建配置类"></a>2. 创建配置类</h3><p>关键在于添加@Configuration注解。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import org.springframework.context.annotation.Configuration;</div><div class="line"></div><div class="line">@Configuration</div><div class="line">public class CDPlayerConfig &#123;</div><div class="line">...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>显示创建也就不需要之前的@ComponentScan注解了。</p>
-<h3 id="3-声明简单的bean"><a href="#3-声明简单的bean" class="headerlink" title="3. 声明简单的bean"></a>3. 声明简单的bean</h3><p>编写一个方法，这个方法创建所需类型的实例，然后给这个方法添加@Bean注解。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CompactDisc compactDisc() &#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Bean</div><div class="line">public CompactDisc sgtPeppers()&#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="4-JavaConfig注入"><a href="#4-JavaConfig注入" class="headerlink" title="4. JavaConfig注入"></a>4. JavaConfig注入</h3><p>javaConfig最简单的方法是引用创建bean的方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CDPlayer cdPlayer() &#123;</div><div class="line">    return new CDPlayer(sgtPeppers());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>cdPlayer可以直接请求一个CompactDisc作为参数，调用cdPlayer()创建CDPlayer bean的时候，Spring就自动装配一个CompactDisc到配置方法之中。实现了DI。代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CompactDisc compactDisc() &#123;</div><div class="line">  return new SgtPeppers();</div><div class="line">&#125;</div><div class="line">@Bean</div><div class="line">public CDPlayer cdPlayer(CompactDisc compactDisc) &#123;</div><div class="line">  return new CDPlayer(compactDisc);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/12/19/spring-javabean/" data-id="cjbiys3gz0025y0ua62rm11xg" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Spring-组件扫描" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/18/Spring-组件扫描/">Spring-组件扫描</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/12/18/Spring-组件扫描/" class="article-date"><time datetime="2016-12-18T13:24:49.000Z" itemprop="datePublished">2016-12-18</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>spring会自动发现应用上下文中所创建的bean。</p>
-<p>创建一个CDPleaer类，让Spring发现它，并将CompactDisc bean注入进来。</p>
-<p>SgtPeppers.java<br>主要是用@Component注解，表明该类会作为一个组件类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line">import org.springframework.stereotype.Component;</div><div class="line"></div><div class="line">@Component</div><div class="line">public class SgtPeppers implements CompactDisc &#123;</div><div class="line"></div><div class="line">  private String title = &quot;Sgt. Pepper&apos;s Lonely Hearts Club Band&quot;;  </div><div class="line">  private String artist = &quot;The Beatles&quot;;</div><div class="line">  </div><div class="line">  public void play() &#123;</div><div class="line">    System.out.println(&quot;Playing &quot; + title + &quot; by &quot; + artist);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>不过组件扫描默认是不启用的，得配置一下Spring，让他去寻找带有@Component的组件，如下:<br>CDPlayerConfig.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line">import org.springframework.context.annotation.ComponentScan;</div><div class="line">import org.springframework.context.annotation.Configuration;</div><div class="line"></div><div class="line">@Configuration</div><div class="line">@ComponentScan</div><div class="line">public class CDPlayerConfig &#123; </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后通过CDPlayerTest.java类来测试。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">package soundsystem;</div><div class="line"></div><div class="line">import static org.junit.Assert.*;</div><div class="line"></div><div class="line">import org.junit.Rule;</div><div class="line">import org.junit.Test;</div><div class="line">import org.junit.contrib.java.lang.system.StandardOutputStreamLog;</div><div class="line">import org.junit.runner.RunWith;</div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.test.context.ContextConfiguration;</div><div class="line">import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;</div><div class="line"></div><div class="line">@RunWith(SpringJUnit4ClassRunner.class)</div><div class="line">@ContextConfiguration(classes=CDPlayerConfig.class)</div><div class="line">public class CDPlayerTest &#123;</div><div class="line"></div><div class="line"></div><div class="line">  </div><div class="line">  @Autowired</div><div class="line">  private CompactDisc cd;</div><div class="line">  </div><div class="line">  @Test</div><div class="line">  public void cdShouldNotBeNull() &#123;</div><div class="line">    assertNotNull(cd);</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">:compileJava UP-TO-DATE</div><div class="line">:processResources UP-TO-DATE</div><div class="line">:classes UP-TO-DATE</div><div class="line">:compileTestJava</div><div class="line">:processTestResources UP-TO-DATE</div><div class="line">:testClasses</div><div class="line">:test</div><div class="line"></div><div class="line">BUILD SUCCESSFUL</div><div class="line"></div><div class="line">Total time: 16.894 secs</div></pre></td></tr></table></figure>
-<p>gradle测试通过，说明SgtPeppers被很好的创建出来了,不为空。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/12/18/Spring-组件扫描/" data-id="cjbiys3d10001y0ua895g5e3h" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
-    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/4/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/3/">3</a></li><li><a class="page-number" href="/page/4/">4</a></li><li class="active"><span class="page-number">5</span></li><li><a class="page-number" href="/page/6/">6</a></li><li><a class="page-number" href="/page/7/">7</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-next" rel="next" href="/page/6/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/4/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/3/">3</a></li><li><a class="page-number" href="/page/4/">4</a></li><li class="active"><span class="page-number">5</span></li><li><a class="page-number" href="/page/6/">6</a></li><li><a class="page-number" href="/page/7/">7</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/12/">12</a></li><li><a class="page-next" rel="next" href="/page/6/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
   </div>
 
 
@@ -434,7 +437,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -443,7 +446,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -451,7 +454,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -460,6 +463,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
+        </li>
       
         <li>
           <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
@@ -473,14 +484,6 @@ ga('send', 'pageview');
           <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
         </li>
       
-        <li>
-          <a href="/2017/10/11/ensp-install/">ensp安装</a>
-        </li>
-      
-        <li>
-          <a href="/2017/08/14/arp/">arp协议</a>
-        </li>
-      
     </ul>
   </div>
 
@@ -492,7 +495,7 @@ ga('send', 'pageview');
   <footer class="blog-footer">
   <div class="container">
     <div id="footer-info" class="inner">
-      &copy; 2017 QinYueming<br>
+      &copy; 2018 QinYueming<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

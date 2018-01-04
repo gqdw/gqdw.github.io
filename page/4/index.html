@@ -88,6 +88,122 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-algs4" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/18/algs4/">algs4源码使用</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/05/18/algs4/" class="article-date"><time datetime="2017-05-18T01:10:59.000Z" itemprop="datePublished">2017-05-18</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-资源"><a href="#1-资源" class="headerlink" title="1. 资源"></a>1. 资源</h3><ol>
+<li><p>除了书以外，还有一个专门支持的网站<br><a href="http://algs4.cs.princeton.edu/home/" target="_blank" rel="external">http://algs4.cs.princeton.edu/home/</a></p>
+</li>
+<li><p>另一个是soursera上面的<br><a href="https://www.coursera.org/learn/algorithms-part1/home/week/1" target="_blank" rel="external">https://www.coursera.org/learn/algorithms-part1/home/week/1</a></p>
+</li>
+</ol>
+<h3 id="2-源码编译"><a href="#2-源码编译" class="headerlink" title="2. 源码编译"></a>2. 源码编译</h3><p>源码在github上面有一份，<a href="https://github.com/kevin-wayne/algs4" target="_blank" rel="external">https://github.com/kevin-wayne/algs4</a></p>
+<p>第四版是用java描述的，编译的话要用到mvn或者gradle ,可以比较熟悉mvn。</p>
+<p>mvn的一个注意点是需要设置JAVA_HOME环境变量。<br>mvn install就妥了。</p>
+<h3 id="3-class使用"><a href="#3-class使用" class="headerlink" title="3. class使用"></a>3. class使用</h3><p>编译完了以后是一个jar包，class无法直接使用。得这样引用:<br>如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -cp algs4-1.0.0.0.jar edu/princeton/cs/algs4/UF &lt; tinyUF.txt</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/05/18/algs4/" data-id="cjbiys3da0004y0ua6azvdzko" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-tcp1" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/01/tcp1/">tcp连接建立和断开</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/05/01/tcp1/" class="article-date"><time datetime="2017-05-01T13:17:50.000Z" itemprop="datePublished">2017-05-01</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-建立连接"><a href="#1-建立连接" class="headerlink" title="1. 建立连接"></a>1. 建立连接</h3><p>又叫三次握手，老外叫three way handshake，很好记，分别发三个包，syn,syn+ack,ack<br>用tcpdump出来就是如下的形式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">10:24:00.265744 IP (tos 0x10, ttl 64, id 21567, offset 0, flags [DF], proto TCP (6), length 64)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [S], cksum 0xf35a (correct), seq 1754109131, win 65535, options [mss 1460,nop,wscale 5,nop,nop,TS val 811537995 ecr 0,sackOK,eol], length 0</div><div class="line"></div><div class="line">10:24:00.286693 IP (tos 0x0, ttl 52, id 0, offset 0, flags [DF], proto TCP (6), length 60)</div><div class="line">    114.215.206.177.5555 &gt; 192.168.3.10.58544: Flags [S.], cksum 0xafc3 (correct), seq 2349913793, ack 1754109132, win 28960, options [mss 1312,sackOK,TS val 2088043701 ecr 811537995,nop,wscale 7], length 0</div><div class="line"></div><div class="line">10:24:00.286749 IP (tos 0x10, ttl 64, id 762, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [.], cksum 0x3f00 (correct), seq 1, ack 1, win 4103, options [nop,nop,TS val 811538016 ecr 2088043701], length 0</div></pre></td></tr></table></figure>
+<h3 id="2-断开连接"><a href="#2-断开连接" class="headerlink" title="2.断开连接"></a>2.断开连接</h3><p>又叫4次挥手，多了一次是因为tcp是双向全双工的协议，要两边都关一下，然后确认。<br>但我用telnet测试的时候抓到的都是3个报文，并没有第二个的ack包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">10:24:13.326683 IP (tos 0x10, ttl 64, id 41433, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [F.], cksum 0x0c2b (correct), seq 1, ack 1, win 4103, options [nop,nop,TS val 811551028 ecr 2088043701], length 0</div><div class="line"></div><div class="line">10:24:13.347347 IP (tos 0x0, ttl 52, id 53768, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    114.215.206.177.5555 &gt; 192.168.3.10.58544: Flags [F.], cksum 0xe848 (correct), seq 1, ack 2, win 227, options [nop,nop,TS val 2088056762 ecr 811551028], length 0</div><div class="line">    </div><div class="line">10:24:13.347436 IP (tos 0x10, ttl 64, id 47236, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [.], cksum 0xd910 (correct), seq 2, ack 2, win 4103, options [nop,nop,TS val 811551048 ecr 2088056762], length 0</div></pre></td></tr></table></figure>
+<h3 id="3-tcp头部信息图"><a href="#3-tcp头部信息图" class="headerlink" title="3. tcp头部信息图"></a>3. tcp头部信息图</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> 0                            15                              31</div><div class="line">-----------------------------------------------------------------</div><div class="line">|          source port          |       destination port        |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|                        sequence number                        |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|                     acknowledgment number                     |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|  HL   | rsvd  |C|E|U|A|P|R|S|F|        window size            |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|         TCP checksum          |       urgent pointer          |</div><div class="line">-----------------------------------------------------------------</div></pre></td></tr></table></figure>
+<p>source port : 源端口, 1024~65535.<br>destination port : 目的端口,比如常见的80,22等。<br>sequence number: 序列号,用来将数据正确的顺序重新排序。<br>acknowledgment number: 确认号，tcp期望接下来收到的数据段。<br>rsvd: 用于建立和终止会话的控制功能。<br>window size: 窗口大小，发送方愿意接受窗口的大小。<br>tcp头部一共20个字节，相对udp还是复杂很多的，每次传数据之前要简历虚电路，就是上面的三次握手。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/05/01/tcp1/" data-id="cjbiys3h6002cy0ua7cbf7xtl" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-zabbix-windows-network" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -278,139 +394,10 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-mysql-5-7-install" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/17/mysql-5-7-install/">mysql-5.7编译安装</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/01/17/mysql-5-7-install/" class="article-date"><time datetime="2017-01-17T05:54:20.000Z" itemprop="datePublished">2017-01-17</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-编译"><a href="#1-编译" class="headerlink" title="1. 编译"></a>1. 编译</h3><p>下载:<br>直接用国内的源，速度杠杠的:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.17.tar.gz</div></pre></td></tr></table></figure>
-<p>最新源码包是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-5.7.18.tar.gz</div><div class="line">http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-boost-5.7.18.tar.gz</div></pre></td></tr></table></figure>
-<p>依赖(centos7为例):</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum -y install make gcc-c++ cmake bison-devel bison ncurses-devel</div></pre></td></tr></table></figure>
-<p>编译跟5.6稍微有点不一样，依赖新版的boost了。不要cmake时候自动下载，会被墙掉。直接下载boost版本的源码包就行了，剩下的套路跟5.6的一样。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd BUILD</div><div class="line">cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql57  -DWITH_BOOST=../boost ..</div><div class="line">make </div><div class="line">make install</div></pre></td></tr></table></figure>
-<h3 id="2-单实例初始化和运行"><a href="#2-单实例初始化和运行" class="headerlink" title="2.单实例初始化和运行"></a>2.单实例初始化和运行</h3><p>mysql_install_db已经被废弃了。直接用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># bin/mysqld --initialize --user=mysql --datadir=/vdb/mysql1</div><div class="line">2017-06-19T01:18:19.299580Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).</div><div class="line">2017-06-19T01:18:19.458771Z 0 [Warning] InnoDB: New log files created, LSN=45790</div><div class="line">2017-06-19T01:18:19.482412Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.</div><div class="line">2017-06-19T01:18:19.537139Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 2de7b52f-548d-11e7-b57b-52560acdcad4.</div><div class="line">2017-06-19T01:18:19.537944Z 0 [Warning] Gtid table is not ready to be used. Table &apos;mysql.gtid_executed&apos; cannot be opened.</div><div class="line">2017-06-19T01:18:19.538602Z 1 [Note] A temporary password is generated for root@localhost: C#lF1kb*KkV/</div></pre></td></tr></table></figure></p>
-<p>运行，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># cp support-files/mysql.server .</div><div class="line">修改mysql.server中的</div><div class="line">basedir=xxx</div><div class="line">datadir=xxx</div><div class="line"></div><div class="line">修改 /etc/my.cnf 中配置。</div><div class="line">vim /etc/my.cnf</div><div class="line"></div><div class="line"></div><div class="line"># ./mysql.server start </div><div class="line">Starting MySQL.Logging to &apos;/vdb/mysql1/10-205-202-212.err&apos;.  [  OK  ]</div></pre></td></tr></table></figure></p>
-<p>用上面系统生成的随机密码进去，然后修改成自己的密码完成整个初始化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter user root@localhost identified by &apos;123123&apos;;</div></pre></td></tr></table></figure>
-<h3 id="3-多实例部署"><a href="#3-多实例部署" class="headerlink" title="3.多实例部署"></a>3.多实例部署</h3><p>主要是用到了mysqld_multi,要在my.cnf里面填上多个实例的信息，格式如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[mysqld_multi]</div><div class="line">mysqld     = /usr/local/mysql57/bin/mysqld_safe</div><div class="line">mysqladmin = /usr/local/mysql57/bin/mysqladmin</div><div class="line">user       = multi_admin</div><div class="line">password   = my_password</div><div class="line"></div><div class="line">[mysqld2]</div><div class="line">socket     = /tmp/mysql.sock2</div><div class="line">port       = 3307</div><div class="line">pid-file   = /usr/local/mysql57/data2/hostname.pid2</div><div class="line">datadir    = /usr/local/mysql57/data2</div><div class="line">language   = /usr/local/mysql57/share/mysql/english</div><div class="line">user       = unix_user1</div><div class="line"></div><div class="line">[mysqld3]</div><div class="line">mysqld     = /path/to/mysqld_safe</div><div class="line">ledir      = /path/to/mysqld-binary/</div><div class="line">mysqladmin = /path/to/mysqladmin</div><div class="line">socket     = /tmp/mysql.sock3</div><div class="line">port       = 3308</div><div class="line">pid-file   = /usr/local/mysql57/data3/hostname.pid3</div><div class="line">datadir    = /usr/local/mysql57/data3</div><div class="line">language   = /usr/local/mysql57/share/mysql/swedish</div><div class="line">user       = unix_user2</div></pre></td></tr></table></figure>
-<p>用 mysqld_multi –example可以直接查看。很方便,mysqld_multi里面的user和password 主要是用来关闭实例时候用的mysql 用户，所以先要附权限</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GRANT SHUTDOWN ON *.* TO multi_admin@localhost IDENTIFIED BY &apos;password&apos;</div></pre></td></tr></table></figure>
-<p>然后配置上就可以了~很方便。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/01/17/mysql-5-7-install/" data-id="cjbiys3ex0014y0uaz98xzkax" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-mysql-gtid" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/16/mysql-gtid/">mysql-GTID</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/01/16/mysql-gtid/" class="article-date"><time datetime="2017-01-16T10:25:18.000Z" itemprop="datePublished">2017-01-16</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-GTID概念"><a href="#1-GTID概念" class="headerlink" title="1. GTID概念"></a>1. GTID概念</h3><p>简化了很多主从复制上面的问题。不需要像之前版本需要通过binlog的pos来确定从哪开始复制。<br>GTID = source_id:transaction_id<br>source_id是一个mysql自动生成的uuid，在datadir下面的auto.cnf里面,例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">server-uuid=6cdd37fa-d3d8-11e6-b843-00163e0030cf</div></pre></td></tr></table></figure></p>
-<p>transaction_id是事务id，递增的一个序列。连起来标识一个事务。</p>
-<h3 id="2-master上面设置"><a href="#2-master上面设置" class="headerlink" title="2. master上面设置"></a>2. master上面设置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">binlog-format=ROW</div><div class="line">log-slave-updates=true</div><div class="line">gtid-mode=on</div><div class="line">enforce-gtid-consistency=true</div><div class="line">log-bin=master-bin</div><div class="line">log-bin-index=master-bin.index</div><div class="line">server_id = 1</div></pre></td></tr></table></figure>
-<p>主要就是加了gtid-mode,enforce-gtid-consistency</p>
-<h3 id="3-slave设置"><a href="#3-slave设置" class="headerlink" title="3. slave设置"></a>3. slave设置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">server_id = 222</div><div class="line">gtid-mode=on</div><div class="line">log-bin=slave-bin</div><div class="line">log-slave-updates=true</div><div class="line">enforce-gtid-consistency=true</div><div class="line">binlog-format=ROW</div><div class="line">log-bin-index=slave-bin.index</div><div class="line">relay-log=slave1-relay-bin</div></pre></td></tr></table></figure>
-<h3 id="4-grant权限"><a href="#4-grant权限" class="headerlink" title="4. grant权限"></a>4. grant权限</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">CREATE USER &apos;repl&apos;@&apos;%&apos; IDENTIFIED BY &apos;slavepass&apos;;</div><div class="line">grant REPLICATION SLAVE ON *.* TO &apos;repl&apos;@&apos;%&apos;;</div></pre></td></tr></table></figure>
-<h3 id="5-change-master"><a href="#5-change-master" class="headerlink" title="5. change master"></a>5. change master</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">change master to master_host=&apos;10.168.105.153&apos;, master_user=&apos;repl&apos;,master_password=&apos;slavepass&apos;,master_auto_position=1;</div></pre></td></tr></table></figure>
-<h3 id="6-启动slave"><a href="#6-启动slave" class="headerlink" title="6. 启动slave"></a>6. 启动slave</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">start slave;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/01/16/mysql-gtid/" data-id="cjbiys3ez0016y0ua5hk2ubrh" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
-    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/3/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li><a class="page-number" href="/page/2/">2</a></li><li><a class="page-number" href="/page/3/">3</a></li><li class="active"><span class="page-number">4</span></li><li><a class="page-number" href="/page/5/">5</a></li><li><a class="page-number" href="/page/6/">6</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-next" rel="next" href="/page/5/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/3/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li><a class="page-number" href="/page/2/">2</a></li><li><a class="page-number" href="/page/3/">3</a></li><li class="active"><span class="page-number">4</span></li><li><a class="page-number" href="/page/5/">5</a></li><li><a class="page-number" href="/page/6/">6</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/12/">12</a></li><li><a class="page-next" rel="next" href="/page/5/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
   </div>
 
 
@@ -431,7 +418,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -440,7 +427,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -448,7 +435,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -457,6 +444,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
+        </li>
       
         <li>
           <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
@@ -470,14 +465,6 @@ ga('send', 'pageview');
           <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
         </li>
       
-        <li>
-          <a href="/2017/10/11/ensp-install/">ensp安装</a>
-        </li>
-      
-        <li>
-          <a href="/2017/08/14/arp/">arp协议</a>
-        </li>
-      
     </ul>
   </div>
 
@@ -489,7 +476,7 @@ ga('send', 'pageview');
   <footer class="blog-footer">
   <div class="container">
     <div id="footer-info" class="inner">
-      &copy; 2017 QinYueming<br>
+      &copy; 2018 QinYueming<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

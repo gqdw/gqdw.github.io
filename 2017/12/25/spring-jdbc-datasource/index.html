@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>spring jdbc数据源 | 秦悦明的运维笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0. 所有jdbc的先决条件配置数据源，spring里面是配置一个datasource bean。 1. maven依赖需要导入jdbc包，spring包,h2包 1234567891011121314151617&amp;lt;dependency&amp;gt;		&amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;		&amp;lt;artifactId&amp;gt;spr">
+<meta name="keywords" content="java,spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring jdbc数据源">
+<meta property="og:url" content="http://qinyueming.cc/2017/12/25/spring-jdbc-datasource/index.html">
+<meta property="og:site_name" content="秦悦明的运维笔记">
+<meta property="og:description" content="0. 所有jdbc的先决条件配置数据源，spring里面是配置一个datasource bean。 1. maven依赖需要导入jdbc包，spring包,h2包 1234567891011121314151617&amp;lt;dependency&amp;gt;		&amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;		&amp;lt;artifactId&amp;gt;spr">
+<meta property="og:updated_time" content="2018-01-04T12:44:45.263Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring jdbc数据源">
+<meta name="twitter:description" content="0. 所有jdbc的先决条件配置数据源，spring里面是配置一个datasource bean。 1. maven依赖需要导入jdbc包，spring包,h2包 1234567891011121314151617&amp;lt;dependency&amp;gt;		&amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;		&amp;lt;artifactId&amp;gt;spr">
+  
+    <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83411325-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">秦悦明的运维笔记</h1>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          <article id="post-spring-jdbc-datasource" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 class="article-title" itemprop="name">
+      spring jdbc数据源
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/12/25/spring-jdbc-datasource/" class="article-date"><time datetime="2017-12-25T06:39:32.000Z" itemprop="datePublished">2017-12-25</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0-所有jdbc的先决条件"><a href="#0-所有jdbc的先决条件" class="headerlink" title="0. 所有jdbc的先决条件"></a>0. 所有jdbc的先决条件</h3><p>配置数据源，spring里面是配置一个datasource bean。</p>
+<h3 id="1-maven依赖"><a href="#1-maven依赖" class="headerlink" title="1. maven依赖"></a>1. maven依赖</h3><p>需要导入jdbc包，spring包,h2包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;4.0.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line"></div><div class="line">	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-context&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;4.0.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line"></div><div class="line">   	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;com.h2database&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;h2&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.3.175&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<h3 id="2-运行h2数据库"><a href="#2-运行h2数据库" class="headerlink" title="2. 运行h2数据库"></a>2. 运行h2数据库</h3><p>可以网上找h2的二进制包运行，也可以直接在idea里面找到org.h2.tools.Console类运行。<br>用户名sa,密码为空。</p>
+<h3 id="3-创建一个spring-bean配置类，使用DriverManagerDataSource定义一个datasource-bean"><a href="#3-创建一个spring-bean配置类，使用DriverManagerDataSource定义一个datasource-bean" class="headerlink" title="3. 创建一个spring bean配置类，使用DriverManagerDataSource定义一个datasource bean"></a>3. 创建一个spring bean配置类，使用DriverManagerDataSource定义一个datasource bean</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">public class Ch4Configuration &#123;</div><div class="line">    @Bean</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        DriverManagerDataSource dataSource = new DriverManagerDataSource();</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>DriverManagerDataSource还有一个子类SingleConnectionDataSource，该类重复使用相同的连接。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Ch4Configuration &#123;</div><div class="line">    @Bean</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        SingleConnectionDataSource dataSource = new SingleConnectionDataSource();</div><div class="line">        dataSource.setSuppressClose(true);</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-生产环境下使用连接池化的datasource"><a href="#4-生产环境下使用连接池化的datasource" class="headerlink" title="4. 生产环境下使用连接池化的datasource"></a>4. 生产环境下使用连接池化的datasource</h3><p>比如C3P0,或者DBCP，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;commons-dbcp&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;commons-dbcp&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;1.4&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line"></div><div class="line">import org.apache.commons.dbcp.BasicDataSource;</div><div class="line">@Configuration</div><div class="line">public class Ch4ConfigurationForPooledDS1 &#123;</div><div class="line">    </div><div class="line">    @Bean(destroyMethod=&quot;close&quot;)</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        BasicDataSource dataSource = new BasicDataSource();</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;com.mchange&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;c3p0&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;0.9.2.1&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line"></div><div class="line"></div><div class="line">import com.mchange.v2.c3p0.ComboPooledDataSource;</div><div class="line">@Configuration</div><div class="line">public class Ch4ConfigurationForPooledDS2 &#123;</div><div class="line">    </div><div class="line">    @Bean(destroyMethod=&quot;close&quot;)</div><div class="line">    public DataSource dataSource() throws Exception &#123;</div><div class="line">        ComboPooledDataSource dataSource = new ComboPooledDataSource();</div><div class="line">        dataSource.setDriverClass(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setJdbcUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUser(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5-获取connection"><a href="#5-获取connection" class="headerlink" title="5. 获取connection"></a>5. 获取connection</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class Main &#123;</div><div class="line">	public static void main(String[] args) throws SQLException &#123;</div><div class="line">		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(Ch4Configuration.class);</div><div class="line">		DataSource dataSource = applicationContext.getBean(&quot;dataSource&quot;, DataSource.class);</div><div class="line">		</div><div class="line">		Connection connection = dataSource.getConnection();</div><div class="line">		System.out.println(connection.isClosed());</div><div class="line">		connection.close();</div><div class="line">		System.out.println(connection.isClosed());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所有datasource 都实现了getConnection()接口，直接调用即可。这样我们就通过jdbc 数据源，获取了数据库连接。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/12/25/spring-jdbc-datasource/" data-id="cjc0hj2e300010kua4g628s7q" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2017/12/23/spring-docker/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">spring boot与docker结合</span>
+    </a>
+  </li>
+  
+  
+  <li role="presentation">
+    <a href="/2017/12/25/spring-jdbcTemplate/" id="article-nav-newer" class="article-nav-link-wrap">
+      <span class="article-nav-link-title">spring jdbcTemplate配置</span>
+      <i class="fa fa-chevron-right pull-right"></i>
+    </a>
+  </li>
+  
+</ul>
+
+
+  
+</article>
+
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>weclome to qym's blog</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
+        </li>
+      
+        <li>
+          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2018 QinYueming<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>

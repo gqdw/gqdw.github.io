@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>spring jdbcTemplate配置 | 秦悦明的运维笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. 创建Account类和AccountDao接口1234567public class Account &amp;#123;    private long id;    private String ownerName;    private double balance;    private Date accessTime;    private boolean locked;    ... 1">
+<meta name="keywords" content="java,spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring jdbcTemplate配置">
+<meta property="og:url" content="http://qinyueming.cc/2017/12/25/spring-jdbcTemplate/index.html">
+<meta property="og:site_name" content="秦悦明的运维笔记">
+<meta property="og:description" content="1. 创建Account类和AccountDao接口1234567public class Account &amp;#123;    private long id;    private String ownerName;    private double balance;    private Date accessTime;    private boolean locked;    ... 1">
+<meta property="og:updated_time" content="2018-01-04T12:44:45.268Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring jdbcTemplate配置">
+<meta name="twitter:description" content="1. 创建Account类和AccountDao接口1234567public class Account &amp;#123;    private long id;    private String ownerName;    private double balance;    private Date accessTime;    private boolean locked;    ... 1">
+  
+    <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83411325-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">秦悦明的运维笔记</h1>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          <article id="post-spring-jdbcTemplate" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 class="article-title" itemprop="name">
+      spring jdbcTemplate配置
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/12/25/spring-jdbcTemplate/" class="article-date"><time datetime="2017-12-25T08:44:51.000Z" itemprop="datePublished">2017-12-25</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-创建Account类和AccountDao接口"><a href="#1-创建Account类和AccountDao接口" class="headerlink" title="1. 创建Account类和AccountDao接口"></a>1. 创建Account类和AccountDao接口</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class Account &#123;</div><div class="line">    private long id;</div><div class="line">    private String ownerName;</div><div class="line">    private double balance;</div><div class="line">    private Date accessTime;</div><div class="line">    private boolean locked;</div><div class="line">    ...</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public interface AccountDao &#123;</div><div class="line">    public void insert(Account account);</div><div class="line">    public void update(Account account);</div><div class="line">    public void update(List&lt;Account&gt; accounts);</div><div class="line">    public void delete(long accountId);</div><div class="line">    public Account find(long accountId);</div><div class="line">    public List&lt;Account&gt; find(List&lt;Long&gt; accountIds);</div><div class="line">    public List&lt;Account&gt; find(String ownerName);</div><div class="line">    public List&lt;Account&gt; find(boolean locked);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-实现AccountDao接口的AccountDaoJdbcImpl类"><a href="#2-实现AccountDao接口的AccountDaoJdbcImpl类" class="headerlink" title="2. 实现AccountDao接口的AccountDaoJdbcImpl类"></a>2. 实现AccountDao接口的AccountDaoJdbcImpl类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class AccountDaoJdbcImpl implements AccountDao &#123;</div><div class="line"></div><div class="line">	private JdbcTemplate jdbcTemplate;</div><div class="line"></div><div class="line">	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) &#123;</div><div class="line">		this.jdbcTemplate = jdbcTemplate;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void insert(Account account) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-使用jdbcTemplate类定义jdbcTemplate-Bean-并使用dataSource-Bean-满足DataSource其依赖"><a href="#3-使用jdbcTemplate类定义jdbcTemplate-Bean-并使用dataSource-Bean-满足DataSource其依赖" class="headerlink" title="3. 使用jdbcTemplate类定义jdbcTemplate Bean,并使用dataSource Bean 满足DataSource其依赖"></a>3. 使用jdbcTemplate类定义jdbcTemplate Bean,并使用dataSource Bean 满足DataSource其依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public DataSource dataSource() &#123;</div><div class="line">    DriverManagerDataSource dataSource = new DriverManagerDataSource();</div><div class="line">    dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">    dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">    dataSource.setUsername(&quot;sa&quot;);</div><div class="line">    dataSource.setPassword(&quot;&quot;);</div><div class="line">    return dataSource;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Bean</div><div class="line">public JdbcTemplate jdbcTemplate() &#123;</div><div class="line">    JdbcTemplate jdbcTemplate = new JdbcTemplate();</div><div class="line">    jdbcTemplate.setDataSource(dataSource());</div><div class="line">    return jdbcTemplate;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-使用AccountDaoJdbcImpl创建accountDao-bean-并将jdbcTemplate-Bean注入其中"><a href="#4-使用AccountDaoJdbcImpl创建accountDao-bean-并将jdbcTemplate-Bean注入其中" class="headerlink" title="4. 使用AccountDaoJdbcImpl创建accountDao bean,并将jdbcTemplate Bean注入其中:"></a>4. 使用AccountDaoJdbcImpl创建accountDao bean,并将jdbcTemplate Bean注入其中:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public AccountDao accountDao() &#123;</div><div class="line">    AccountDaoJdbcImpl accountDao = new AccountDaoJdbcImpl();</div><div class="line">    accountDao.setJdbcTemplate(jdbcTemplate());</div><div class="line">    return accountDao;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5-main中查找accountDao-bean"><a href="#5-main中查找accountDao-bean" class="headerlink" title="5. main中查找accountDao bean"></a>5. main中查找accountDao bean</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AccountDao accountDao = applicationContext.getBean(AccountDao.class);</div></pre></td></tr></table></figure>
+<p>之后便意味着可以在accountdaojdbcimpl中使用jdbctemplate 了。</p>
+<h3 id="6-使用jdbctemplate运行查询"><a href="#6-使用jdbctemplate运行查询" class="headerlink" title="6. 使用jdbctemplate运行查询"></a>6. 使用jdbctemplate运行查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public Account find(long accountId) &#123;</div><div class="line">	return jdbcTemplate</div><div class="line">			.queryForObject(</div><div class="line">					&quot;select id,owner_name,balance,access_time,locked from account where id = ?&quot;,</div><div class="line">					new RowMapper&lt;Account&gt;() &#123;</div><div class="line">						public Account mapRow(ResultSet rs, int rowNum)</div><div class="line">								throws SQLException &#123;</div><div class="line">							Account account = new Account();</div><div class="line">							account.setId(rs.getLong(&quot;id&quot;));</div><div class="line">							account.setOwnerName(rs.getString(&quot;owner_name&quot;));</div><div class="line">							account.setBalance(rs.getDouble(&quot;balance&quot;));</div><div class="line">							account.setAccessTime(rs</div><div class="line">									.getTimestamp(&quot;access_time&quot;));</div><div class="line">							account.setLocked(rs.getBoolean(&quot;locked&quot;));</div><div class="line">							return account;</div><div class="line">						&#125;</div><div class="line"></div><div class="line">					&#125;, accountId);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用jdbctemplate的 queryforobject方法。</p>
+<p>调用参数是 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public &lt;T&gt; T queryForObject(String sql, RowMapper&lt;T&gt; rowMapper, Object... args) throws DataAccessException &#123;</div><div class="line">     List&lt;T&gt; results = (List)this.query((String)sql, (Object[])args, (ResultSetExtractor)(new RowMapperResultSetExtractor(rowMapper, 1)));</div><div class="line">     return DataAccessUtils.requiredSingleResult(results);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>第一个参数是string的sql 语句，sql语句里面用问号做了占位符。第二个是RowMapper的接口，这里创建了一个匿名类，第三个之后是可变参数列表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface RowMapper&lt;T&gt; &#123;</div><div class="line">    T mapRow(ResultSet var1, int var2) throws SQLException;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>RowMapper<t> 里面就一个函数，mapRow,从ResultSet对象中获取值填充属性。比如这里的，new了一个Account对象，然后把ResultSet里面的属性填充一下就行了。</t></p>
+<p>在main中这样调用即可:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">AccountDao accountDao = applicationContext.getBean(AccountDao.class);</div><div class="line">Account account = accountDao.find(100L);</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/12/25/spring-jdbcTemplate/" data-id="cjc0hj2dz00000kuaxe2p0tk9" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2017/12/25/spring-jdbc-datasource/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">spring jdbc数据源</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
+</article>
+
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>weclome to qym's blog</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
+        </li>
+      
+        <li>
+          <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
+        </li>
+      
+        <li>
+          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2018 QinYueming<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>
