@@ -88,6 +88,192 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-vector1" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/18/vector1/">c++ 标准库string和vector (c++ primer4th 读书笔记)</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/05/18/vector1/" class="article-date"><time datetime="2017-05-18T13:28:58.000Z" itemprop="datePublished">2017-05-18</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-string"><a href="#1-string" class="headerlink" title="1. string"></a>1. string</h3><p>字符串。相比c语言里面的char[]可是好用多了。</p>
+<h3 id="2-string的4种初始化"><a href="#2-string的4种初始化" class="headerlink" title="2. string的4种初始化"></a>2. string的4种初始化</h3><ol>
+<li>string s1;</li>
+<li>string s2(s1);</li>
+<li>string s3(“value”);</li>
+<li>string s4(n, ‘c’);</li>
+</ol>
+<h3 id="3-string的操作"><a href="#3-string的操作" class="headerlink" title="3. string的操作"></a>3. string的操作</h3><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s.empty()</td>
+<td>是否为空串，返回true或者false  if (st.emtyp()) ..</td>
+</tr>
+<tr>
+<td>s.size()</td>
+<td>字符串长度，相当于java里面的length()</td>
+</tr>
+<tr>
+<td>s[n]</td>
+<td>数组一样的用法</td>
+</tr>
+<tr>
+<td>s1 + s2</td>
+<td>连成一个新的字符串，返回</td>
+</tr>
+<tr>
+<td>s1 = s2</td>
+<td>s1的内容替换成s2的副本</td>
+</tr>
+<tr>
+<td>v1 == v2</td>
+<td>比较内容是否相等</td>
+</tr>
+<tr>
+<td>&gt; &lt; !=</td>
+<td>比较每个字符，比较字符串会像c语言里面的调用strcmp？不存在的。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-string-size-type类型"><a href="#4-string-size-type类型" class="headerlink" title="4. string::size_type类型"></a>4. string::size_type类型</h3><p>size()返回的是一个string::size_type类型的值，也就是说本质是用for(int i=0; i&lt; s.size();i++)是不精确的，因为size_type是一个unsigned型的值，int会丢失精度。</p>
+<h3 id="5-遍历string"><a href="#5-遍历string" class="headerlink" title="5. 遍历string"></a>5. 遍历string</h3><p>正确的姿势应该是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for(string::size_type ix = 0; ix != str.size() ;++ix)</div><div class="line">	str[ix] = &apos;*&apos;;</div></pre></td></tr></table></figure>
+<h3 id="6-vector类型"><a href="#6-vector类型" class="headerlink" title="6. vector类型"></a>6. vector类型</h3><p>可变数组，大小可以动态变化，用起来非常方便，个人感觉跟java里面的arraylist类似，而且还是一个模版，还是一个容器，可以包含其他对象。<br>使用之前先:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#include &lt;vector&gt;</div><div class="line">using std::vector;</div></pre></td></tr></table></figure>
+<h3 id="7-vector的4种初始化"><a href="#7-vector的4种初始化" class="headerlink" title="7 vector的4种初始化"></a>7 vector的4种初始化</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vector<t> v1;</t></td>
+<td>保存类型为T对象</td>
+</tr>
+<tr>
+<td>vector<t> v2(v1);</t></td>
+<td>v2是v1的一个副本</td>
+</tr>
+<tr>
+<td>vector<t> v3(n, i);</t></td>
+<td>v3包含n个i</td>
+</tr>
+<tr>
+<td>vector<t> v4(n)</t></td>
+<td>初始化n个副本的T</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vector&lt;int&gt; fvec(10);</div></pre></td></tr></table></figure>
+<p>创建了10个int的vector，每个是0，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vector&lt;string&gt; svec(10);</div></pre></td></tr></table></figure>
+<p>创建了10个string，同时调用默认的构造函数进行初始化，string默认的构造函数是空串。</p>
+<h3 id="8-vector对象的操作"><a href="#8-vector对象的操作" class="headerlink" title="8. vector对象的操作"></a>8. vector对象的操作</h3><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v.empty()</td>
+<td></td>
+</tr>
+<tr>
+<td>v.size()</td>
+<td></td>
+</tr>
+<tr>
+<td>v.push_back(t)</td>
+<td>末尾增加一个t的元素</td>
+</tr>
+<tr>
+<td>v[n]</td>
+<td>下标操作</td>
+</tr>
+<tr>
+<td>v1 = v2</td>
+<td>赋值，替换为v2的副本</td>
+</tr>
+<tr>
+<td>v1 == v2</td>
+<td></td>
+</tr>
+<tr>
+<td>!= ,&lt;, &lt;= ,&gt;=, &gt;</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="9-vector的size"><a href="#9-vector的size" class="headerlink" title="9. vector的size"></a>9. vector的size</h3><p>同样返回的是size_type类型: vector<int>::size_type。不过说实话我是经常写成int。。这个习惯要改。</int></p>
+<h3 id="10-添加元素"><a href="#10-添加元素" class="headerlink" title="10.添加元素"></a>10.添加元素</h3><p>要用push_back()，千万不能用下标操作:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vector&lt;int&gt; v;</div><div class="line">for(vector&lt;int&gt;::size_type ix=0;ix != 10; ++ix)</div><div class="line">	v[ix] = ix;</div></pre></td></tr></table></figure>
+<p>这是错误的，下标操作只能获取已存在的元素，正确应该写成:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for(vector&lt;int&gt;::size_type ix = 0; ix != 10; ++ix)</div><div class="line">	v.push_back(ix);</div></pre></td></tr></table></figure>
+<h3 id="11-迭代器"><a href="#11-迭代器" class="headerlink" title="11.迭代器"></a>11.迭代器</h3><p>除了用下标以外，标准库还提供了另一种访问元素的方法:使用迭代器 iterator</p>
+<h3 id="12-iterator类型"><a href="#12-iterator类型" class="headerlink" title="12.iterator类型"></a>12.iterator类型</h3><p>每种容器都有iterator类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vector&lt;int&gt;::iterator iter;</div></pre></td></tr></table></figure></p>
+<h3 id="13-begin和end操作"><a href="#13-begin和end操作" class="headerlink" title="13. begin和end操作"></a>13. begin和end操作</h3><p>分别指向第一个元素和末端元素的下一个，end()不指向任何元素，只是起到了哨兵的作用。</p>
+<h3 id="14-自增，解引用"><a href="#14-自增，解引用" class="headerlink" title="14.自增，解引用"></a>14.自增，解引用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">++iter ;</div></pre></td></tr></table></figure>
+<p>向前移动一个位置，</p>
+<p>*iter 用迭代器访问当前指向的元素.</p>
+<p>连起来，遍历vector就可以这样写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for(vector&lt;int&gt;::iterator iter = ivec.begin(); iter!= ivec.end();++iter)</div><div class="line">	*iter = 0;</div></pre></td></tr></table></figure>
+<p>c++11里面有个auto类型可以简化iter的定义工作:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for(auto iter = ivec.begin();iter!= ivec.end(); ++iter)</div><div class="line">	*iter = 0;</div></pre></td></tr></table></figure>
+<p>c++也发展迅猛，都发展到c++14了,17正在发展中。<br>以上就是string和vector的总结，内容跟c++ primer里面的相似度很高，哈哈，相信lippman是不会怪我的~</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/05/18/vector1/" data-id="cjc3267jz002vtouatplx6k09" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c++</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-algs4" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -134,7 +320,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/05/18/algs4/" data-id="cjbiys3da0004y0ua6azvdzko" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/05/18/algs4/" data-id="cjc3267g60004toual5jjouzu" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -190,7 +376,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/05/01/tcp1/" data-id="cjbiys3h6002cy0ua7cbf7xtl" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/05/01/tcp1/" data-id="cjc3267ju002otoua4eejscbu" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -258,7 +444,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/04/26/zabbix-windows-network/" data-id="cjbiys3hu002wy0uajsnf56mk" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/04/26/zabbix-windows-network/" data-id="cjc3267k80032touacuk0janq" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -317,74 +503,13 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/04/08/salt初探/" data-id="cjbiys3gv0022y0uaxra94xt6" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/04/08/salt初探/" data-id="cjc3267jg002btoua0d06ul05" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/salt/">salt</a></li></ul>
 
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-sre-job" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/26/sre-job/">SRE职责</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/02/26/sre-job/" class="article-date"><time datetime="2017-02-26T07:51:30.000Z" itemprop="datePublished">2017-02-26</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="SRE-职责"><a href="#SRE-职责" class="headerlink" title="SRE 职责"></a>SRE 职责</h2><ol>
-<li>可用性改进</li>
-<li>延迟优化</li>
-<li>性能优化</li>
-<li>效率优化</li>
-<li>变更管理</li>
-<li>监控</li>
-<li>紧急事务处理</li>
-<li>容量规划与管理</li>
-</ol>
-<p>摘自[SRE google运维解密]，2017年努力践行SRE。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/02/26/sre-job/" data-id="cjbiys3h20027y0ua52uevcj9" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
 
     </footer>
   </div>
@@ -418,7 +543,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -427,7 +552,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -435,7 +560,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -444,6 +569,10 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/04/redis-basic/">redis基础</a>
+        </li>
       
         <li>
           <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
@@ -459,10 +588,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
-        </li>
-      
-        <li>
-          <a href="/2017/11/12/asm-test/">linux下汇编语言编程</a>
         </li>
       
     </ul>
