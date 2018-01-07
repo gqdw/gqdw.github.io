@@ -88,6 +88,98 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-queue" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/21/queue/">c++队列 queue</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/05/21/queue/" class="article-date"><time datetime="2017-05-21T10:57:59.000Z" itemprop="datePublished">2017-05-21</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-队列"><a href="#1-队列" class="headerlink" title="1. 队列"></a>1. 队列</h3><p>类比生活中，就是排队的现象，先进先出。</p>
+<h3 id="2-c-中的队列"><a href="#2-c-中的队列" class="headerlink" title="2. c++中的队列"></a>2. c++中的队列</h3><p>不用自己实现，stl帮你实现了。只需要:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;quque&gt;</div></pre></td></tr></table></figure>
+<p>queue支持下面几种操作.</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>q.empty()</td>
+<td>判断是否为空</td>
+</tr>
+<tr>
+<td>q.size()</td>
+<td>大小</td>
+</tr>
+<tr>
+<td>q.pop()</td>
+<td>头部删除元素</td>
+</tr>
+<tr>
+<td>q.front()</td>
+<td>返回头部的元素</td>
+</tr>
+<tr>
+<td>q.push(item)</td>
+<td>从尾部添加元素</td>
+</tr>
+</tbody>
+</table>
+<p>非常简洁。</p>
+<h3 id="3-计算机中的例子"><a href="#3-计算机中的例子" class="headerlink" title="3. 计算机中的例子"></a>3. 计算机中的例子</h3><p>最经典的莫过于cpu多进程模型了，n个进程，每消耗X的cpu时间，就切换到其他进程去执行，看上去计算机是多进程同时在跑的。</p>
+<p>aoj里面有个经典的例子:</p>
+<p><a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_B" target="_blank" rel="external">http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_B</a></p>
+<p>我自己的实现是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;queue&gt;</div><div class="line">using namespace std;</div><div class="line"></div><div class="line">struct pp</div><div class="line">&#123;</div><div class="line">	string name;</div><div class="line">	int time;	</div><div class="line">&#125;;</div><div class="line">int main(int argc, char const *argv[])</div><div class="line">&#123;</div><div class="line">	int n, q ;</div><div class="line">	cin&gt;&gt;n&gt;&gt;q;</div><div class="line">	queue&lt;pp&gt; que;</div><div class="line">	for (int i = 0; i &lt; n; ++i)</div><div class="line">	&#123;</div><div class="line">		pp x;</div><div class="line">		cin&gt;&gt;x.name&gt;&gt;x.time;</div><div class="line">		que.push(x);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// debug print it</div><div class="line">	int now=0;</div><div class="line">	while(!que.empty())</div><div class="line">	&#123;</div><div class="line">		pp a = que.front();</div><div class="line">		// &gt;100</div><div class="line">		if (a.time - q&gt;0 )</div><div class="line">		&#123;</div><div class="line">			now += q ;</div><div class="line">			a.time -= q;</div><div class="line">			// debug </div><div class="line">			// cout &lt;&lt; &quot;name: &quot;&lt;&lt;a.name&lt;&lt; &quot;\ta.spentime: &quot;&lt;&lt; a.time + now&lt;&lt; &quot; \n&quot;; </div><div class="line">			// cout &lt;&lt; &quot;now: &quot; &lt;&lt; now &lt;&lt; endl;</div><div class="line">			que.pop();</div><div class="line">			que.push(a);</div><div class="line">		&#125;</div><div class="line">		// &lt; 100</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			now += a.time;</div><div class="line">			// cout &lt;&lt; &quot;name: &quot;&lt;&lt;a.name&lt;&lt; &quot;\ta.spentime: &quot;&lt;&lt; now + a.time&lt;&lt; &quot; \n&quot;; </div><div class="line">			// cout &lt;&lt; &quot;now: &quot; &lt;&lt; now &lt;&lt; endl;</div><div class="line">			cout &lt;&lt; a.name &lt;&lt; &quot; &quot; &lt;&lt; now &lt;&lt; endl;</div><div class="line">			que.pop();</div><div class="line">		&#125;</div><div class="line">		// cout &lt;&lt; &quot;name: &quot; &lt;&lt; que.front().name &lt;&lt; &quot;\ttime: &quot; &lt;&lt; que.front().time&lt;&lt; endl;</div><div class="line">		// que.pop();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>算是一个queue的典型用法了。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/05/21/queue/" data-id="cjc43julw001yxcuaz30yoec8" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c++</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-vector1" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -258,7 +350,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/05/18/vector1/" data-id="cjc3267jz002vtouatplx6k09" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/05/18/vector1/" data-id="cjc43jumv002yxcuar7224nbk" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -320,7 +412,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/05/18/algs4/" data-id="cjc3267g60004toual5jjouzu" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/05/18/algs4/" data-id="cjc43jujf0004xcuadsec3zs3" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -376,7 +468,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/05/01/tcp1/" data-id="cjc3267ju002otoua4eejscbu" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/05/01/tcp1/" data-id="cjc43jun00030xcuazwp6myeo" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -444,71 +536,12 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/04/26/zabbix-windows-network/" data-id="cjc3267k80032touacuk0janq" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2017/04/26/zabbix-windows-network/" data-id="cjc43jun20033xcuaia54nfj7" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zabbix/">zabbix</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-salt初探" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/08/salt初探/">自动化工具saltstack初探</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/04/08/salt初探/" class="article-date"><time datetime="2017-04-08T06:07:53.000Z" itemprop="datePublished">2017-04-08</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-最早接触"><a href="#1-最早接触" class="headerlink" title="1. 最早接触"></a>1. 最早接触</h3><p>最早接触是在2012年左右，当时我记得是在epel包里，安装起来也很方便，当时就会一些简单的cmd.run，这很easy，相当于pssh那种批量执行命令的用法，如果是那样，就会发挥不出他的优势。</p>
-<h3 id="2-salt的优劣势"><a href="#2-salt的优劣势" class="headerlink" title="2. salt的优劣势"></a>2. salt的优劣势</h3><h4 id="2-1agent-need"><a href="#2-1agent-need" class="headerlink" title="2.1agent need."></a>2.1agent need.</h4><p>主要是和另一个优秀的自动化工具ansible相比的，salt最大的劣势是需要安装client，也就是salt minion，这会让他看起来比较重，当然现在salt里面有salt-ssh， 也有agentless 的应用。但是一般还是会安装他的客户端。</p>
-<h4 id="2-2-support-windows"><a href="#2-2-support-windows" class="headerlink" title="2.2 support windows."></a>2.2 support windows.</h4><p>还一个好处是对windows的支持较好。要让ansible支持windows需要安装powershell3.0 一般win2008都没有安装的，而且生产服务器不让重启，windows上面安装powershell是重启生效的。<br>salt在windows下面安装就比较easy，直接运行exe下一步下一步设置master地址，minion id然后启动服务就妥了，而且不需要重启服务器,服务起来以后会主动连master，salt-key accept即可，非常方便。</p>
-<h4 id="2-3-速度快"><a href="#2-3-速度快" class="headerlink" title="2.3 速度快"></a>2.3 速度快</h4><p>因为他安装minion以后就会保持一个长连接，master下发命令到zeromq，然后minion会受到这个订阅信息，之后执行操作，并非处理很快，在大并发下多了明显感觉比ansbile快很多。</p>
-<h3 id="3-配置文件"><a href="#3-配置文件" class="headerlink" title="3.配置文件"></a>3.配置文件</h3><p>之前就比较头痛他的配置文件sls，但是写贯了ansible的yml，发现他两真差不多。unless比when好用!</p>
-<h3 id="4-一些注意点"><a href="#4-一些注意点" class="headerlink" title="4.一些注意点"></a>4.一些注意点</h3><h4 id="4-1-防火墙配置"><a href="#4-1-防火墙配置" class="headerlink" title="4.1 防火墙配置"></a>4.1 防火墙配置</h4><p>只需要在master端开放4505，4506两个端口，minion的不需要做特别的限制，但是出口OUTPUT链别做限制，我以前在shopex，机器的OUTPUT都会做规则的。</p>
-<h4 id="4-2-文件位置"><a href="#4-2-文件位置" class="headerlink" title="4.2 文件位置"></a>4.2 文件位置</h4><p>比较强势，必须在/srv下面存放，并不会搜索当前目录下的sls。用惯ansible的要稍微注意一下。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/04/08/salt初探/" data-id="cjc3267jg002btoua0d06ul05" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/salt/">salt</a></li></ul>
 
 
     </footer>
@@ -543,7 +576,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -552,7 +585,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 12px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -560,7 +593,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -569,6 +602,10 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/06/redis-benchmark-with-ssdb/">redis与ssdb对比压测</a>
+        </li>
       
         <li>
           <a href="/2018/01/04/redis-basic/">redis基础</a>
@@ -584,10 +621,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
         </li>
       
     </ul>

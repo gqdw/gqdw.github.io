@@ -3,14 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: tcp | 秦悦明的运维笔记</title>
+  <title>redis与ssdb对比压测 | 秦悦明的运维笔记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="秦悦明的运维笔记">
-<meta property="og:url" content="http://qinyueming.cc/tags/tcp/index.html">
+  <meta name="description" content="1. ssdb简介“一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.”官网上面是这么说的。个人理解是一个兼容redis数据结构，底层用leveldb的nosql数据库。 2. ssdb安装1234567yum install -y autoconf gcc-c++wget --no-check-certificate https://github.com/ideawu/">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis与ssdb对比压测">
+<meta property="og:url" content="http://qinyueming.cc/2018/01/06/redis-benchmark-with-ssdb/index.html">
 <meta property="og:site_name" content="秦悦明的运维笔记">
+<meta property="og:description" content="1. ssdb简介“一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.”官网上面是这么说的。个人理解是一个兼容redis数据结构，底层用leveldb的nosql数据库。 2. ssdb安装1234567yum install -y autoconf gcc-c++wget --no-check-certificate https://github.com/ideawu/">
+<meta property="og:updated_time" content="2018-01-07T08:07:04.481Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="秦悦明的运维笔记">
+<meta name="twitter:title" content="redis与ssdb对比压测">
+<meta name="twitter:description" content="1. ssdb简介“一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.”官网上面是这么说的。个人理解是一个兼容redis数据结构，底层用leveldb的nosql数据库。 2. ssdb安装1234567yum install -y autoconf gcc-c++wget --no-check-certificate https://github.com/ideawu/">
   
     <link rel="alternate" href="/atom.xml" title="秦悦明的运维笔记" type="application/atom+xml">
   
@@ -86,40 +91,182 @@ ga('send', 'pageview');
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
+          <article id="post-redis-benchmark-with-ssdb" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
     
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/08/tcp-status/">tcp状态</a>
+    <h1 class="article-title" itemprop="name">
+      redis与ssdb对比压测
     </h1>
   
 
 
+  </header>
+
+  <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2017/08/08/tcp-status/" class="archive-article-date"><time datetime="2017-08-08T05:52:04.000Z" itemprop="datePublished">August 8th</time></a>
+  <a href="/2018/01/06/redis-benchmark-with-ssdb/" class="article-date"><time datetime="2018-01-06T13:21:41.000Z" itemprop="datePublished">2018-01-06</time></a>
 </div>
 
-  </header>
-</article>
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-ssdb简介"><a href="#1-ssdb简介" class="headerlink" title="1. ssdb简介"></a>1. ssdb简介</h3><p>“一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.”官网上面是这么说的。<br>个人理解是一个兼容redis数据结构，底层用leveldb的nosql数据库。</p>
+<h3 id="2-ssdb安装"><a href="#2-ssdb安装" class="headerlink" title="2. ssdb安装"></a>2. ssdb安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">yum install -y autoconf gcc-c++</div><div class="line">wget --no-check-certificate https://github.com/ideawu/ssdb/archive/master.zip</div><div class="line">unzip master</div><div class="line">cd ssdb-master</div><div class="line">make</div><div class="line"># optional, install ssdb in /usr/local/ssdb</div><div class="line">make install</div></pre></td></tr></table></figure>
+<p>先得把gcc-c++安装好。如果有问题，目录删了重新编译。。如果说在编译鲁棒性上面redis说完虐ssdb，应该没人会反对吧。</p>
+<h3 id="3-配置"><a href="#3-配置" class="headerlink" title="3. 配置"></a>3. 配置</h3><p>基本都是默认配置，redis测了开aof的和不开aof，当然开aof qps会下降一些，后面有详细数据。<br>ssdb也是默认配置，开了binlog。<br>注意一下redis对内核设置有要求:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sysctl vm.overcommit_memory=1</div><div class="line">echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</div></pre></td></tr></table></figure>
+<p>两个版本分别为 4.0.6 和1.9.6。<br>机器是在8核16G的机器上面测的。</p>
+<h3 id="4-压测注意事项"><a href="#4-压测注意事项" class="headerlink" title="4. 压测注意事项"></a>4. 压测注意事项</h3><p>很有意思的是2个程序都自带了压测工具，redis的叫redis-benchmark，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">Usage: redis-benchmark [-h &lt;host&gt;] [-p &lt;port&gt;] [-c &lt;clients&gt;] [-n &lt;requests&gt;] [-k &lt;boolean&gt;]</div><div class="line"></div><div class="line"> -h &lt;hostname&gt;      Server hostname (default 127.0.0.1)</div><div class="line"> -p &lt;port&gt;          Server port (default 6379)</div><div class="line"> -s &lt;socket&gt;        Server socket (overrides host and port)</div><div class="line"> -a &lt;password&gt;      Password for Redis Auth</div><div class="line"> -c &lt;clients&gt;       Number of parallel connections (default 50)</div><div class="line"> -n &lt;requests&gt;      Total number of requests (default 100000)</div><div class="line"> -d &lt;size&gt;          Data size of SET/GET value in bytes (default 3)</div><div class="line"> --dbnum &lt;db&gt;       SELECT the specified db number (default 0)</div><div class="line"> -k &lt;boolean&gt;       1=keep alive 0=reconnect (default 1)</div><div class="line"> -r &lt;keyspacelen&gt;   Use random keys for SET/GET/INCR, random values for SADD</div><div class="line">  Using this option the benchmark will expand the string __rand_int__</div><div class="line">  inside an argument with a 12 digits number in the specified range</div><div class="line">  from 0 to keyspacelen-1. The substitution changes every time a command</div><div class="line">  is executed. Default tests use this to hit random keys in the</div><div class="line">  specified range.</div><div class="line"> -P &lt;numreq&gt;        Pipeline &lt;numreq&gt; requests. Default 1 (no pipeline).</div><div class="line"> -e                 If server replies with errors, show them on stdout.</div><div class="line">                    (no more than 1 error per second is displayed)</div><div class="line"> -q                 Quiet. Just show query/sec values</div><div class="line"> --csv              Output in CSV format</div><div class="line"> -l                 Loop. Run the tests forever</div><div class="line"> -t &lt;tests&gt;         Only run the comma separated list of tests. The test</div><div class="line">                    names are the same as the ones produced as output.</div><div class="line"> -I                 Idle mode. Just open N idle connections and wait.</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">ssdb-bench - SSDB benchmark tool, 1.9.6</div><div class="line">Copyright (c) 2013-2015 ssdb.io</div><div class="line"></div><div class="line">Usage:</div><div class="line">    tools/ssdb-bench [ip] [port] [requests] [clients]</div><div class="line"></div><div class="line">Options:</div><div class="line">    ip          server ip (default 127.0.0.1)</div><div class="line">    port        server port (default 8888)</div><div class="line">    requests    Total number of requests (default 10000)</div><div class="line">    clients     Number of parallel connections (default 50)</div></pre></td></tr></table></figure>
+<p>注意，client都是开50个线程，request却差了10倍。redis默认是10w，ssdb默认是1w，所以ssdb测时候指定了10w个连接。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis-bench</div><div class="line">tools/ssdb-bench 127.0.0.1 8888 100000 50</div></pre></td></tr></table></figure>
+<h3 id="5-结论"><a href="#5-结论" class="headerlink" title="5. 结论"></a>5. 结论</h3><p>ssdb的结果:</p>
+<p>redis:</p>
+<table>
+<thead>
+<tr>
+<th>PING_INLINE</th>
+<th>PING_BULK</th>
+<th>SET</th>
+<th>GET</th>
+<th>INCR</th>
+<th>LPUSH</th>
+<th>RPUSH</th>
+<th>LPOP</th>
+<th>RPOP</th>
+<th>SADD</th>
+<th>HSET</th>
+<th>SPOP</th>
+<th>LPUSH</th>
+<th>LRANGE_100</th>
+<th>LRANGE_300</th>
+<th>LRANGE_500</th>
+<th>LRANGE_600</th>
+<th>MSET</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>152207.00</td>
+<td>137741.05</td>
+<td>120192.30</td>
+<td>141843.97</td>
+<td>168634.06</td>
+<td>179211.45</td>
+<td>140056.03</td>
+<td>150150.14</td>
+<td>136798.91</td>
+<td>144717.80</td>
+<td>132978.73</td>
+<td>142653.36</td>
+<td>173010.38</td>
+<td>49236.83</td>
+<td>20898.64</td>
+<td>15415.45</td>
+<td>11823.13</td>
+<td>116414.43</td>
+</tr>
+<tr>
+<td>146627.56</td>
+<td>158478.61</td>
+<td>162866.44</td>
+<td>149031.30</td>
+<td>147275.41</td>
+<td>149031.30</td>
+<td>169491.53</td>
+<td>175438.59</td>
+<td>163398.70</td>
+<td>166112.95</td>
+<td>142045.45</td>
+<td>159489.64</td>
+<td>152905.20</td>
+<td>63856.96</td>
+<td>23218.02</td>
+<td>14925.37</td>
+<td>10511.93</td>
+<td>74515.65</td>
+</tr>
+</tbody>
+</table>
+<p>第二行是开了aof的数据，set反而高了。</p>
+<p>ssdb:</p>
+<table>
+<thead>
+<tr>
+<th>set</th>
+<th>get</th>
+<th>del</th>
+<th>hset</th>
+<th>hget</th>
+<th>hdel</th>
+<th>zset</th>
+<th>zget</th>
+<th>zdel</th>
+<th>qpush</th>
+<th>qpop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>82281</td>
+<td>43160</td>
+<td>65208</td>
+<td>41184</td>
+<td>43745</td>
+<td>48159</td>
+<td>38246</td>
+<td>42734</td>
+<td>36934</td>
+<td>42031</td>
+<td>30591</td>
+</tr>
+</tbody>
+</table>
+<p>redis不论set，get都是15w左右的qps，ssdb差不多是3，4w左右，差距还是有一些的，redis基本上是全面碾压ssdb。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2018/01/06/redis-benchmark-with-ssdb/" data-id="cjc43jumb002excuaxewmmg8s" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2018/01/04/redis-basic/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">redis基础</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
 
   
-  
-    </div></section>
-  
+</article>
 
 
 

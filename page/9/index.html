@@ -88,6 +88,120 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-kubernetes-安装与组件图" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/20/kubernetes-安装与组件图/">kubernetes 安装与组件图</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/08/20/kubernetes-安装与组件图/" class="article-date"><time datetime="2016-08-20T06:14:53.000Z" itemprop="datePublished">2016-08-20</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>初略的概念</p>
+<table>
+<thead>
+<tr>
+<th>master节点</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kube-apiserver</td>
+<td>restful设计的一个api server</td>
+</tr>
+<tr>
+<td>kube-scheduler</td>
+<td>调度器,基本上不加参数</td>
+</tr>
+<tr>
+<td>etcd</td>
+<td>k,v store</td>
+</tr>
+<tr>
+<td>kube-controller-manager</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<table>
+<thead>
+<tr>
+<th>node节点</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kube-proxy</td>
+<td>代理</td>
+</tr>
+<tr>
+<td>kubelet</td>
+<td>node agent</td>
+</tr>
+<tr>
+<td>docker</td>
+<td>这个不用说了,容器</td>
+</tr>
+</tbody>
+</table>
+<p>下面附kubernetes安装过程。centos7</p>
+<h3 id="1-repo源"><a href="#1-repo源" class="headerlink" title="1.repo源"></a>1.repo源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[virt7-docker-common-release]</div><div class="line">name=virt7-docker-common-release</div><div class="line">baseurl=http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/</div><div class="line">gpgcheck=0</div></pre></td></tr></table></figure>
+<h3 id="2-在所有节点安装kubernetes和etcd"><a href="#2-在所有节点安装kubernetes和etcd" class="headerlink" title="2.在所有节点安装kubernetes和etcd"></a>2.在所有节点安装kubernetes和etcd</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install --enablerepo=virt7-docker-common-release kubernetes etcd</div></pre></td></tr></table></figure>
+<h3 id="3-写hosts文件"><a href="#3-写hosts文件" class="headerlink" title="3.写hosts文件"></a>3.写hosts文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vim /etc/hosts</div><div class="line">192.168.121.9		centos-master</div><div class="line">192.168.121.65	centos-minion</div></pre></td></tr></table></figure>
+<h3 id="4-配置-etc-kubernetes-config"><a href="#4-配置-etc-kubernetes-config" class="headerlink" title="4.配置/etc/kubernetes/config"></a>4.配置/etc/kubernetes/config</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">KUBE_ETCD_SERVERS=&quot;--etcd-servers=http://centos-master:2379&quot;</div><div class="line"></div><div class="line">KUBE_LOGTOSTDERR=&quot;--logtostderr=true&quot;</div><div class="line"></div><div class="line"># journal message level, 0 is debug</div><div class="line">KUBE_LOG_LEVEL=&quot;--v=0&quot;</div><div class="line"></div><div class="line"># Should this cluster be allowed to run privileged docker containers</div><div class="line">KUBE_ALLOW_PRIV=&quot;--allow-privileged=false&quot;</div><div class="line"></div><div class="line"># How the controller-manager, scheduler, and proxy find the apiserver</div><div class="line">KUBE_MASTER=&quot;--master=http://centos-master:8080&quot;</div></pre></td></tr></table></figure>
+<h3 id="5-关闭防火墙"><a href="#5-关闭防火墙" class="headerlink" title="5.关闭防火墙"></a>5.关闭防火墙</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">systemctl disable iptables-services firewalld</div><div class="line">systemctl stop iptables-services firewalld</div></pre></td></tr></table></figure>
+<h3 id="6-配置etcd"><a href="#6-配置etcd" class="headerlink" title="6.配置etcd"></a>6.配置etcd</h3><p>/etc/etcd/etcd.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># [member]</div><div class="line">ETCD_NAME=default</div><div class="line">ETCD_DATA_DIR=&quot;/var/lib/etcd/default.etcd&quot;</div><div class="line">ETCD_LISTEN_CLIENT_URLS=&quot;http://0.0.0.0:2379&quot;</div><div class="line"></div><div class="line">#[cluster]</div><div class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;http://0.0.0.0:2379&quot;</div></pre></td></tr></table></figure>
+<h3 id="7-配置apiserver"><a href="#7-配置apiserver" class="headerlink" title="7.配置apiserver"></a>7.配置apiserver</h3><p>/etc/kubernetes/apiserver</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">KUBE_API_ADDRESS=&quot;--insecure-bind-address=0.0.0.0&quot;</div><div class="line">#  KUBE_API_ADDRESS=&quot;--insecure-bind-address=127.0.0.1&quot;</div><div class="line"></div><div class="line"># The port on the local server to listen on.</div><div class="line">KUBE_API_PORT=&quot;--port=8080&quot;</div><div class="line"></div><div class="line"># Port minions listen on</div><div class="line">KUBELET_PORT=&quot;--kubelet-port=10250&quot;</div><div class="line"></div><div class="line"># Comma separated list of nodes in the etcd cluster</div><div class="line">KUBE_ETCD_SERVERS=&quot;--etcd-servers=http://127.0.0.1:2379&quot;</div><div class="line"></div><div class="line"># Address range to use for services</div><div class="line">KUBE_SERVICE_ADDRESSES=&quot;--service-cluster-ip-range=10.0.0.0/16&quot;</div><div class="line"></div><div class="line"># default admission control policies</div><div class="line">KUBE_ADMISSION_CONTROL=&quot;--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ResourceQuota&quot;</div><div class="line"># KUBE_ADMISSION_CONTROL=&quot;--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota&quot;</div><div class="line"></div><div class="line"># Add your own!</div><div class="line">KUBE_API_ARGS=&quot;&quot;</div></pre></td></tr></table></figure>
+<h3 id="8-起服务-master"><a href="#8-起服务-master" class="headerlink" title="8.起服务(master)"></a>8.起服务(master)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler; do</div><div class="line">    systemctl restart $SERVICES</div><div class="line">    systemctl enable $SERVICES</div><div class="line">    systemctl status $SERVICES</div><div class="line">done</div></pre></td></tr></table></figure>
+<h3 id="9-在minion上配置kubelet"><a href="#9-在minion上配置kubelet" class="headerlink" title="9.在minion上配置kubelet"></a>9.在minion上配置kubelet</h3><p>/etc/kubernetes/kubelet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># The address for the info server to serve on</div><div class="line">KUBELET_ADDRESS=&quot;--address=0.0.0.0&quot;</div><div class="line"></div><div class="line"># The port for the info server to serve on</div><div class="line">KUBELET_PORT=&quot;--port=10250&quot;</div><div class="line"></div><div class="line"># You may leave this blank to use the actual hostname</div><div class="line">KUBELET_HOSTNAME=&quot;--hostname-override=centos-minion&quot;</div><div class="line"></div><div class="line"># Location of the api-server</div><div class="line">KUBELET_API_SERVER=&quot;--api-servers=http://centos-master:8080&quot;</div><div class="line"></div><div class="line"># Add your own!</div><div class="line">KUBELET_ARGS=&quot;&quot;</div></pre></td></tr></table></figure>
+<h3 id="10-在minion节点上起服务"><a href="#10-在minion节点上起服务" class="headerlink" title="10.在minion节点上起服务"></a>10.在minion节点上起服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for SERVICES in kube-proxy kubelet docker; do</div><div class="line">    systemctl restart $SERVICES</div><div class="line">    systemctl enable $SERVICES</div><div class="line">    systemctl status $SERVICES</div><div class="line">done</div></pre></td></tr></table></figure>
+<h3 id="11-查看node状态"><a href="#11-查看node状态" class="headerlink" title="11.查看node状态"></a>11.查看node状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ kubectl get nodes</div><div class="line">NAME                   LABELS            STATUS</div><div class="line">centos-minion          &lt;none&gt;            Ready</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/08/20/kubernetes-安装与组件图/" data-id="cjc43jukl0010xcuamnfhwbwg" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-marathon-使用docker私仓" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -133,7 +247,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/08/08/marathon-使用docker私仓/" data-id="cjc3267i70018touablz4dskk" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/08/08/marathon-使用docker私仓/" data-id="cjc43jul4001cxcuao3r5kpj2" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -201,7 +315,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/08/04/Mesos-安装/" data-id="cjc3267ff0000touavj57dl0g" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/08/04/Mesos-安装/" data-id="cjc43juj60001xcuawq0eluwd" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -262,7 +376,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/08/02/etcd简单安装/" data-id="cjc3267gp000ctouaha2lcb29" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/08/02/etcd简单安装/" data-id="cjc43juju000excuar8fqfhpx" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -326,76 +440,12 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/07/31/负载均衡-haproxy/" data-id="cjc3267kg003btouajncf7vtx" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/07/31/负载均衡-haproxy/" data-id="cjc43jun6003axcuabfiouh8c" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/负载均衡/">负载均衡</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-负载均衡-tengine和nginx" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/31/负载均衡-tengine和nginx/">[负载均衡]tengine和nginx</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/07/31/负载均衡-tengine和nginx/" class="article-date"><time datetime="2016-07-31T08:49:01.000Z" itemprop="datePublished">2016-07-31</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-nginx"><a href="#1-nginx" class="headerlink" title="1.nginx"></a>1.nginx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">	upstream backend</div><div class="line">	&#123;</div><div class="line">		server 127.0.0.1:6000;</div><div class="line">		server 127.0.0.1:6001;</div><div class="line">	&#125;</div><div class="line">server&#123;</div><div class="line">        location / &#123;</div><div class="line">		proxy_pass http://backend;</div><div class="line">		proxy_read_timeout 5s;</div><div class="line">    #        root   html;</div><div class="line">    #        index  index.html index.htm;</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里不用nginx,原因是nginx自带的健康检查,是以正常请求来试的,这会导致很多问题.这里不详细说.</p>
-<h3 id="2-tengine"><a href="#2-tengine" class="headerlink" title="2.tengine"></a>2.tengine</h3><p>tengine的非常简单.加个check语句就行了.</p>
-<p><a href="http://tengine.taobao.org/document_cn/http_upstream_check_cn.html" target="_blank" rel="external">http://tengine.taobao.org/document_cn/http_upstream_check_cn.html</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Syntax: check interval=milliseconds [fall=count] [rise=count] [timeout=milliseconds] [default_down=true|false] [type=tcp|http|ssl_hello|mysql|ajp] [port=check_port]</div><div class="line"></div><div class="line">Default: 如果没有配置参数，默认值是：interval=30000 fall=5 rise=2 timeout=1000 default_down=true type=tcp</div><div class="line"></div><div class="line">Context: upstream</div></pre></td></tr></table></figure></p>
-<p>该指令可以打开后端服务器的健康检查功能。<br>指令后面的参数意义是：<br>interval：向后端发送的健康检查包的间隔。<br>fall(fall_count): 如果连续失败次数达到fall_count，服务器就被认为是down。<br>rise(rise_count): 如果连续成功次数达到rise_count，服务器就被认为是up。<br>timeout: 后端健康请求的超时时间。<br>default_down: 设定初始时服务器的状态，如果是true，就说明默认是down的，如果是false，就是up的。默认值是true，也就是一开始服务器认为是不可用，要等健康检查包达到一定成功次数以后才会被认为是健康的。<br>type：健康检查包的类型，现在支持以下多种类型<br>tcp：简单的tcp连接，如果连接成功，就说明后端正常。<br>ssl_hello：发送一个初始的SSL hello包并接受服务器的SSL hello包。<br>http：发送HTTP请求，通过后端的回复包的状态来判断后端是否存活。<br>mysql: 向mysql服务器连接，通过接收服务器的greeting包来判断后端是否存活。<br>ajp：向后端发送AJP协议的Cping包，通过接收Cpong包来判断后端是否存活。<br>port: 指定后端服务器的检查端口。你可以指定不同于真实服务的后端服务器的端口，比如后端提供的是443端口的应用，你可以去检查80端口的状态来判断后端健康状况。默认是0，表示跟后端server提供真实服务的端口一样。该选项出现于Tengine-1.4.0。</p>
-<p>官方的解释非常荆楚了.<br>有个例子可以抄,就是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">check interval=3000 rise=2 fall=5 timeout=1000 type=http;</div></pre></td></tr></table></figure>
-<p>加了check以后服务器3秒一次的在check,有error的话会写在error log里面.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">2016/07/31 16:13:40 [error] 15940#0: send() failed (111: Connection refused)</div><div class="line"></div><div class="line">2016/07/31 16:07:47 [error] 15940#0: send() failed (111: Connection refused)</div></pre></td></tr></table></figure>
-<p>非常的爽.tengine的健康检查模块没有nginx的那种问题.</p>
-<p>其实阿里云的slb就是用tengine + lvs来做的,里面的健康检查配置是和tengine一模一样的.如图:</p>
-<p><img src="http://img.blog.csdn.net/20160821175622768" alt="这里写图片描述"></p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/07/31/负载均衡-tengine和nginx/" data-id="cjc3267kg003dtouaz8awdjem" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/负载均衡/">负载均衡</a></li></ul>
 
 
     </footer>
@@ -430,7 +480,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -439,7 +489,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 12px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -447,7 +497,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -456,6 +506,10 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/06/redis-benchmark-with-ssdb/">redis与ssdb对比压测</a>
+        </li>
       
         <li>
           <a href="/2018/01/04/redis-basic/">redis基础</a>
@@ -471,10 +525,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
         </li>
       
     </ul>

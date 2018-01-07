@@ -88,6 +88,108 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-mysql-partitioning" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/26/mysql-partitioning/">mysql分区</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/09/26/mysql-partitioning/" class="article-date"><time datetime="2016-09-26T01:30:58.000Z" itemprop="datePublished">2016-09-26</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-确认已安装"><a href="#1-确认已安装" class="headerlink" title="1.确认已安装"></a>1.确认已安装</h3><p>很多人动不动就想到要用分布式数据库，其实单库的性能随着MYSQL版本的提升越来越高，单表1000w数据应用优化的好的话用单库是完全没问题的。一个更优的做法是做表分区。也就是mysql partition。本文大量参考官网和<mysql技术内幕-sql编程>。</mysql技术内幕-sql编程></p>
+<p>这里以mysql5.7.15为例。确认有partition插件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SHOW PLUGINS;</div><div class="line">partition                  | ACTIVE   | STORAGE ENGINE     | NULL    | GPL</div></pre></td></tr></table></figure>
+<p>有partition就ok。<br>另外5.7有所不同的是mysql_install_db以后，会生成一个随便密码，在~/.mysql_secret,之后用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;new_password&apos;);</div><div class="line">或者:</div><div class="line">ALTER USER user IDENTIFIED BY &apos;new_password&apos;;</div></pre></td></tr></table></figure>
+<p>重置密码，然后就可以开始使用了。<br>5.7给我的感觉很不错。repo源很快，mysql被oracle买了以后运作的很规范，文档也是全的不行。</p>
+<h3 id="2-分区的类型"><a href="#2-分区的类型" class="headerlink" title="2.分区的类型"></a>2.分区的类型</h3><p>介绍常用的4中分区（当然不止这4个）:</p>
+<ol>
+<li>RANGE分区</li>
+<li>LIST分区</li>
+<li>HASH分区</li>
+<li>KEY分区</li>
+</ol>
+<h3 id="3-RANGE分区"><a href="#3-RANGE分区" class="headerlink" title="3.RANGE分区"></a>3.RANGE分区</h3><p>很好理解，就是安装区域来分。</p>
+<p>这里先看不用分区，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">create table t1(</div><div class="line">id INT</div><div class="line">)engine=innodb</div></pre></td></tr></table></figure>
+<p>默认生成一个ibd文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">t1.frm  t1.ibd</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">create table t2(</div><div class="line">id INT</div><div class="line">)engine=innodb</div><div class="line">partition by RANGE(id)(</div><div class="line">partition p0 values less than (10),</div><div class="line">partition p1 values less than (20));</div></pre></td></tr></table></figure>
+<p>t2用了分区，可以看到p0,p1分区信息的ibd文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">t2.frm  t2#P#p0.ibd  t2#P#p1.ibd</div></pre></td></tr></table></figure>
+<p>再插入几条数据试试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">insert into t2 select 9;</div><div class="line">insert into t2 select 10;</div><div class="line">insert into t2 select 15;</div></pre></td></tr></table></figure>
+<p>可以通过information_schema.partitions中的有相关分区信息:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from information_schema.partitions where table_name=&apos;t2&apos;\G</div><div class="line">*************************** 1. row ***************************</div><div class="line">                TABLE_CATALOG: def</div><div class="line">                 TABLE_SCHEMA: test</div><div class="line">                   TABLE_NAME: t2</div><div class="line">               PARTITION_NAME: p0</div><div class="line">            SUBPARTITION_NAME: NULL</div><div class="line">   PARTITION_ORDINAL_POSITION: 1</div><div class="line">SUBPARTITION_ORDINAL_POSITION: NULL</div><div class="line">             PARTITION_METHOD: RANGE</div><div class="line">          SUBPARTITION_METHOD: NULL</div><div class="line">         PARTITION_EXPRESSION: id</div><div class="line">      SUBPARTITION_EXPRESSION: NULL</div><div class="line">        PARTITION_DESCRIPTION: 10</div><div class="line">                   TABLE_ROWS: 1</div><div class="line">               AVG_ROW_LENGTH: 16384</div><div class="line">                  DATA_LENGTH: 16384</div><div class="line">              MAX_DATA_LENGTH: NULL</div><div class="line">                 INDEX_LENGTH: 0</div><div class="line">                    DATA_FREE: 0</div><div class="line">                  CREATE_TIME: 2016-09-26 15:34:03</div><div class="line">                  UPDATE_TIME: 2016-09-26 15:34:52</div><div class="line">                   CHECK_TIME: NULL</div><div class="line">                     CHECKSUM: NULL</div><div class="line">            PARTITION_COMMENT:</div><div class="line">                    NODEGROUP: default</div><div class="line">              TABLESPACE_NAME: NULL</div><div class="line">*************************** 2. row ***************************</div><div class="line">                TABLE_CATALOG: def</div><div class="line">                 TABLE_SCHEMA: test</div><div class="line">                   TABLE_NAME: t2</div><div class="line">               PARTITION_NAME: p1</div><div class="line">            SUBPARTITION_NAME: NULL</div><div class="line">   PARTITION_ORDINAL_POSITION: 2</div><div class="line">SUBPARTITION_ORDINAL_POSITION: NULL</div><div class="line">             PARTITION_METHOD: RANGE</div><div class="line">          SUBPARTITION_METHOD: NULL</div><div class="line">         PARTITION_EXPRESSION: id</div><div class="line">      SUBPARTITION_EXPRESSION: NULL</div><div class="line">        PARTITION_DESCRIPTION: 20</div><div class="line">                   TABLE_ROWS: 2</div><div class="line">               AVG_ROW_LENGTH: 8192</div><div class="line">                  DATA_LENGTH: 16384</div><div class="line">              MAX_DATA_LENGTH: NULL</div><div class="line">                 INDEX_LENGTH: 0</div><div class="line">                    DATA_FREE: 0</div><div class="line">                  CREATE_TIME: 2016-09-26 15:34:03</div><div class="line">                  UPDATE_TIME: 2016-09-26 15:34:58</div><div class="line">                   CHECK_TIME: NULL</div><div class="line">                     CHECKSUM: NULL</div><div class="line">            PARTITION_COMMENT:</div><div class="line">                    NODEGROUP: default</div><div class="line">              TABLESPACE_NAME: NULL</div><div class="line">2 rows in set (0.01 sec)</div></pre></td></tr></table></figure>
+<p>但是这存在一个问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; insert into t2 select 30;</div><div class="line">ERROR 1526 (HY000): Table has no partition for value 30</div></pre></td></tr></table></figure>
+<p>插入30时即会报错，分区range没有涵盖所以条件，当插入30这个值的时候MYSQL不知道插入到哪。我们可以增加一个小于MAXVALUE的分区来涵盖所以的区域:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">alter table t2</div><div class="line">add partition (partition p2 values less than MAXVALUE);</div><div class="line">Query OK, 0 rows affected (0.06 sec)</div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div><div class="line"></div><div class="line">mysql&gt; insert into t2 select 30;</div><div class="line">Query OK, 1 row affected (0.01 sec)</div><div class="line">Records: 1  Duplicates: 0  Warnings: 0</div><div class="line"></div><div class="line">mysql&gt; insert into t2 select 40;</div><div class="line">Query OK, 1 row affected (0.00 sec)</div><div class="line">Records: 1  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure>
+<p>再插入遍不会报错了。</p>
+<p>range分区主要用于日期列的分区。<br>mysql里面data type 格式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Data Type	“Zero” Value</div><div class="line">DATE	&apos;0000-00-00&apos;</div><div class="line">TIME	&apos;00:00:00&apos;</div><div class="line">DATETIME	&apos;0000-00-00 00:00:00&apos;</div><div class="line">TIMESTAMP	&apos;0000-00-00 00:00:00&apos;</div><div class="line">YEAR	0000</div></pre></td></tr></table></figure>
+<p>官网举了个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE members (</div><div class="line">    firstname VARCHAR(25) NOT NULL,</div><div class="line">    lastname VARCHAR(25) NOT NULL,</div><div class="line">    username VARCHAR(16) NOT NULL,</div><div class="line">    email VARCHAR(35),</div><div class="line">    joined DATE NOT NULL</div><div class="line">)</div><div class="line">PARTITION BY RANGE( YEAR(joined) ) (</div><div class="line">    PARTITION p0 VALUES LESS THAN (1960),</div><div class="line">    PARTITION p1 VALUES LESS THAN (1970),</div><div class="line">    PARTITION p2 VALUES LESS THAN (1980),</div><div class="line">    PARTITION p3 VALUES LESS THAN (1990),</div><div class="line">    PARTITION p4 VALUES LESS THAN MAXVALUE</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>按joined日期来的YEAR函数来分区，</p>
+<p>把上面的表格简化一下，变成t3:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE t3 (</div><div class="line">    firstname VARCHAR(25) NOT NULL,</div><div class="line">    joined DATE NOT NULL</div><div class="line">)</div><div class="line">PARTITION BY RANGE( YEAR(joined) ) (</div><div class="line">    PARTITION p0 VALUES LESS THAN (1960),</div><div class="line">    PARTITION p1 VALUES LESS THAN (1970),</div><div class="line">    PARTITION p2 VALUES LESS THAN (1980),</div><div class="line">    PARTITION p3 VALUES LESS THAN (1990),</div><div class="line">    PARTITION p4 VALUES LESS THAN MAXVALUE</div><div class="line">);</div><div class="line">mysql&gt; select * from t3;</div><div class="line">+-----------+------------+</div><div class="line">| firstname | joined     |</div><div class="line">+-----------+------------+</div><div class="line">| aaa       | 1955-01-01 |</div><div class="line">| bbb       | 1965-01-01 |</div><div class="line">| ccc       | 1966-02-02 |</div><div class="line">| ccc       | 1967-03-03 |</div><div class="line">| ccc       | 1977-03-03 |</div><div class="line">| ccc       | 1987-03-03 |</div><div class="line">+-----------+------------+</div></pre></td></tr></table></figure>
+<p>然后做select查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from t3 where joined&lt;&apos;1969-12-30&apos;;</div><div class="line">+-----------+------------+</div><div class="line">| firstname | joined     |</div><div class="line">+-----------+------------+</div><div class="line">| aaa       | 1955-01-01 |</div><div class="line">| bbb       | 1965-01-01 |</div><div class="line">| ccc       | 1966-02-02 |</div><div class="line">| ccc       | 1967-03-03 |</div><div class="line">+-----------+------------+</div><div class="line">4 rows in set (0.00 sec)</div><div class="line">mysql&gt; explain partitions select * from t3 where joined&lt;&apos;1969-12-30&apos;;</div><div class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</div><div class="line">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |</div><div class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</div><div class="line">|  1 | SIMPLE      | t3    | p0,p1      | ALL  | NULL          | NULL | NULL    | NULL |    4 |    33.33 | Using where |</div><div class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</div><div class="line">1 row in set, 2 warnings (0.00 sec)</div></pre></td></tr></table></figure>
+<p>year(‘1955-01-01’)返回1955，表格根据year做了分区，可以看到where子句只扫了p0,p1两个分区，提升了查询效率。这个叫partition pruning,官网地址 <a href="http://dev.mysql.com/doc/refman/5.7/en/partitioning-pruning.html" target="_blank" rel="external">http://dev.mysql.com/doc/refman/5.7/en/partitioning-pruning.html</a></p>
+<p>但并不是对所以的函数都能进行partition pruning,只是几个时间的函数，YEAR(),TO_DAYS(),TO_SECONDS(),UNIX_TIMESTAMP()这几个有效。</p>
+<h3 id="4-LIST分区"><a href="#4-LIST分区" class="headerlink" title="4.LIST分区"></a>4.LIST分区</h3><p>LIST分区跟RANGE特别类似，只是RANGE是连续的值，用less than 表达，LIST分区用VALUES IN(…)来表达，是离散的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">create table t4(</div><div class="line">a INT,</div><div class="line">b INT)engine=innodb</div><div class="line">partition by LIST(b)(</div><div class="line">partition p0 values in (1,3,5,7,9),</div><div class="line">partition p1 values in (2,4,6,8,0));</div></pre></td></tr></table></figure>
+<p>这时候你select * from t4 where b=1;那么只会扫p1分区。</p>
+<h3 id="5-HASH分区"><a href="#5-HASH分区" class="headerlink" title="5.HASH分区"></a>5.HASH分区</h3><p>hash目的将数据均匀分布到预设的分区中，保证各分区数据量大致一样。HASH分区也和之前的其他分区一样，需要制定分区的函数，以及HASH分区的个数。如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">create table t_hash(</div><div class="line">a INT,</div><div class="line">b DATETIME) engine=innodb</div><div class="line">partition by HASH (YEAR(b))</div><div class="line">partitions 4;</div></pre></td></tr></table></figure>
+<p>上面根据YEAR的结果进行hash分区，不是很科学，最好根据自增字段进行分区，如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">create table t_hash2(</div><div class="line">a INT AUTO_INCREMENT,</div><div class="line">b DATETIME,</div><div class="line">PRIMARY KEY (a)) engine=innodb</div><div class="line">partition by HASH(a)</div><div class="line">partitions 4;</div></pre></td></tr></table></figure>
+<h3 id="6-KEY分区"><a href="#6-KEY分区" class="headerlink" title="6.KEY分区"></a>6.KEY分区</h3><p>KEY分区跟HASH分区类似，不过HASH分区根据用户提供的函数进行分区，而KEY分区则使用MYSQL内部的散列函数进行分区。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">create table t_key(</div><div class="line">a INT,</div><div class="line">b DATETIME) engine=innodb</div><div class="line">partition by KEY(b)</div><div class="line">partitions 4;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/09/26/mysql-partitioning/" data-id="cjc43juld001jxcuacdnhectm" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-容量规划" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -128,7 +230,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/09/24/容量规划/" data-id="cjc3267kc0036touaba5q15ph" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/09/24/容量规划/" data-id="cjc43jun40038xcuawp8suosh" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -273,7 +375,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/08/31/hadoop分布式部署/" data-id="cjc3267hg000stoua7jkrf69z" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/08/31/hadoop分布式部署/" data-id="cjc43juka000qxcuaq3gyvuvn" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -344,7 +446,7 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/08/30/hadoop伪分布式部署/" data-id="cjc3267hs0013touay3tu8nws" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/08/30/hadoop伪分布式部署/" data-id="cjc43jukh000wxcuavf6bxyor" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -413,127 +515,13 @@ ga('send', 'pageview');
     
 
     <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/08/22/nginx-tengine-haproxy会话保持/" data-id="cjc3267ij001htouame3jsxuy" class="article-share-link">
+      <a data-url="http://qinyueming.cc/2016/08/22/nginx-tengine-haproxy会话保持/" data-id="cjc43jul9001hxcuat4k3kqbh" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
 
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-kubernetes-安装与组件图" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/20/kubernetes-安装与组件图/">kubernetes 安装与组件图</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/08/20/kubernetes-安装与组件图/" class="article-date"><time datetime="2016-08-20T06:14:53.000Z" itemprop="datePublished">2016-08-20</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>初略的概念</p>
-<table>
-<thead>
-<tr>
-<th>master节点</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>kube-apiserver</td>
-<td>restful设计的一个api server</td>
-</tr>
-<tr>
-<td>kube-scheduler</td>
-<td>调度器,基本上不加参数</td>
-</tr>
-<tr>
-<td>etcd</td>
-<td>k,v store</td>
-</tr>
-<tr>
-<td>kube-controller-manager</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<table>
-<thead>
-<tr>
-<th>node节点</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>kube-proxy</td>
-<td>代理</td>
-</tr>
-<tr>
-<td>kubelet</td>
-<td>node agent</td>
-</tr>
-<tr>
-<td>docker</td>
-<td>这个不用说了,容器</td>
-</tr>
-</tbody>
-</table>
-<p>下面附kubernetes安装过程。centos7</p>
-<h3 id="1-repo源"><a href="#1-repo源" class="headerlink" title="1.repo源"></a>1.repo源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[virt7-docker-common-release]</div><div class="line">name=virt7-docker-common-release</div><div class="line">baseurl=http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/</div><div class="line">gpgcheck=0</div></pre></td></tr></table></figure>
-<h3 id="2-在所有节点安装kubernetes和etcd"><a href="#2-在所有节点安装kubernetes和etcd" class="headerlink" title="2.在所有节点安装kubernetes和etcd"></a>2.在所有节点安装kubernetes和etcd</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install --enablerepo=virt7-docker-common-release kubernetes etcd</div></pre></td></tr></table></figure>
-<h3 id="3-写hosts文件"><a href="#3-写hosts文件" class="headerlink" title="3.写hosts文件"></a>3.写hosts文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vim /etc/hosts</div><div class="line">192.168.121.9		centos-master</div><div class="line">192.168.121.65	centos-minion</div></pre></td></tr></table></figure>
-<h3 id="4-配置-etc-kubernetes-config"><a href="#4-配置-etc-kubernetes-config" class="headerlink" title="4.配置/etc/kubernetes/config"></a>4.配置/etc/kubernetes/config</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">KUBE_ETCD_SERVERS=&quot;--etcd-servers=http://centos-master:2379&quot;</div><div class="line"></div><div class="line">KUBE_LOGTOSTDERR=&quot;--logtostderr=true&quot;</div><div class="line"></div><div class="line"># journal message level, 0 is debug</div><div class="line">KUBE_LOG_LEVEL=&quot;--v=0&quot;</div><div class="line"></div><div class="line"># Should this cluster be allowed to run privileged docker containers</div><div class="line">KUBE_ALLOW_PRIV=&quot;--allow-privileged=false&quot;</div><div class="line"></div><div class="line"># How the controller-manager, scheduler, and proxy find the apiserver</div><div class="line">KUBE_MASTER=&quot;--master=http://centos-master:8080&quot;</div></pre></td></tr></table></figure>
-<h3 id="5-关闭防火墙"><a href="#5-关闭防火墙" class="headerlink" title="5.关闭防火墙"></a>5.关闭防火墙</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">systemctl disable iptables-services firewalld</div><div class="line">systemctl stop iptables-services firewalld</div></pre></td></tr></table></figure>
-<h3 id="6-配置etcd"><a href="#6-配置etcd" class="headerlink" title="6.配置etcd"></a>6.配置etcd</h3><p>/etc/etcd/etcd.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># [member]</div><div class="line">ETCD_NAME=default</div><div class="line">ETCD_DATA_DIR=&quot;/var/lib/etcd/default.etcd&quot;</div><div class="line">ETCD_LISTEN_CLIENT_URLS=&quot;http://0.0.0.0:2379&quot;</div><div class="line"></div><div class="line">#[cluster]</div><div class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;http://0.0.0.0:2379&quot;</div></pre></td></tr></table></figure>
-<h3 id="7-配置apiserver"><a href="#7-配置apiserver" class="headerlink" title="7.配置apiserver"></a>7.配置apiserver</h3><p>/etc/kubernetes/apiserver</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">KUBE_API_ADDRESS=&quot;--insecure-bind-address=0.0.0.0&quot;</div><div class="line">#  KUBE_API_ADDRESS=&quot;--insecure-bind-address=127.0.0.1&quot;</div><div class="line"></div><div class="line"># The port on the local server to listen on.</div><div class="line">KUBE_API_PORT=&quot;--port=8080&quot;</div><div class="line"></div><div class="line"># Port minions listen on</div><div class="line">KUBELET_PORT=&quot;--kubelet-port=10250&quot;</div><div class="line"></div><div class="line"># Comma separated list of nodes in the etcd cluster</div><div class="line">KUBE_ETCD_SERVERS=&quot;--etcd-servers=http://127.0.0.1:2379&quot;</div><div class="line"></div><div class="line"># Address range to use for services</div><div class="line">KUBE_SERVICE_ADDRESSES=&quot;--service-cluster-ip-range=10.0.0.0/16&quot;</div><div class="line"></div><div class="line"># default admission control policies</div><div class="line">KUBE_ADMISSION_CONTROL=&quot;--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ResourceQuota&quot;</div><div class="line"># KUBE_ADMISSION_CONTROL=&quot;--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota&quot;</div><div class="line"></div><div class="line"># Add your own!</div><div class="line">KUBE_API_ARGS=&quot;&quot;</div></pre></td></tr></table></figure>
-<h3 id="8-起服务-master"><a href="#8-起服务-master" class="headerlink" title="8.起服务(master)"></a>8.起服务(master)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler; do</div><div class="line">    systemctl restart $SERVICES</div><div class="line">    systemctl enable $SERVICES</div><div class="line">    systemctl status $SERVICES</div><div class="line">done</div></pre></td></tr></table></figure>
-<h3 id="9-在minion上配置kubelet"><a href="#9-在minion上配置kubelet" class="headerlink" title="9.在minion上配置kubelet"></a>9.在minion上配置kubelet</h3><p>/etc/kubernetes/kubelet</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># The address for the info server to serve on</div><div class="line">KUBELET_ADDRESS=&quot;--address=0.0.0.0&quot;</div><div class="line"></div><div class="line"># The port for the info server to serve on</div><div class="line">KUBELET_PORT=&quot;--port=10250&quot;</div><div class="line"></div><div class="line"># You may leave this blank to use the actual hostname</div><div class="line">KUBELET_HOSTNAME=&quot;--hostname-override=centos-minion&quot;</div><div class="line"></div><div class="line"># Location of the api-server</div><div class="line">KUBELET_API_SERVER=&quot;--api-servers=http://centos-master:8080&quot;</div><div class="line"></div><div class="line"># Add your own!</div><div class="line">KUBELET_ARGS=&quot;&quot;</div></pre></td></tr></table></figure>
-<h3 id="10-在minion节点上起服务"><a href="#10-在minion节点上起服务" class="headerlink" title="10.在minion节点上起服务"></a>10.在minion节点上起服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for SERVICES in kube-proxy kubelet docker; do</div><div class="line">    systemctl restart $SERVICES</div><div class="line">    systemctl enable $SERVICES</div><div class="line">    systemctl status $SERVICES</div><div class="line">done</div></pre></td></tr></table></figure>
-<h3 id="11-查看node状态"><a href="#11-查看node状态" class="headerlink" title="11.查看node状态"></a>11.查看node状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ kubectl get nodes</div><div class="line">NAME                   LABELS            STATUS</div><div class="line">centos-minion          &lt;none&gt;            Ready</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/08/20/kubernetes-安装与组件图/" data-id="cjc3267i9001atouaje1ijo95" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
 
     </footer>
   </div>
@@ -567,7 +555,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -576,7 +564,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 12px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -584,7 +572,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -593,6 +581,10 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/06/redis-benchmark-with-ssdb/">redis与ssdb对比压测</a>
+        </li>
       
         <li>
           <a href="/2018/01/04/redis-basic/">redis基础</a>
@@ -608,10 +600,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/17/spring-boot1/">spring-boot一般套路</a>
         </li>
       
     </ul>
