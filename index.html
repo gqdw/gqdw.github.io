@@ -293,6 +293,7 @@ ga('send', 'pageview');
 <li>get</li>
 <li>del</li>
 </ul>
+<p>没啥多说的，如果你喜欢的话可以存文件。</p>
 <h3 id="3-list-队列"><a href="#3-list-队列" class="headerlink" title="3. list 队列"></a>3. list 队列</h3><p>redis里面的队列能做到双向队列，两头都可以操作。<br>相关命令是:</p>
 <ul>
 <li>rpush</li>
@@ -302,6 +303,7 @@ ga('send', 'pageview');
 <li>lindex 获取给定位置的单个元素</li>
 <li>lrange 获取给定范围上的所有值</li>
 </ul>
+<p>一个非常典型的用法是用作消息队列，如果是先进先出的那种，可以直接用rpush和lpop，so easy。</p>
 <h3 id="4-set-集合"><a href="#4-set-集合" class="headerlink" title="4. set 集合"></a>4. set 集合</h3><p>存储的方式是无序的，用户可以通过sadd命令将元素添加到集合，使用srem将元素从集合中删除。<br>相关命令:</p>
 <ul>
 <li>sadd</li>
