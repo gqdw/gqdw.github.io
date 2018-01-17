@@ -88,6 +88,132 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-java-gson" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/17/java-gson/">java-gson简单应用</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2018/01/17/java-gson/" class="article-date"><time datetime="2018-01-17T07:22:02.000Z" itemprop="datePublished">2018-01-17</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-gson"><a href="#1-gson" class="headerlink" title="1.gson"></a>1.gson</h3><p><a href="https://github.com/google/gson]" target="_blank" rel="external">官网https://github.com/google/gson</a></p>
+<h3 id="1-1-maven"><a href="#1-1-maven" class="headerlink" title="1.1 maven"></a>1.1 maven</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;dependencies&gt;</div><div class="line">    &lt;!--  Gson: Java to Json conversion --&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">      &lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;</div><div class="line">      &lt;artifactId&gt;gson&lt;/artifactId&gt;</div><div class="line">      &lt;version&gt;2.8.2&lt;/version&gt;</div><div class="line">      &lt;scope&gt;compile&lt;/scope&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure>
+<h3 id="2-基本方法"><a href="#2-基本方法" class="headerlink" title="2.基本方法"></a>2.基本方法</h3><ol>
+<li>gson.toJson  将对象转换成json字符串</li>
+<li>gson.fromJson  将json字符串转换为object对象</li>
+</ol>
+<h3 id="2-1-toJson方法"><a href="#2-1-toJson方法" class="headerlink" title="2.1 toJson方法"></a>2.1 toJson方法</h3><p>定义一个对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public class Res1 &#123;</div><div class="line">    private String jsonrpc;</div><div class="line">    private String result;</div><div class="line">    private Integer id;</div><div class="line"></div><div class="line">    public String getResult() &#123;</div><div class="line">        return result;</div><div class="line">    &#125;</div><div class="line">       public void setId(Integer id) &#123;</div><div class="line">        this.id = id;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setJsonrpc(String jsonrpc) &#123;</div><div class="line">        this.jsonrpc = jsonrpc;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setResult(String result) &#123;</div><div class="line">        this.result = result;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以不用定义setter函数,用构造函数赋值，然后:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Res1 r1 = new Res1();</div><div class="line">Res1.setId()</div><div class="line">...</div><div class="line">Gson gson = new Gson();</div><div class="line">Res1 r1 = gson.toJson();</div></pre></td></tr></table></figure></p>
+<p>就可以转成json字符串。</p>
+<h3 id="2-2-fromJson方法"><a href="#2-2-fromJson方法" class="headerlink" title="2.2 fromJson方法"></a>2.2 fromJson方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String j1 = JSON_STRING</div><div class="line">Gson gson = new Gson();</div><div class="line">Res1 res1 = gson.fromJson(JSON_STRING, Res1.class)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2018/01/17/java-gson/" data-id="cjcj3a0e20000cgua5qipyajx" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-java-httpclient" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/17/java-httpclient/">java-HttpClient</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2018/01/17/java-httpclient/" class="article-date"><time datetime="2018-01-17T07:09:28.000Z" itemprop="datePublished">2018-01-17</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-apache-HttpClient"><a href="#1-apache-HttpClient" class="headerlink" title="1. apache HttpClient"></a>1. apache HttpClient</h3><p>用于替换jdk的httpclient,<br>官网文档 <a href="http://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/fundamentals.html" target="_blank" rel="external">http://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/fundamentals.htm</a></p>
+<h3 id="2-基本套路"><a href="#2-基本套路" class="headerlink" title="2.基本套路"></a>2.基本套路</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">CloseableHttpClient httpclient = HttpClients.createDefault();</div><div class="line">HttpGet httpget = new HttpGet(&quot;http://localhost/&quot;);</div><div class="line">CloseableHttpResponse response = httpclient.execute(httpget);</div><div class="line">try &#123;</div><div class="line">    &lt;...&gt;</div><div class="line">&#125; finally &#123;</div><div class="line">    response.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-1-http请求"><a href="#2-1-http请求" class="headerlink" title="2.1 http请求"></a>2.1 http请求</h3><p>一个http请求对象，有HttpGet,HttpPost等，HttpGet接收一个uri作参数，可以用字符串比如 “<a href="http://localhost&quot;，" target="_blank" rel="external">http://localhost&quot;，</a> 注意加上http://， 也可以用URIBuilder来生成，如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">URI uri = new URIBuilder()</div><div class="line">        .setScheme(&quot;http&quot;)</div><div class="line">        .setHost(&quot;www.google.com&quot;)</div><div class="line">        .setPath(&quot;/search&quot;)</div><div class="line">        .setParameter(&quot;q&quot;, &quot;httpclient&quot;)</div><div class="line">        .setParameter(&quot;btnG&quot;, &quot;Google Search&quot;)</div><div class="line">        .setParameter(&quot;aq&quot;, &quot;f&quot;)</div><div class="line">        .setParameter(&quot;oq&quot;, &quot;&quot;)</div><div class="line">        .build();</div><div class="line">HttpGet httpget = new HttpGet(uri);</div><div class="line">System.out.println(httpget.getURI());</div></pre></td></tr></table></figure>
+<p>如果想设置内容，可以用 httpPost.setEntity()方法，最简单的是用StringEntity声明一个，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String j1 = &quot;xx&quot;</div><div class="line">StringEntity entity1 = new StringEntity(j1);</div><div class="line">httpPost.setEntity(entity1);</div></pre></td></tr></table></figure></p>
+<p>也有setHeader这类实用的方法，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">httpPost.setHeader(&quot;Content-Type&quot;,&quot;application/json-rpc&quot;);</div></pre></td></tr></table></figure></p>
+<h3 id="2-2-http-response回复"><a href="#2-2-http-response回复" class="headerlink" title="2.2 http response回复"></a>2.2 http response回复</h3><p>response一般是httpclient执行execute() HttpPost返回的对象。<br>可以用response.getStatusLine().toString()得到返回码。</p>
+<h3 id="2-3-http-entity实体"><a href="#2-3-http-entity实体" class="headerlink" title="2.3 http entity实体"></a>2.3 http entity实体</h3><p>一般用EntityUtils的toString(myEntity)将实体转换为字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">CloseableHttpClient httpclient = HttpClients.createDefault();</div><div class="line">HttpGet httpget = new HttpGet(&quot;http://localhost/&quot;);</div><div class="line">CloseableHttpResponse response = httpclient.execute(httpget);</div><div class="line">try &#123;</div><div class="line">    HttpEntity entity = response.getEntity();</div><div class="line">    if (entity != null) &#123;</div><div class="line">        long len = entity.getContentLength();</div><div class="line">        if (len != -1 &amp;&amp; len &lt; 2048) &#123;</div><div class="line">            System.out.println(EntityUtils.toString(entity));</div><div class="line">        &#125; else &#123;</div><div class="line">            // Stream content out</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125; finally &#123;</div><div class="line">    response.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>还能用低级的instream流来处理实体<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">CloseableHttpClient httpclient = HttpClients.createDefault();</div><div class="line">HttpGet httpget = new HttpGet(&quot;http://localhost/&quot;);</div><div class="line">CloseableHttpResponse response = httpclient.execute(httpget);</div><div class="line">try &#123;</div><div class="line">    HttpEntity entity = response.getEntity();</div><div class="line">    if (entity != null) &#123;</div><div class="line">        InputStream instream = entity.getContent();</div><div class="line">        try &#123;</div><div class="line">            // do something useful</div><div class="line">        &#125; finally &#123;</div><div class="line">            instream.close();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125; finally &#123;</div><div class="line">    response.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="2-4-basic认证套路"><a href="#2-4-basic认证套路" class="headerlink" title="2.4 basic认证套路"></a>2.4 basic认证套路</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CredentialsProvider credentialsProvider = new BasicCredentialsProvider();</div><div class="line">UsernamePasswordCredentials credentials =</div><div class="line">new UsernamePasswordCredentials(&quot;admin&quot;,&quot;PASSWORD&quot;);</div><div class="line">credentialsProvider.setCredentials(AuthScope.ANY, credentials);</div><div class="line">CloseableHttpClient client = HttpClientBuilder.create()</div><div class="line">                .setDefaultCredentialsProvider(credentialsProvider)</div><div class="line">                .build();</div></pre></td></tr></table></figure>
+<p>创建CredentialsProvider对象，UsernamePasswordCredentials对象，然后用setCredentials方法将credentialsProvider设置。<br>之后使用HttpClientBuilder方法来构建一个添加过认证的client，之后的调用没有任何区别。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2018/01/17/java-httpclient/" data-id="cjcj3a0e70001cgua8ggydd4n" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-redis-benchmark-with-ssdb" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -419,133 +545,10 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-spring-jdbc-datasource" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/12/25/spring-jdbc-datasource/" class="article-date"><time datetime="2017-12-25T06:39:32.000Z" itemprop="datePublished">2017-12-25</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0-所有jdbc的先决条件"><a href="#0-所有jdbc的先决条件" class="headerlink" title="0. 所有jdbc的先决条件"></a>0. 所有jdbc的先决条件</h3><p>配置数据源，spring里面是配置一个datasource bean。</p>
-<h3 id="1-maven依赖"><a href="#1-maven依赖" class="headerlink" title="1. maven依赖"></a>1. maven依赖</h3><p>需要导入jdbc包，spring包,h2包</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;4.0.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line"></div><div class="line">	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-context&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;4.0.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line"></div><div class="line">   	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;com.h2database&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;h2&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.3.175&lt;/version&gt;</div><div class="line">	&lt;/dependency&gt;</div></pre></td></tr></table></figure>
-<h3 id="2-运行h2数据库"><a href="#2-运行h2数据库" class="headerlink" title="2. 运行h2数据库"></a>2. 运行h2数据库</h3><p>可以网上找h2的二进制包运行，也可以直接在idea里面找到org.h2.tools.Console类运行。<br>用户名sa,密码为空。</p>
-<h3 id="3-创建一个spring-bean配置类，使用DriverManagerDataSource定义一个datasource-bean"><a href="#3-创建一个spring-bean配置类，使用DriverManagerDataSource定义一个datasource-bean" class="headerlink" title="3. 创建一个spring bean配置类，使用DriverManagerDataSource定义一个datasource bean"></a>3. 创建一个spring bean配置类，使用DriverManagerDataSource定义一个datasource bean</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">public class Ch4Configuration &#123;</div><div class="line">    @Bean</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        DriverManagerDataSource dataSource = new DriverManagerDataSource();</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>DriverManagerDataSource还有一个子类SingleConnectionDataSource，该类重复使用相同的连接。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Ch4Configuration &#123;</div><div class="line">    @Bean</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        SingleConnectionDataSource dataSource = new SingleConnectionDataSource();</div><div class="line">        dataSource.setSuppressClose(true);</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="4-生产环境下使用连接池化的datasource"><a href="#4-生产环境下使用连接池化的datasource" class="headerlink" title="4. 生产环境下使用连接池化的datasource"></a>4. 生产环境下使用连接池化的datasource</h3><p>比如C3P0,或者DBCP，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;commons-dbcp&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;commons-dbcp&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;1.4&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line"></div><div class="line">import org.apache.commons.dbcp.BasicDataSource;</div><div class="line">@Configuration</div><div class="line">public class Ch4ConfigurationForPooledDS1 &#123;</div><div class="line">    </div><div class="line">    @Bean(destroyMethod=&quot;close&quot;)</div><div class="line">    public DataSource dataSource() &#123;</div><div class="line">        BasicDataSource dataSource = new BasicDataSource();</div><div class="line">        dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUsername(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;com.mchange&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;c3p0&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;0.9.2.1&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line"></div><div class="line"></div><div class="line">import com.mchange.v2.c3p0.ComboPooledDataSource;</div><div class="line">@Configuration</div><div class="line">public class Ch4ConfigurationForPooledDS2 &#123;</div><div class="line">    </div><div class="line">    @Bean(destroyMethod=&quot;close&quot;)</div><div class="line">    public DataSource dataSource() throws Exception &#123;</div><div class="line">        ComboPooledDataSource dataSource = new ComboPooledDataSource();</div><div class="line">        dataSource.setDriverClass(&quot;org.h2.Driver&quot;);</div><div class="line">        dataSource.setJdbcUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">        dataSource.setUser(&quot;sa&quot;);</div><div class="line">        dataSource.setPassword(&quot;&quot;);</div><div class="line">        return dataSource;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="5-获取connection"><a href="#5-获取connection" class="headerlink" title="5. 获取connection"></a>5. 获取connection</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class Main &#123;</div><div class="line">	public static void main(String[] args) throws SQLException &#123;</div><div class="line">		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(Ch4Configuration.class);</div><div class="line">		DataSource dataSource = applicationContext.getBean(&quot;dataSource&quot;, DataSource.class);</div><div class="line">		</div><div class="line">		Connection connection = dataSource.getConnection();</div><div class="line">		System.out.println(connection.isClosed());</div><div class="line">		connection.close();</div><div class="line">		System.out.println(connection.isClosed());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>所有datasource 都实现了getConnection()接口，直接调用即可。这样我们就通过jdbc 数据源，获取了数据库连接。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/12/25/spring-jdbc-datasource/" data-id="cjc43jumd002gxcuaypw9xgzn" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-spring-docker" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/12/23/spring-docker/" class="article-date"><time datetime="2017-12-23T06:19:05.000Z" itemprop="datePublished">2017-12-23</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-结合起来跟其他java程序差不多"><a href="#1-结合起来跟其他java程序差不多" class="headerlink" title="1. 结合起来跟其他java程序差不多"></a>1. 结合起来跟其他java程序差不多</h3><p>无非就是dockerfile，然后build ，push ，pull 。但是spring boot特别适合微服务，特别适合在容器里面跑，因为他内嵌了tomcat，单进程。<a href="https://spring.io/guides/gs/spring-boot-docker/" target="_blank" rel="external">https://spring.io/guides/gs/spring-boot-docker/</a> 讲述了他和mvn结合的奇妙例子。</p>
-<h3 id="2-Dockerfile"><a href="#2-Dockerfile" class="headerlink" title="2. Dockerfile"></a>2. Dockerfile</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">FROM openjdk:8-jdk-alpine</div><div class="line">VOLUME /tmp</div><div class="line">ARG JAR_FILE</div><div class="line">ADD $&#123;JAR_FILE&#125; app.jar</div><div class="line">ENTRYPOINT [&quot;java&quot;,&quot;-Djava.security.egd=file:/dev/./urandom&quot;,&quot;-jar&quot;,&quot;/app.jar&quot;]</div></pre></td></tr></table></figure>
-<p>虽然这是一个普通的不能再普通的dockerfile，但是里面的JAR_FILE很完美的替代了硬编码，具体是mvn传进去的参数。</p>
-<h3 id="3-mvn配置"><a href="#3-mvn配置" class="headerlink" title="3.mvn配置"></a>3.mvn配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;properties&gt;</div><div class="line">   &lt;docker.image.prefix&gt;springio&lt;/docker.image.prefix&gt;</div><div class="line">&lt;/properties&gt;</div><div class="line">&lt;build&gt;</div><div class="line">    &lt;plugins&gt;</div><div class="line">        &lt;plugin&gt;</div><div class="line">            &lt;groupId&gt;com.spotify&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;dockerfile-maven-plugin&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.3.6&lt;/version&gt;</div><div class="line">            &lt;configuration&gt;</div><div class="line">                &lt;repository&gt;$&#123;docker.image.prefix&#125;/$&#123;project.artifactId&#125;&lt;/repository&gt;</div><div class="line">	&lt;buildArgs&gt;</div><div class="line">		&lt;JAR_FILE&gt;target/$&#123;project.build.finalName&#125;.jar&lt;/JAR_FILE&gt;</div><div class="line">	&lt;/buildArgs&gt;</div><div class="line">            &lt;/configuration&gt;</div><div class="line">        &lt;/plugin&gt;</div><div class="line">    &lt;/plugins&gt;</div><div class="line">&lt;/build&gt;</div></pre></td></tr></table></figure>
-<p>用了个dockerfile-maven-plugin的插件，直接将mvn package 的jar文件名传到dockerfile里面去。<br>可以直接用mvn命令来build 。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn install dockerfile:build</div></pre></td></tr></table></figure>
-<p>build完之后可以push，带tag的push，非常方便。官网<a href="https://github.com/spotify/docker-maven-plugin" target="_blank" rel="external">https://github.com/spotify/docker-maven-plugin</a></p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/12/23/spring-docker/" data-id="cjc43jum9002cxcuaid80xpze" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
-    <nav><ul class="pagination"><li class="disabled"><span class="page-prev"><i class="fa fa-chevron-left"></i> Prev</a></li><li class="active"><span class="page-number">1</span></li><li><a class="page-number" href="/page/2/">2</a></li><li><a class="page-number" href="/page/3/">3</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/12/">12</a></li><li><a class="page-next" rel="next" href="/page/2/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+    <nav><ul class="pagination"><li class="disabled"><span class="page-prev"><i class="fa fa-chevron-left"></i> Prev</a></li><li class="active"><span class="page-number">1</span></li><li><a class="page-number" href="/page/2/">2</a></li><li><a class="page-number" href="/page/3/">3</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/13/">13</a></li><li><a class="page-next" rel="next" href="/page/2/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
   </div>
 
 
@@ -566,7 +569,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">10</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -583,7 +586,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -592,6 +595,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/17/java-gson/">java-gson简单应用</a>
+        </li>
+      
+        <li>
+          <a href="/2018/01/17/java-httpclient/">java-HttpClient</a>
+        </li>
       
         <li>
           <a href="/2018/01/06/redis-benchmark-with-ssdb/">redis与ssdb对比压测</a>
@@ -603,14 +614,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
         </li>
       
     </ul>

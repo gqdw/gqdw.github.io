@@ -88,6 +88,132 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-tcp1" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/01/tcp1/">tcp连接建立和断开</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/05/01/tcp1/" class="article-date"><time datetime="2017-05-01T13:17:50.000Z" itemprop="datePublished">2017-05-01</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-建立连接"><a href="#1-建立连接" class="headerlink" title="1. 建立连接"></a>1. 建立连接</h3><p>又叫三次握手，老外叫three way handshake，很好记，分别发三个包，syn,syn+ack,ack<br>用tcpdump出来就是如下的形式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">10:24:00.265744 IP (tos 0x10, ttl 64, id 21567, offset 0, flags [DF], proto TCP (6), length 64)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [S], cksum 0xf35a (correct), seq 1754109131, win 65535, options [mss 1460,nop,wscale 5,nop,nop,TS val 811537995 ecr 0,sackOK,eol], length 0</div><div class="line"></div><div class="line">10:24:00.286693 IP (tos 0x0, ttl 52, id 0, offset 0, flags [DF], proto TCP (6), length 60)</div><div class="line">    114.215.206.177.5555 &gt; 192.168.3.10.58544: Flags [S.], cksum 0xafc3 (correct), seq 2349913793, ack 1754109132, win 28960, options [mss 1312,sackOK,TS val 2088043701 ecr 811537995,nop,wscale 7], length 0</div><div class="line"></div><div class="line">10:24:00.286749 IP (tos 0x10, ttl 64, id 762, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [.], cksum 0x3f00 (correct), seq 1, ack 1, win 4103, options [nop,nop,TS val 811538016 ecr 2088043701], length 0</div></pre></td></tr></table></figure>
+<h3 id="2-断开连接"><a href="#2-断开连接" class="headerlink" title="2.断开连接"></a>2.断开连接</h3><p>又叫4次挥手，多了一次是因为tcp是双向全双工的协议，要两边都关一下，然后确认。<br>但我用telnet测试的时候抓到的都是3个报文，并没有第二个的ack包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">10:24:13.326683 IP (tos 0x10, ttl 64, id 41433, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [F.], cksum 0x0c2b (correct), seq 1, ack 1, win 4103, options [nop,nop,TS val 811551028 ecr 2088043701], length 0</div><div class="line"></div><div class="line">10:24:13.347347 IP (tos 0x0, ttl 52, id 53768, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    114.215.206.177.5555 &gt; 192.168.3.10.58544: Flags [F.], cksum 0xe848 (correct), seq 1, ack 2, win 227, options [nop,nop,TS val 2088056762 ecr 811551028], length 0</div><div class="line">    </div><div class="line">10:24:13.347436 IP (tos 0x10, ttl 64, id 47236, offset 0, flags [DF], proto TCP (6), length 52)</div><div class="line">    192.168.3.10.58544 &gt; 114.215.206.177.5555: Flags [.], cksum 0xd910 (correct), seq 2, ack 2, win 4103, options [nop,nop,TS val 811551048 ecr 2088056762], length 0</div></pre></td></tr></table></figure>
+<h3 id="3-tcp头部信息图"><a href="#3-tcp头部信息图" class="headerlink" title="3. tcp头部信息图"></a>3. tcp头部信息图</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> 0                            15                              31</div><div class="line">-----------------------------------------------------------------</div><div class="line">|          source port          |       destination port        |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|                        sequence number                        |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|                     acknowledgment number                     |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|  HL   | rsvd  |C|E|U|A|P|R|S|F|        window size            |</div><div class="line">-----------------------------------------------------------------</div><div class="line">|         TCP checksum          |       urgent pointer          |</div><div class="line">-----------------------------------------------------------------</div></pre></td></tr></table></figure>
+<p>source port : 源端口, 1024~65535.<br>destination port : 目的端口,比如常见的80,22等。<br>sequence number: 序列号,用来将数据正确的顺序重新排序。<br>acknowledgment number: 确认号，tcp期望接下来收到的数据段。<br>rsvd: 用于建立和终止会话的控制功能。<br>window size: 窗口大小，发送方愿意接受窗口的大小。<br>tcp头部一共20个字节，相对udp还是复杂很多的，每次传数据之前要简历虚电路，就是上面的三次握手。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/05/01/tcp1/" data-id="cjc43jun00030xcuazwp6myeo" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-zabbix-windows-network" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/26/zabbix-windows-network/">zabbix监控windows网络流量的坑点</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2017/04/26/zabbix-windows-network/" class="article-date"><time datetime="2017-04-26T02:47:35.000Z" itemprop="datePublished">2017-04-26</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-zabbix监控windows网络流量的坑点"><a href="#1-zabbix监控windows网络流量的坑点" class="headerlink" title="1.zabbix监控windows网络流量的坑点"></a>1.zabbix监控windows网络流量的坑点</h3><p>坑点就是会自动发现一堆网络接口出来，大部分是无用的，不想linux那样干净，就eth0,eth1。</p>
+<h3 id="2-究竟该看哪个？"><a href="#2-究竟该看哪个？" class="headerlink" title="2.究竟该看哪个？"></a>2.究竟该看哪个？</h3><p>首先排除一堆无用的接口信息，比如说microsoft开头的，redhat开头的，但这个不绝对，跟底层虚拟化做法有关系。阿里云上面定位的是2个相对正常的图 </p>
+<ol>
+<li>Network traffic on Net Device PV Driver</li>
+<li>Network traffic on Net Device PV Driver #2</li>
+</ol>
+<p>PV Driver的图:<br><img src="/2017/04/26/zabbix-windows-network/chart1.png" alt="PV Driver" title="PV Driver"></p>
+<p>PV Driver #2的图:<br><img src="/2017/04/26/zabbix-windows-network/chart2.png" alt="PV Driver #2" title="PV Driver #2"></p>
+<p>看上去都挺像回事的，但是应该看哪个呢? </p>
+<p>这个不能靠猜，找阿里云的图做对比:</p>
+<img src="/2017/04/26/zabbix-windows-network/chart3.png" alt="阿里云监控图" title="阿里云监控图">
+<p>可以看出流量应该看 Network traffic on Net Device PV Driver #2</p>
+<h3 id="3-hexo引用图"><a href="#3-hexo引用图" class="headerlink" title="3.hexo引用图"></a>3.hexo引用图</h3><p>文档:<br><a href="https://hexo.io/zh-cn/docs/asset-folders.html" target="_blank" rel="external">https://hexo.io/zh-cn/docs/asset-folders.html</a></p>
+<p>_config.yml配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">post_asset_folder: true</div></pre></td></tr></table></figure>
+<p>正确的引用图片方式是使用下列的标签插件而不是 markdown ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;% asset_img example.jpg This is an example image %&#125;</div></pre></td></tr></table></figure>
+<p>通过这种方式，图片将会同时出现在文章和主页以及归档页中。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2017/04/26/zabbix-windows-network/" data-id="cjc43jun20033xcuaia54nfj7" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zabbix/">zabbix</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-salt初探" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -277,131 +403,10 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-mysql-gtid" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/16/mysql-gtid/">mysql-GTID</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/01/16/mysql-gtid/" class="article-date"><time datetime="2017-01-16T10:25:18.000Z" itemprop="datePublished">2017-01-16</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-GTID概念"><a href="#1-GTID概念" class="headerlink" title="1. GTID概念"></a>1. GTID概念</h3><p>简化了很多主从复制上面的问题。不需要像之前版本需要通过binlog的pos来确定从哪开始复制。<br>GTID = source_id:transaction_id<br>source_id是一个mysql自动生成的uuid，在datadir下面的auto.cnf里面,例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">server-uuid=6cdd37fa-d3d8-11e6-b843-00163e0030cf</div></pre></td></tr></table></figure></p>
-<p>transaction_id是事务id，递增的一个序列。连起来标识一个事务。</p>
-<h3 id="2-master上面设置"><a href="#2-master上面设置" class="headerlink" title="2. master上面设置"></a>2. master上面设置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">binlog-format=ROW</div><div class="line">log-slave-updates=true</div><div class="line">gtid-mode=on</div><div class="line">enforce-gtid-consistency=true</div><div class="line">log-bin=master-bin</div><div class="line">log-bin-index=master-bin.index</div><div class="line">server_id = 1</div></pre></td></tr></table></figure>
-<p>主要就是加了gtid-mode,enforce-gtid-consistency</p>
-<h3 id="3-slave设置"><a href="#3-slave设置" class="headerlink" title="3. slave设置"></a>3. slave设置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">server_id = 222</div><div class="line">gtid-mode=on</div><div class="line">log-bin=slave-bin</div><div class="line">log-slave-updates=true</div><div class="line">enforce-gtid-consistency=true</div><div class="line">binlog-format=ROW</div><div class="line">log-bin-index=slave-bin.index</div><div class="line">relay-log=slave1-relay-bin</div></pre></td></tr></table></figure>
-<h3 id="4-grant权限"><a href="#4-grant权限" class="headerlink" title="4. grant权限"></a>4. grant权限</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">CREATE USER &apos;repl&apos;@&apos;%&apos; IDENTIFIED BY &apos;slavepass&apos;;</div><div class="line">grant REPLICATION SLAVE ON *.* TO &apos;repl&apos;@&apos;%&apos;;</div></pre></td></tr></table></figure>
-<h3 id="5-change-master"><a href="#5-change-master" class="headerlink" title="5. change master"></a>5. change master</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">change master to master_host=&apos;10.168.105.153&apos;, master_user=&apos;repl&apos;,master_password=&apos;slavepass&apos;,master_auto_position=1;</div></pre></td></tr></table></figure>
-<h3 id="6-启动slave"><a href="#6-启动slave" class="headerlink" title="6. 启动slave"></a>6. 启动slave</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">start slave;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/01/16/mysql-gtid/" data-id="cjc43jul7001excuabdlzn176" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Alisql安装与压测" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/09/Alisql安装与压测/">Alisql安装与压测</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/01/09/Alisql安装与压测/" class="article-date"><time datetime="2017-01-09T02:15:02.000Z" itemprop="datePublished">2017-01-09</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>alisql试用</p>
-<h3 id="alisql简介"><a href="#alisql简介" class="headerlink" title="alisql简介"></a>alisql简介</h3><p><a href="http://www.infoq.com/cn/news/2016/09/AliSQL-ali-cloud-AliSQL" target="_blank" rel="external">专访丁奇：阿里云即将开源AliSQL，超大并发、针对秒杀优化</a><br>本质上是一个mysql分支。</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>alisql是从mysql5.6fork出来的版本，所以安装和5.6的一样，比较套路跟之前的mysql安装没有什么区别:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">yum -y install make gcc-c++ cmake bison-devel bison ncurses-devel</div><div class="line">cd BUILD</div><div class="line">cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql56 ..</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
-<h3 id="sysbench压测"><a href="#sysbench压测" class="headerlink" title="sysbench压测"></a>sysbench压测</h3><p>压测很关键，不同机器配置，不通server参数下得出的结果是很不同的，压测得到的数据有直观的说服力。<br>上系统之前先压一下，了解db的极限在哪。<br>sysbench安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/akopytov/sysbench</div><div class="line">git checkout origin/0.5</div><div class="line">yum install -y automake libtool</div><div class="line">./autogen.sh</div><div class="line">./configure</div><div class="line">make</div></pre></td></tr></table></figure>
-<h3 id="sysbench测试"><a href="#sysbench测试" class="headerlink" title="sysbench测试"></a>sysbench测试</h3><p>有多套lua脚本来测不同场景。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tests/db/bulk_insert.lua  tests/db/insert.lua       tests/db/parallel_prepare.lua      tests/db/select_random_ranges.lua</div><div class="line">tests/db/common.lua       tests/db/oltp.lua         tests/db/select.lua                tests/db/update_index.lua</div><div class="line">tests/db/delete.lua       tests/db/oltp_simple.lua  tests/db/select_random_points.lua  tests/db/update_non_index.lua</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">./sysbench --test=./tests/db/oltp.lua --mysql-table-engine=innodb --mysql-host=127.0.0.1 --mysql-db=dba_test --oltp-table-size=500000 --oltp_tables_count=3 --rand-init=on --mysql-user=test --mysql-password=test prepare</div><div class="line"></div><div class="line"></div><div class="line">./sysbench --test=./tests/db/oltp.lua --mysql-table-engine=innodb --mysql-host=127.0.0.1 --mysql-db=dba_test --num-threads=8 --oltp-read-only=off --report-interval=10  --max-requests=0 --percentile=99 --oltp-table-size=500000 --oltp_tables_count=3 --rand-init=on --max-time=100 --mysql-user=test --mysql-password=test run</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/01/09/Alisql安装与压测/" data-id="cjc43juiz0000xcua5yry13ip" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
-    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/4/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/3/">3</a></li><li><a class="page-number" href="/page/4/">4</a></li><li class="active"><span class="page-number">5</span></li><li><a class="page-number" href="/page/6/">6</a></li><li><a class="page-number" href="/page/7/">7</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/12/">12</a></li><li><a class="page-next" rel="next" href="/page/6/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/4/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/3/">3</a></li><li><a class="page-number" href="/page/4/">4</a></li><li class="active"><span class="page-number">5</span></li><li><a class="page-number" href="/page/6/">6</a></li><li><a class="page-number" href="/page/7/">7</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/13/">13</a></li><li><a class="page-next" rel="next" href="/page/6/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
   </div>
 
 
@@ -422,7 +427,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">10</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -439,7 +444,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -448,6 +453,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/17/java-gson/">java-gson简单应用</a>
+        </li>
+      
+        <li>
+          <a href="/2018/01/17/java-httpclient/">java-HttpClient</a>
+        </li>
       
         <li>
           <a href="/2018/01/06/redis-benchmark-with-ssdb/">redis与ssdb对比压测</a>
@@ -459,14 +472,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
         </li>
       
     </ul>

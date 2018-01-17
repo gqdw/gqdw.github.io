@@ -88,6 +88,133 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-etcd简单安装" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/02/etcd简单安装/">etcd简单安装</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/08/02/etcd简单安装/" class="article-date"><time datetime="2016-08-02T03:08:58.000Z" itemprop="datePublished">2016-08-02</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="etcd简单安装"><a href="#etcd简单安装" class="headerlink" title="etcd简单安装"></a>etcd简单安装</h2><h3 id="1-go-的安装"><a href="#1-go-的安装" class="headerlink" title="1. go 的安装"></a>1. go 的安装</h3><p>可以到官网直接下载二进制包: <a href="https://golang.org/dl/" target="_blank" rel="external">https://golang.org/dl/</a></p>
+<p><a href="https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz" target="_blank" rel="external">https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz</a></p>
+<p>设置环境变量:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export PATH=$PATH:/usr/local/go/bin/</div></pre></td></tr></table></figure>
+<h3 id="2-etcd-的安装"><a href="#2-etcd-的安装" class="headerlink" title="2.etcd 的安装"></a>2.etcd 的安装</h3><p>这里用编译的方式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/coreos/etcd.git</div><div class="line">cd etcd</div><div class="line">./build</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/etcd</div></pre></td></tr></table></figure>
+<p>会起两个端口，2379,2380.</p>
+<p>bin/etcdctl set  mykey ‘123’<br>bin/etcdctl get  mykey</p>
+<h3 id="3-etcd简介"><a href="#3-etcd简介" class="headerlink" title="3.etcd简介"></a>3.etcd简介</h3><p>看文档<a href="https://coreos.com/etcd/docs/latest/" target="_blank" rel="external">https://coreos.com/etcd/docs/latest/</a><br>A distributed, reliable key-value store for the most critical data of a distributed system.</p>
+<p>其实就是一个高效的kv store，可以做分布式部署。可以做成集群。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/08/02/etcd简单安装/" data-id="cjc43juju000excuar8fqfhpx" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-负载均衡-haproxy" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/31/负载均衡-haproxy/">[负载均衡]haproxy</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/07/31/负载均衡-haproxy/" class="article-date"><time datetime="2016-07-31T12:17:59.000Z" itemprop="datePublished">2016-07-31</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这东西非常强大..配置语法跟之前tengine的类似.</p>
+<h3 id="1-健康检查的例子"><a href="#1-健康检查的例子" class="headerlink" title="1.健康检查的例子:"></a>1.健康检查的例子:</h3><p>主要是使用check关键字:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line">#</div><div class="line"># demo config for Proxy mode</div><div class="line">#</div><div class="line"></div><div class="line">global</div><div class="line">        maxconn         20000</div><div class="line">#	ulimit-n	20000</div><div class="line">	# ulimit-n	16384</div><div class="line">        log             127.0.0.1 local0</div><div class="line">	# log /tmp/haproxy.log</div><div class="line">        uid             200</div><div class="line">        gid             200</div><div class="line">#        chroot          /var/empty</div><div class="line">	nbproc		4</div><div class="line">        daemon</div><div class="line"></div><div class="line">frontend test-proxy</div><div class="line">	bind		0.0.0.0:81</div><div class="line">	# bind		192.168.200.10:8080</div><div class="line">        mode            http</div><div class="line">        log             global</div><div class="line">        option          httplog</div><div class="line">        option          dontlognull</div><div class="line">        option          nolinger</div><div class="line">        option          http_proxy</div><div class="line">        maxconn         8000</div><div class="line">        timeout client  30s</div><div class="line"></div><div class="line">	# layer3: Valid users</div><div class="line">#	acl allow_host src 192.168.200.150/32</div><div class="line">#	http-request deny if !allow_host</div><div class="line"></div><div class="line">	# layer7: prevent private network relaying</div><div class="line">#	acl forbidden_dst url_ip 192.168.0.0/24</div><div class="line">#	acl forbidden_dst url_ip 172.16.0.0/12</div><div class="line">#	acl forbidden_dst url_ip 10.0.0.0/8</div><div class="line">#	http-request deny if forbidden_dst</div><div class="line"></div><div class="line">	default_backend test-proxy-srv</div><div class="line"></div><div class="line"></div><div class="line">backend test-proxy-srv</div><div class="line">	mode            http</div><div class="line">	timeout connect 5s</div><div class="line">	timeout server  5s</div><div class="line">	retries         2</div><div class="line">#	option          nolinger</div><div class="line">	option          http_proxy</div><div class="line"></div><div class="line">	# layer7: Only GET method is valid</div><div class="line">	acl valid_method        method GET</div><div class="line">	http-request deny if !valid_method</div><div class="line"></div><div class="line">	# layer7: protect bad reply</div><div class="line">	# http-response deny if &#123; res.hdr(content-type) audio/mp3 &#125;</div><div class="line"></div><div class="line">	balance roundrobin  #负载均衡的方式,roundrobin平均方式</div><div class="line">#	cookie SERVERID     #允许插入serverid到cookie中,serverid后面可以定义</div><div class="line"></div><div class="line">#心跳检测的URL,HTTP/1.1¥r¥nHost:XXXX,指定了心跳检测HTTP的版本,XXX为检测时请求</div><div class="line">#服务器的request中的域名是什么,这个在应用的检测URL对应的功能有对域名依赖的话需要设置</div><div class="line">	option httpchk GET / HTTP/1.0</div><div class="line"></div><div class="line">  #服务器定义,cookie 1表示serverid为1,check inter 1500 是检测心跳频率</div><div class="line">  #rise 3是3次正确认为服务器可用,fall 3是3次失败认为服务器不可用,weight代表权重</div><div class="line">	server mms1 127.0.0.1:6000 cookie 1 check inter 3000 rise 3 fall 3 weight 1</div><div class="line">	server mms2 127.0.0.1:6001 cookie 2 check inter 3000 rise 3 fall 3 weight 2</div></pre></td></tr></table></figure>
+<p>关于haproxy其实还是不太理解，可以从简单的着手。</p>
+<h3 id="2-配置一个简单的本地代理"><a href="#2-配置一个简单的本地代理" class="headerlink" title="2.配置一个简单的本地代理"></a>2.配置一个简单的本地代理</h3><p>可以写成这样，一个frontend+一个backend:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"># Simple configuration for an HTTP proxy listening on port 80 on all</div><div class="line">  # interfaces and forwarding requests to a single backend &quot;servers&quot; with a</div><div class="line">  # single server &quot;server1&quot; listening on 127.0.0.1:8000</div><div class="line">  global</div><div class="line">      daemon</div><div class="line">      maxconn 256</div><div class="line"></div><div class="line">  defaults</div><div class="line">      mode http</div><div class="line">      timeout connect 5000ms</div><div class="line">      timeout client 50000ms</div><div class="line">      timeout server 50000ms</div><div class="line"></div><div class="line">  frontend http-in</div><div class="line">      bind *:81</div><div class="line">      default_backend servers</div><div class="line"></div><div class="line">  backend servers</div><div class="line">      server server1 127.0.0.1:80 maxconn 32</div></pre></td></tr></table></figure>
+<p>也可以写成单独的listen:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"># The same configuration defined with a single listen block. Shorter but</div><div class="line">   # less expressive, especially in HTTP mode.</div><div class="line">   global</div><div class="line">       daemon</div><div class="line">       maxconn 256</div><div class="line"></div><div class="line">   defaults</div><div class="line">       mode http</div><div class="line">       timeout connect 5000ms</div><div class="line">       timeout client 50000ms</div><div class="line">       timeout server 50000ms</div><div class="line"></div><div class="line">   listen http-in</div><div class="line">       bind *:81</div><div class="line">       server server1 127.0.0.1:80 maxconn 32</div></pre></td></tr></table></figure>
+<h3 id="3-日志记录"><a href="#3-日志记录" class="headerlink" title="3.日志记录"></a>3.日志记录</h3><p>这里还缺了一个很关键的日志记录，日志需要和syslog软件相结合。<br>需要配置一下rsyslog:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ModLoad imudp</div><div class="line">$UDPServerRun 514</div><div class="line">local1.* /var/log/haproxy.log</div></pre></td></tr></table></figure>
+<p>然后在代码中配置相关内容即可:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"># Simple configuration for an HTTP proxy listening on port 80 on all</div><div class="line">  # interfaces and forwarding requests to a single backend &quot;servers&quot; with a</div><div class="line">  # single server &quot;server1&quot; listening on 127.0.0.1:8000</div><div class="line">  global</div><div class="line">      daemon</div><div class="line">      maxconn 256</div><div class="line">log 127.0.0.1 local1</div><div class="line"></div><div class="line">  defaults</div><div class="line">log global</div><div class="line">      mode http</div><div class="line">      timeout connect 5000ms</div><div class="line">      timeout client 50000ms</div><div class="line">      timeout server 50000ms</div><div class="line">option httplog</div><div class="line"></div><div class="line">  frontend http-in</div><div class="line">      bind *:81</div><div class="line">      default_backend servers</div><div class="line"></div><div class="line">  backend servers</div><div class="line">      server server1 127.0.0.1:80 maxconn 32</div></pre></td></tr></table></figure>
+<h3 id="4-配置statistics"><a href="#4-配置statistics" class="headerlink" title="4.配置statistics"></a>4.配置statistics</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">listen stats</div><div class="line">    bind *:82</div><div class="line">    mode http</div><div class="line">    stats enable</div><div class="line">    stats hide-version</div><div class="line">    stats realm Haproxy\ Statistics</div><div class="line">    stats uri /</div><div class="line">    stats auth admin:Qq123456</div></pre></td></tr></table></figure>
+<p>haproxy提供一个很方便的monitor界面,比nginx_status好看多了.内容也丰富很多.很直观.</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/07/31/负载均衡-haproxy/" data-id="cjc43jun6003axcuabfiouh8c" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/负载均衡/">负载均衡</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-负载均衡-tengine和nginx" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -270,119 +397,10 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-flask-hello" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/15/flask-hello/">[flask] hello</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/06/15/flask-hello/" class="article-date"><time datetime="2016-06-15T02:59:51.000Z" itemprop="datePublished">2016-06-15</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="0-hello-py"><a href="#0-hello-py" class="headerlink" title="0.hello.py"></a>0.hello.py</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">from flask import Flask</div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line">@app.route(&apos;/&apos;)</div><div class="line">def index():</div><div class="line">	return &apos;&lt;h1&gt;hello world.&lt;/h1&gt;&apos;</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">	app.run(debug=True)</div></pre></td></tr></table></figure>
-<p>运行起来就是python hello1.py</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">python hello1.py                                                                                                                                                   !10032</div><div class="line"> * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)</div><div class="line"> * Restarting with stat</div><div class="line"> * Debugger is active!</div><div class="line"> * Debugger pin code: 270-940-657</div></pre></td></tr></table></figure>
-<h2 id="1-增加一个manager"><a href="#1-增加一个manager" class="headerlink" title="1.增加一个manager"></a>1.增加一个manager</h2><p>类似django的运行方式。需要的步骤也很少。<br>需要引入一个ext.script的包.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">from flask.ext.script import Manager</div><div class="line">manager = Manager(app)</div><div class="line"># ...</div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">manager.run()</div></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/06/15/flask-hello/" data-id="cjc43juk1000kxcuaydtk8blm" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-python-线程与进程" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/30/python-线程与进程/">python 线程与进程</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/05/30/python-线程与进程/" class="article-date"><time datetime="2016-05-30T03:27:01.000Z" itemprop="datePublished">2016-05-30</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0-计算100w随机数的和，分别用多进程和多线程，结果是在同样的环境下，多进程更能压榨每个cpu使用率-因为GIL的存在，所以python里面的多线程效率有瓶颈。"><a href="#0-计算100w随机数的和，分别用多进程和多线程，结果是在同样的环境下，多进程更能压榨每个cpu使用率-因为GIL的存在，所以python里面的多线程效率有瓶颈。" class="headerlink" title="0. 计算100w随机数的和，分别用多进程和多线程，结果是在同样的环境下，多进程更能压榨每个cpu使用率,因为GIL的存在，所以python里面的多线程效率有瓶颈。"></a>0. 计算100w随机数的和，分别用多进程和多线程，结果是在同样的环境下，多进程更能压榨每个cpu使用率,因为GIL的存在，所以python里面的多线程效率有瓶颈。</h3><p>当然老司机知道，这种cpu密集的运算，本来就不应该用多线程来做，这是后话。<br>例子是抄的，对比一下很明显。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">import multiprocessing</div><div class="line">import random</div><div class="line"></div><div class="line">def compute(n):</div><div class="line">	return sum(</div><div class="line">		[random.randint(1, 100) for i in range(1000000)])</div><div class="line"></div><div class="line"></div><div class="line">pool = multiprocessing.Pool(8)</div><div class="line">print &quot;results: %s&quot; % pool.map(compute, range(8))</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">import random</div><div class="line">import threading</div><div class="line"></div><div class="line">results = []</div><div class="line"></div><div class="line">def compute():</div><div class="line">	results.append(sum(</div><div class="line">		[random.randint(1, 100) for i in range(1000000)]))</div><div class="line"></div><div class="line"></div><div class="line">workers = [threading.Thread(target=compute) for x in range(8)]</div><div class="line"></div><div class="line">for worker in workers:</div><div class="line">	worker.start()</div><div class="line"></div><div class="line">for worker in workers:</div><div class="line">	worker.join()</div><div class="line"></div><div class="line">print &quot;results: %s&quot; % results</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/05/30/python-线程与进程/" data-id="cjc43julv001vxcuapkb3wsi5" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
-    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/9/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/8/">8</a></li><li><a class="page-number" href="/page/9/">9</a></li><li class="active"><span class="page-number">10</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-number" href="/page/12/">12</a></li><li><a class="page-next" rel="next" href="/page/11/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/page/9/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="disabled"><span class="page-space">&hellip;</span></li><li><a class="page-number" href="/page/8/">8</a></li><li><a class="page-number" href="/page/9/">9</a></li><li class="active"><span class="page-number">10</span></li><li><a class="page-number" href="/page/11/">11</a></li><li><a class="page-number" href="/page/12/">12</a></li><li><a class="page-number" href="/page/13/">13</a></li><li><a class="page-next" rel="next" href="/page/11/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
   </div>
 
 
@@ -403,7 +421,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">8</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">10</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -420,7 +438,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -429,6 +447,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/17/java-gson/">java-gson简单应用</a>
+        </li>
+      
+        <li>
+          <a href="/2018/01/17/java-httpclient/">java-HttpClient</a>
+        </li>
       
         <li>
           <a href="/2018/01/06/redis-benchmark-with-ssdb/">redis与ssdb对比压测</a>
@@ -440,14 +466,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/25/spring-jdbc-datasource/">spring jdbc数据源</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/23/spring-docker/">spring boot与docker结合</a>
         </li>
       
     </ul>
