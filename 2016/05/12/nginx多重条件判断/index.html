@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://qinyueming.cc/2016/05/12/nginx多重条件判断/index.html">
 <meta property="og:site_name" content="秦悦明的运维笔记">
 <meta property="og:description" content="nginx配置语法里面的if其实是不支持逻辑与，或操作的。但是可以通过set变量的方式绕过去。实例如下: 12345678910111213141516if ($http_user_agent ~ &amp;quot;^Mozilla/5.0&amp;quot; ) &amp;#123; 	set $test 1;&amp;#125;if ($request_uri ~ &amp;quot;sendSMS&amp;quot;)&amp;#123;	se">
-<meta property="og:updated_time" content="2017-10-13T11:56:08.364Z">
+<meta property="og:updated_time" content="2018-01-21T13:38:53.762Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="nginx多重条件判断">
 <meta name="twitter:description" content="nginx配置语法里面的if其实是不支持逻辑与，或操作的。但是可以通过set变量的方式绕过去。实例如下: 12345678910111213141516if ($http_user_agent ~ &amp;quot;^Mozilla/5.0&amp;quot; ) &amp;#123; 	set $test 1;&amp;#125;if ($request_uri ~ &amp;quot;sendSMS&amp;quot;)&amp;#123;	se">
@@ -119,7 +119,7 @@ ga('send', 'pageview');
       
         <p>nginx配置语法里面的if其实是不支持逻辑与，或操作的。但是可以通过set变量的方式绕过去。实例如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">if ($http_user_agent ~ &quot;^Mozilla/5.0&quot; ) &#123;</div><div class="line"> 	set $test 1;</div><div class="line">&#125;</div><div class="line">if ($request_uri ~ &quot;sendSMS&quot;)</div><div class="line">&#123;</div><div class="line">	set $test &quot;$&#123;test&#125;2&quot;;</div><div class="line">&#125;</div><div class="line">if ($request_uri !~ &quot;vcode&quot;)</div><div class="line">&#123;</div><div class="line">	set $test &quot;$&#123;test&#125;3&quot; ;</div><div class="line">&#125;</div><div class="line">if ($test = 123)</div><div class="line">&#123;</div><div class="line">	return 403;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>代码用于屏蔽所有Mozilla的agent发起的sendSMS uri的请求，并且uri中没有包含vcode信息的请求。直接会被返回403.</p>
+<p>代码用于屏蔽所有Mozilla的agent发起的sendSMS uri的请求，并且uri中没有包含vcode信息的请求。直接会被返回403。这里要注意的是set操作进行的是不是算数操作，而是字符串拼接。<br>当然，如果是做合法性校验，应该也要在后端代码里面做。</p>
 
       
     </div>
