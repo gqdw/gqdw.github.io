@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://qinyueming.cc/2018/01/06/redis-benchmark-with-ssdb/index.html">
 <meta property="og:site_name" content="秦悦明的运维笔记">
 <meta property="og:description" content="1. ssdb简介“一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.”官网上面是这么说的。个人理解是一个兼容redis数据结构，底层用leveldb的nosql数据库。 2. ssdb安装1234567yum install -y autoconf gcc-c++wget --no-check-certificate https://github.com/ideawu/">
-<meta property="og:updated_time" content="2018-01-07T08:07:04.481Z">
+<meta property="og:updated_time" content="2018-01-21T12:59:24.353Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis与ssdb对比压测">
 <meta name="twitter:description" content="1. ssdb简介“一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.”官网上面是这么说的。个人理解是一个兼容redis数据结构，底层用leveldb的nosql数据库。 2. ssdb安装1234567yum install -y autoconf gcc-c++wget --no-check-certificate https://github.com/ideawu/">
@@ -229,7 +229,7 @@ ga('send', 'pageview');
 </tr>
 </tbody>
 </table>
-<p>redis不论set，get都是15w左右的qps，ssdb差不多是3，4w左右，差距还是有一些的，redis基本上是全面碾压ssdb。</p>
+<p>redis不论set，get都是15w左右的qps，ssdb差不多是3，4w左右，差距还是有一些的，redis基本上是全面碾压ssdb。<br>当然我个人觉得如果是实际业务的话，也应该在技术选型的时候压测一把，特定业务场景的压测非常重要。另外redis比ssdb优势的一点是其社区更加壮大，可运维性大于ssdb，当然这是题外话了。</p>
 
       
     </div>
