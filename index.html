@@ -88,6 +88,140 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-spring-restfull" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/31/spring-restfull/">spring-restfull</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2018/01/31/spring-restfull/" class="article-date"><time datetime="2018-01-31T01:45:06.000Z" itemprop="datePublished">2018-01-31</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-maven依赖"><a href="#1-maven依赖" class="headerlink" title="1. maven依赖"></a>1. maven依赖</h3><p>能用ide的用ide，或者用spring的命令行生成项目文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-boot-starter-data-rest&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<h3 id="2-定义对象"><a href="#2-定义对象" class="headerlink" title="2. 定义对象"></a>2. 定义对象</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public class Greeting &#123;</div><div class="line"></div><div class="line">    private final long id;</div><div class="line">    private final String content;</div><div class="line"></div><div class="line">    public Greeting(long id, String content) &#123;</div><div class="line">        this.id = id;</div><div class="line">        this.content = content;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public long getId() &#123;</div><div class="line">        return id;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public String getContent() &#123;</div><div class="line">        return content;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-定义controller"><a href="#3-定义controller" class="headerlink" title="3. 定义controller"></a>3. 定义controller</h3><p>GreetingController.java</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">import java.util.concurrent.atomic.AtomicLong;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestParam;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">@RestController</div><div class="line">public class GreetingController &#123;</div><div class="line"></div><div class="line">    private static final String template = &quot;Hello, %s!&quot;;</div><div class="line">    private final AtomicLong counter = new AtomicLong();</div><div class="line"></div><div class="line">    @RequestMapping(&quot;/greeting&quot;)</div><div class="line">    public Greeting greeting(@RequestParam(value=&quot;name&quot;, defaultValue=&quot;World&quot;) String name) &#123;</div><div class="line">        return new Greeting(counter.incrementAndGet(),</div><div class="line">                            String.format(template, name));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>@RequestMapping 映射url地址，RequestMapping里面可以定义http方法@RequestMapping(method=GET).</p>
+<p>RequestParam解析请求参数。</p>
+<p>这里用了个String.format，套一个模板，还有就是id用了AtomicLong 原子对象。返回一个Greeting对象，spring boot自动配置生成json格式,里面的原理是data-rest依赖里面有com.jayway.jsonpath:json-path的依赖，spring的 <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/http/converter/json/MappingJackson2HttpMessageConverter.html" target="_blank" rel="external">MappingJackson2HttpMessageConverter</a>自动将Greeting对象转成JSON了。</p>
+<p>再详细了解一下@SpringBootApplication注解，其实他有3个注解组成</p>
+<ol>
+<li>Configuration 表明是个java配置类。</li>
+<li>EnableAutoConfiguration 打开springboot自动配置。</li>
+<li>ComponentScan 组件扫描。</li>
+</ol>
+<h3 id="4-run"><a href="#4-run" class="headerlink" title="4.  run"></a>4.  run</h3><p>运行访问得到结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http://localhost:8080/greeting</div><div class="line">&#123;&quot;id&quot;:1,&quot;content&quot;:&quot;Hello, World!&quot;&#125;</div><div class="line"></div><div class="line">http://localhost:8080/greeting?name=User</div><div class="line">&#123;&quot;id&quot;:2,&quot;content&quot;:&quot;Hello, User!&quot;&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2018/01/31/spring-restfull/" data-id="cjdaaiq1z0001c8uap9ge1w9x" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-spring-jpa-h2" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/30/spring-jpa-h2/">spring data JPA</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2018/01/30/spring-jpa-h2/" class="article-date"><time datetime="2018-01-30T07:18:37.000Z" itemprop="datePublished">2018-01-30</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-JPA提供的功能"><a href="#1-JPA提供的功能" class="headerlink" title="1. JPA提供的功能"></a>1. JPA提供的功能</h3><p>JPA主要用于在java中处理持久化操作。对ORM特性和功能进行标准化。<br>分别定义了用来将对象模型映射到关系模型API,可以在对象上面执行CRUD操作，一种对象查询语言以及通过对象图获取数据的标准API。</p>
+<p>简单来说就是ORM的java规范，比jdbc要方便太多太多。</p>
+<p>JPA的实现有很多种，比如Hibernate,openJPA等。</p>
+<h3 id="2-maven依赖"><a href="#2-maven依赖" class="headerlink" title="2. maven依赖"></a>2. maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;com.h2database&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;h2&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<h3 id="3-1-定义一个entity"><a href="#3-1-定义一个entity" class="headerlink" title="3.1 定义一个entity"></a>3.1 定义一个entity</h3><p>跟普通的BEAN对象差别不大，就是多了一些JPA的注解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">package hello;</div><div class="line"></div><div class="line">import javax.persistence.Entity;</div><div class="line">import javax.persistence.GeneratedValue;</div><div class="line">import javax.persistence.GenerationType;</div><div class="line">import javax.persistence.Id;</div><div class="line"></div><div class="line">@Entity</div><div class="line">public class Customer &#123;</div><div class="line"></div><div class="line">    @Id</div><div class="line">    @GeneratedValue(strategy=GenerationType.AUTO)</div><div class="line">    private Long id;</div><div class="line">    private String firstName;</div><div class="line">    private String lastName;</div><div class="line"></div><div class="line">    protected Customer() &#123;&#125;</div><div class="line"></div><div class="line">    public Customer(String firstName, String lastName) &#123;</div><div class="line">        this.firstName = firstName;</div><div class="line">        this.lastName = lastName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String toString() &#123;</div><div class="line">        return String.format(</div><div class="line">                &quot;Customer[id=%d, firstName=&apos;%s&apos;, lastName=&apos;%s&apos;]&quot;,</div><div class="line">                id, firstName, lastName);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-1-几个关键的注解"><a href="#3-1-几个关键的注解" class="headerlink" title="3.1 几个关键的注解"></a>3.1 几个关键的注解</h3><p>@Entity 定义实体，如果一个对象在数据库端与一个带有主键的纪录相对于，那么该对象就称为实体。可以用@Table注解指定表名。</p>
+<p>@Id 标记了主键属性。</p>
+<p>@GeneratedValue注解告诉JPA，应用程序将不负责分配主键值，stratepy属性指定实体类的ID生成策略。</p>
+<h3 id="4-定义一个repository接口"><a href="#4-定义一个repository接口" class="headerlink" title="4 定义一个repository接口"></a>4 定义一个repository接口</h3><p>repository是spring dat jpa里面的特性，很magic，实现了CrudRepository接口就能自动实现CRUD操作了，不用自己去实现方法！ amazing! I like it!</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">import org.springframework.data.repository.CrudRepository;</div><div class="line"></div><div class="line">public interface CustomerRepository extends CrudRepository&lt;Customer, Long&gt; &#123;</div><div class="line"></div><div class="line">    List&lt;Customer&gt; findByLastName(String lastName);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>将Entity和Id的值传到CrudRepository泛型中去即可。也可以自己定义查询，比如上面定义的findByLastName。很方便。</p>
+<h3 id="5-调用"><a href="#5-调用" class="headerlink" title="5.调用"></a>5.调用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public CommandLineRunner demo(CustomerRepository repository)&#123;</div><div class="line">	return (args)-&gt; &#123;</div><div class="line">		repository.save(new Customer(&quot;Jack&quot;,&quot;Bauer&quot;));</div><div class="line">		repository.save(new Customer(&quot;Chloe&quot;, &quot;O&apos;Brian&quot;));</div><div class="line">		repository.save(new Customer(&quot;Kim&quot;, &quot;Bauer&quot;));</div><div class="line">		repository.save(new Customer(&quot;David&quot;, &quot;Palmer&quot;));</div><div class="line">		repository.save(new Customer(&quot;Michelle&quot;, &quot;Dessler&quot;));</div><div class="line"></div><div class="line">		logger.info(&quot;Customers found with findAll():&quot;);</div><div class="line">		logger.info(&quot;--------------------------------&quot;);</div><div class="line">		for (Customer customer : repository.findAll())&#123;</div><div class="line">			logger.info(customer.toString());</div><div class="line">		&#125;</div><div class="line">		logger.info(&quot;&quot;);</div><div class="line">		Customer customer = repository.findOne(1L);</div><div class="line">		logger.info(&quot;Customer found with findOne(1L):&quot;);</div><div class="line">		logger.info(&quot;---------------------------------&quot;);</div><div class="line">		logger.info(customer.toString());</div><div class="line">		logger.info(&quot;&quot;);</div><div class="line"></div><div class="line">		logger.info(&quot;Customer found with findByLastName(&apos;Bauer&apos;):&quot;);</div><div class="line">		logger.info(&quot;-------------------------------------------&quot;);</div><div class="line">		for (Customer bauer : repository.findByLastName(&quot;Bauer&quot;))&#123;</div><div class="line">			logger.info(bauer.toString());</div><div class="line">		&#125;</div><div class="line">		logger.info(&quot;&quot;);</div><div class="line"></div><div class="line">	&#125;;</div></pre></td></tr></table></figure>
+<p>直接开个CustomerRepository的对象，各种增删改查就可以了。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2018/01/30/spring-jpa-h2/" data-id="cjdaaiq1u0000c8uap5f7oywp" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-java-gson" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -379,172 +513,6 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-redis-basic" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/04/redis-basic/">redis基础</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2018/01/04/redis-basic/" class="article-date"><time datetime="2018-01-04T12:48:31.000Z" itemprop="datePublished">2018-01-04</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-redis支持的五大数据结构"><a href="#1-redis支持的五大数据结构" class="headerlink" title="1. redis支持的五大数据结构"></a>1. redis支持的五大数据结构</h3><p>分别是</p>
-<ul>
-<li>string</li>
-<li>list</li>
-<li>set</li>
-<li>hash</li>
-<li>zset (有序集合)</li>
-</ul>
-<h3 id="2-string-字符串"><a href="#2-string-字符串" class="headerlink" title="2. string 字符串"></a>2. string 字符串</h3><p>基本上用法跟另一个开源产品memcached的用法差不多了，k-v结构.<br>相关命令是:</p>
-<ul>
-<li>set</li>
-<li>get</li>
-<li>del</li>
-</ul>
-<p>没啥多说的，如果你喜欢的话可以存文件。</p>
-<h3 id="3-list-队列"><a href="#3-list-队列" class="headerlink" title="3. list 队列"></a>3. list 队列</h3><p>redis里面的队列能做到双向队列，两头都可以操作。<br>相关命令是:</p>
-<ul>
-<li>rpush</li>
-<li>rpop</li>
-<li>lpush</li>
-<li>lpop</li>
-<li>lindex 获取给定位置的单个元素</li>
-<li>lrange 获取给定范围上的所有值</li>
-</ul>
-<p>一个非常典型的用法是用作消息队列，如果是先进先出的那种，可以直接用rpush和lpop，so easy。</p>
-<h3 id="4-set-集合"><a href="#4-set-集合" class="headerlink" title="4. set 集合"></a>4. set 集合</h3><p>存储的方式是无序的，用户可以通过sadd命令将元素添加到集合，使用srem将元素从集合中删除。<br>相关命令:</p>
-<ul>
-<li>sadd</li>
-<li>srem</li>
-<li>sismember 判断是否是集合中的元素</li>
-<li>smembers 获取集合包含的所有元素</li>
-</ul>
-<h3 id="5-hash"><a href="#5-hash" class="headerlink" title="5. hash"></a>5. hash</h3><p>相关命令:</p>
-<ul>
-<li>hset</li>
-<li>hget</li>
-<li>hgetall</li>
-<li>hdel</li>
-</ul>
-<h3 id="5-zset-有序集合"><a href="#5-zset-有序集合" class="headerlink" title="5. zset 有序集合"></a>5. zset 有序集合</h3><p>集合带分值(score)，分值必须为浮点数。有序集合是redis里面唯一一个即可以根据成员访问元素，又可以根据分值的排列顺序来访问元素的结构。<br>相关命令:</p>
-<ul>
-<li>zadd</li>
-<li>zrange</li>
-<li>zrangebyscore</li>
-<li>zrem</li>
-</ul>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2018/01/04/redis-basic/" data-id="cjc43jult001txcua8265mgyc" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-spring-jdbcTemplate" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2017/12/25/spring-jdbcTemplate/" class="article-date"><time datetime="2017-12-25T08:44:51.000Z" itemprop="datePublished">2017-12-25</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-创建Account类和AccountDao接口"><a href="#1-创建Account类和AccountDao接口" class="headerlink" title="1. 创建Account类和AccountDao接口"></a>1. 创建Account类和AccountDao接口</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class Account &#123;</div><div class="line">    private long id;</div><div class="line">    private String ownerName;</div><div class="line">    private double balance;</div><div class="line">    private Date accessTime;</div><div class="line">    private boolean locked;</div><div class="line">    ...</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public interface AccountDao &#123;</div><div class="line">    public void insert(Account account);</div><div class="line">    public void update(Account account);</div><div class="line">    public void update(List&lt;Account&gt; accounts);</div><div class="line">    public void delete(long accountId);</div><div class="line">    public Account find(long accountId);</div><div class="line">    public List&lt;Account&gt; find(List&lt;Long&gt; accountIds);</div><div class="line">    public List&lt;Account&gt; find(String ownerName);</div><div class="line">    public List&lt;Account&gt; find(boolean locked);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="2-实现AccountDao接口的AccountDaoJdbcImpl类"><a href="#2-实现AccountDao接口的AccountDaoJdbcImpl类" class="headerlink" title="2. 实现AccountDao接口的AccountDaoJdbcImpl类"></a>2. 实现AccountDao接口的AccountDaoJdbcImpl类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class AccountDaoJdbcImpl implements AccountDao &#123;</div><div class="line"></div><div class="line">	private JdbcTemplate jdbcTemplate;</div><div class="line"></div><div class="line">	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) &#123;</div><div class="line">		this.jdbcTemplate = jdbcTemplate;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void insert(Account account) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<h3 id="3-使用jdbcTemplate类定义jdbcTemplate-Bean-并使用dataSource-Bean-满足DataSource其依赖"><a href="#3-使用jdbcTemplate类定义jdbcTemplate-Bean-并使用dataSource-Bean-满足DataSource其依赖" class="headerlink" title="3. 使用jdbcTemplate类定义jdbcTemplate Bean,并使用dataSource Bean 满足DataSource其依赖"></a>3. 使用jdbcTemplate类定义jdbcTemplate Bean,并使用dataSource Bean 满足DataSource其依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public DataSource dataSource() &#123;</div><div class="line">    DriverManagerDataSource dataSource = new DriverManagerDataSource();</div><div class="line">    dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);</div><div class="line">    dataSource.setUrl(&quot;jdbc:h2:tcp://localhost/~/test&quot;);</div><div class="line">    dataSource.setUsername(&quot;sa&quot;);</div><div class="line">    dataSource.setPassword(&quot;&quot;);</div><div class="line">    return dataSource;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Bean</div><div class="line">public JdbcTemplate jdbcTemplate() &#123;</div><div class="line">    JdbcTemplate jdbcTemplate = new JdbcTemplate();</div><div class="line">    jdbcTemplate.setDataSource(dataSource());</div><div class="line">    return jdbcTemplate;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="4-使用AccountDaoJdbcImpl创建accountDao-bean-并将jdbcTemplate-Bean注入其中"><a href="#4-使用AccountDaoJdbcImpl创建accountDao-bean-并将jdbcTemplate-Bean注入其中" class="headerlink" title="4. 使用AccountDaoJdbcImpl创建accountDao bean,并将jdbcTemplate Bean注入其中:"></a>4. 使用AccountDaoJdbcImpl创建accountDao bean,并将jdbcTemplate Bean注入其中:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@Bean</div><div class="line">public AccountDao accountDao() &#123;</div><div class="line">    AccountDaoJdbcImpl accountDao = new AccountDaoJdbcImpl();</div><div class="line">    accountDao.setJdbcTemplate(jdbcTemplate());</div><div class="line">    return accountDao;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="5-main中查找accountDao-bean"><a href="#5-main中查找accountDao-bean" class="headerlink" title="5. main中查找accountDao bean"></a>5. main中查找accountDao bean</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AccountDao accountDao = applicationContext.getBean(AccountDao.class);</div></pre></td></tr></table></figure>
-<p>之后便意味着可以在accountdaojdbcimpl中使用jdbctemplate 了。</p>
-<h3 id="6-使用jdbctemplate运行查询"><a href="#6-使用jdbctemplate运行查询" class="headerlink" title="6. 使用jdbctemplate运行查询"></a>6. 使用jdbctemplate运行查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public Account find(long accountId) &#123;</div><div class="line">	return jdbcTemplate</div><div class="line">			.queryForObject(</div><div class="line">					&quot;select id,owner_name,balance,access_time,locked from account where id = ?&quot;,</div><div class="line">					new RowMapper&lt;Account&gt;() &#123;</div><div class="line">						public Account mapRow(ResultSet rs, int rowNum)</div><div class="line">								throws SQLException &#123;</div><div class="line">							Account account = new Account();</div><div class="line">							account.setId(rs.getLong(&quot;id&quot;));</div><div class="line">							account.setOwnerName(rs.getString(&quot;owner_name&quot;));</div><div class="line">							account.setBalance(rs.getDouble(&quot;balance&quot;));</div><div class="line">							account.setAccessTime(rs</div><div class="line">									.getTimestamp(&quot;access_time&quot;));</div><div class="line">							account.setLocked(rs.getBoolean(&quot;locked&quot;));</div><div class="line">							return account;</div><div class="line">						&#125;</div><div class="line"></div><div class="line">					&#125;, accountId);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用jdbctemplate的 queryforobject方法。</p>
-<p>调用参数是 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public &lt;T&gt; T queryForObject(String sql, RowMapper&lt;T&gt; rowMapper, Object... args) throws DataAccessException &#123;</div><div class="line">     List&lt;T&gt; results = (List)this.query((String)sql, (Object[])args, (ResultSetExtractor)(new RowMapperResultSetExtractor(rowMapper, 1)));</div><div class="line">     return DataAccessUtils.requiredSingleResult(results);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>第一个参数是string的sql 语句，sql语句里面用问号做了占位符。第二个是RowMapper的接口，这里创建了一个匿名类，第三个之后是可变参数列表。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface RowMapper&lt;T&gt; &#123;</div><div class="line">    T mapRow(ResultSet var1, int var2) throws SQLException;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>RowMapper<t> 里面就一个函数，mapRow,从ResultSet对象中获取值填充属性。比如这里的，new了一个Account对象，然后把ResultSet里面的属性填充一下就行了。</t></p>
-<p>在main中这样调用即可:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">AccountDao accountDao = applicationContext.getBean(AccountDao.class);</div><div class="line">Account account = accountDao.find(100L);</div></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2017/12/25/spring-jdbcTemplate/" data-id="cjc43jumm002qxcuad68lfamy" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
@@ -569,7 +537,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">10</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">11</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -578,7 +546,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 12px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 18px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -586,7 +554,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -595,6 +563,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/31/spring-restfull/">spring-restfull</a>
+        </li>
+      
+        <li>
+          <a href="/2018/01/30/spring-jpa-h2/">spring data JPA</a>
+        </li>
       
         <li>
           <a href="/2018/01/17/java-gson/">java-gson简单应用</a>
@@ -606,14 +582,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2018/01/06/redis-benchmark-with-ssdb/">redis与ssdb对比压测</a>
-        </li>
-      
-        <li>
-          <a href="/2018/01/04/redis-basic/">redis基础</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
         </li>
       
     </ul>

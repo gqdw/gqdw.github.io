@@ -88,6 +88,136 @@ ga('send', 'pageview');
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-spring-helloworld" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/13/spring-helloworld/">spring-helloworld</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/10/13/spring-helloworld/" class="article-date"><time datetime="2016-10-13T06:57:39.000Z" itemprop="datePublished">2016-10-13</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-创建一个java项目"><a href="#1-创建一个java项目" class="headerlink" title="1.创建一个java项目"></a>1.创建一个java项目</h3><p>最好是maven项目，可以自己下载包，比较方便。</p>
+<h3 id="2-添加spring库"><a href="#2-添加spring库" class="headerlink" title="2.添加spring库"></a>2.添加spring库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;4.3.3.RELEASE&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<h3 id="3-创建源文件"><a href="#3-创建源文件" class="headerlink" title="3.创建源文件"></a>3.创建源文件</h3><p>HelloWord.java<br>一个普通的class</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">package com.tutorialspoint;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Created by gqdw on 13/10/2016.</div><div class="line"> */</div><div class="line">public class HelloWorld &#123;</div><div class="line">    private String message;</div><div class="line">    public void setMessage(String m)&#123;</div><div class="line">        message = m;</div><div class="line">    &#125;</div><div class="line">    public void getMessage()&#123;</div><div class="line">        System.out.println(&quot;your Message : &quot; + message);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>MainApp.java<br>MainApp通过spring bean来获取对接，然后调用他的方法，bean通过xml文件来配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">package com.tutorialspoint;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Created by gqdw on 13/10/2016.</div><div class="line"> */</div><div class="line">import org.springframework.context.ApplicationContext;</div><div class="line">import org.springframework.context.support.ClassPathXmlApplicationContext;</div><div class="line"></div><div class="line">public class MainApp &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        ApplicationContext context =</div><div class="line">                new ClassPathXmlApplicationContext(&quot;Beans.xml&quot;);</div><div class="line">        HelloWorld obj = (HelloWorld) context.getBean(&quot;HelloWorld&quot;);</div><div class="line">        obj.getMessage();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ClassPathXmlApplicationContext来获取context，然后用context的getBean方法来获取HelloWorld对象。</p>
+<p>Beans.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;</div><div class="line"></div><div class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</div><div class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</div><div class="line">    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd&quot;&gt;</div><div class="line"></div><div class="line">&lt;bean id=&quot;HelloWorld&quot; class=&quot;com.tutorialspoint.HelloWorld&quot;&gt;</div><div class="line">    &lt;property name=&quot;message&quot; value=&quot;Hello World! aca&quot;/&gt;</div><div class="line">&lt;/bean&gt;</div><div class="line"></div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure>
+<p>Bean文件配置了一个id，class，相当于new了一个HelloWorld对象。value给message，</p>
+<h3 id="4-运行程序"><a href="#4-运行程序" class="headerlink" title="4.运行程序"></a>4.运行程序</h3><p>程序正常运行就能打印出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Your Message : Hello World! aca</div></pre></td></tr></table></figure>
+<p>简单的helloworld程序，演示了spring bean的装配。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/10/13/spring-helloworld/" data-id="cjc43jum20024xcuavfoe0uef" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-使用celery做异步任务" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/09/使用celery做异步任务/">使用celery做异步任务</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/10/09/使用celery做异步任务/" class="article-date"><time datetime="2016-10-09T11:13:31.000Z" itemprop="datePublished">2016-10-09</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-选择broker"><a href="#1-选择broker" class="headerlink" title="1.选择broker"></a>1.选择broker</h3><p>可以选择的broker很多，一般选择rabbitmq。本身就是消息中间件。rabbitmq的安装略。</p>
+<h3 id="2-安装celery"><a href="#2-安装celery" class="headerlink" title="2.安装celery"></a>2.安装celery</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pip install celery</div></pre></td></tr></table></figure>
+<h3 id="3-创建tasks"><a href="#3-创建tasks" class="headerlink" title="3.创建tasks"></a>3.创建tasks</h3><p>创建tasks.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">from celery import Celery</div><div class="line"></div><div class="line">app = Celery(&apos;tasks&apos;, broker=&apos;amqp://guest@localhost//&apos;)</div><div class="line"></div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
+<h3 id="4-运行celery-worker"><a href="#4-运行celery-worker" class="headerlink" title="4.运行celery worker"></a>4.运行celery worker</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ celery -A tasks worker --loglevel=info</div></pre></td></tr></table></figure>
+<h3 id="5-调用tasks"><a href="#5-调用tasks" class="headerlink" title="5.调用tasks"></a>5.调用tasks</h3><p>很简单，import进来，然后调用delay函数即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">add.delay(1,2)</div></pre></td></tr></table></figure>
+<p>celery worker进程会收到这个消息并执行他</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Received task: proj.tasks.add[9e9ee3e8-1350-4858-9fbb-0fd62779c3e1]</div><div class="line">Task proj.tasks.add[9e9ee3e8-1350-4858-9fbb-0fd62779c3e1] succeeded in 0.00637572002597s: 3</div></pre></td></tr></table></figure>
+<p>注意，这里并没有记录结果。</p>
+<h3 id="6-保存结果"><a href="#6-保存结果" class="headerlink" title="6.保存结果"></a>6.保存结果</h3><p>celery里面做法也很简单，初始化app的时候加个backend就可以了。这里已redis为例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Celery(&apos;tasks&apos;, backend=&apos;redis://localhost&apos;, broker=&apos;amqp://&apos;)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">result = add.delay(4, 4)</div><div class="line">ret = result.get(timeout=1)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://qinyueming.cc/2016/10/09/使用celery做异步任务/" data-id="cjc43jun20035xcuavl3a960a" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-java生成mysql分区语句" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -312,207 +442,6 @@ ga('send', 'pageview');
 
 
   
-    <article id="post-容量规划" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/24/容量规划/">容量规划</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/09/24/容量规划/" class="article-date"><time datetime="2016-09-24T07:05:26.000Z" itemprop="datePublished">2016-09-24</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-具体问题具体分析"><a href="#1-具体问题具体分析" class="headerlink" title="1.具体问题具体分析"></a>1.具体问题具体分析</h3><p>首先，这是一个比较大的话题，比较宽泛，跟业务和应用，架构都有很大关系。这里单从运维角度谈几个常见的应用的容量规划。</p>
-<h3 id="2-数据量到底有多少"><a href="#2-数据量到底有多少" class="headerlink" title="2.数据量到底有多少?"></a>2.数据量到底有多少?</h3><p>首先一个维度是数据量的级别，到底有多少，你tb级的还是pb级的，后者就必须应用分布式存储，类似hdfs，ceph那种分布式存储。tb级的数据存放主要分两种，一种是典型的关系型数据，当然放数据库里面，比如mysql，oracle，postgresql，sqlserver等。非关系型的一般有mongodb，redis等。</p>
-<h3 id="3-以mysql为例来做容量规划"><a href="#3-以mysql为例来做容量规划" class="headerlink" title="3.以mysql为例来做容量规划"></a>3.以mysql为例来做容量规划</h3><p>如果设计了单表1亿行的规模，问你需要占用多少磁盘空间，当然可以想当然的回答一个数字出来，但是这并不靠谱，有表结构了，可以在测试库里面插入模拟的1亿条数据进去，用脚本语言不是一件很困难的事情。不能随便估一个值，那不科学。完了还得考虑每天或者每个月递增多少数据，这个和业务也是紧密关联的。之后是binlog，mysql binlog记录了所有的update，insert,delete,update操作语句都记录进去，如果操作很频繁，那么产生的日志量也会非常大，也是比较难预估的。</p>
-<h3 id="4-很多非确定性因素"><a href="#4-很多非确定性因素" class="headerlink" title="4.很多非确定性因素"></a>4.很多非确定性因素</h3><p>那么存在很多非确定性因素，怎么预估? 其实不好预估，企业如果你还在乎100g硬盘和500g硬盘差异的那点钱，那么只能说你不适合搞it。物理机一般都是统一采购1t硬盘，先上1t，不够往上加。关键点是操作系统层做LVS，动态扩容对应用无感知很关键！这是我个人的一点理解(很可能有问题，轻拍).</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/09/24/容量规划/" data-id="cjc43jun40038xcuawp8suosh" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-hadoop分布式部署" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/31/hadoop分布式部署/">hadoop分布式部署</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2016/08/31/hadoop分布式部署/" class="article-date"><time datetime="2016-08-31T10:52:01.000Z" itemprop="datePublished">2016-08-31</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0-版本"><a href="#0-版本" class="headerlink" title="0.版本"></a>0.版本</h3><p>本文hadoop用的是2.7.3</p>
-<h3 id="1-hosts文件"><a href="#1-hosts文件" class="headerlink" title="1. hosts文件"></a>1. hosts文件</h3><p>写在/etc/hosts文件中。之后将hostname写到etc/hadoop/slaves里面去。</p>
-<h3 id="2-配置hdfs"><a href="#2-配置hdfs" class="headerlink" title="2.配置hdfs"></a>2.配置hdfs</h3><p>core-site.xml:</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>配置</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>fs.defaultFS</td>
-<td>hdfs://master:9000</td>
-</tr>
-<tr>
-<td>io.file.buffer.size</td>
-<td>131072</td>
-</tr>
-</tbody>
-</table>
-<p>hdfs-site.xml:</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>配置</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>dfs.replication</td>
-<td>1</td>
-</tr>
-<tr>
-<td>dfs.namenode.name.dir</td>
-<td>/opt/hadoop-2.7.3/dfs/name</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>配置</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>dfs.replication</td>
-<td>1</td>
-</tr>
-<tr>
-<td>dfs.datanode.data.dir</td>
-<td>/opt/hadoop-2.7.3/dfs/data</td>
-</tr>
-</tbody>
-</table>
-<h3 id="3-配置slaves"><a href="#3-配置slaves" class="headerlink" title="3.配置slaves"></a>3.配置slaves</h3><p>etc/hadoop/slaves</p>
-<h3 id="4-启动hdfs"><a href="#4-启动hdfs" class="headerlink" title="4.启动hdfs"></a>4.启动hdfs</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sbin/start-dfs.sh</div></pre></td></tr></table></figure>
-<p>启动之后50070可以看节点状态。</p>
-<h3 id="5-启动yarn"><a href="#5-启动yarn" class="headerlink" title="5.启动yarn"></a>5.启动yarn</h3><p>master:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sbin/yarn-daemon.sh start resourcemanager</div></pre></td></tr></table></figure>
-<p>slave :<br>etc/hadoop/yarn-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">    &lt;value&gt;master&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sbin/yarn-daemon.sh start nodemanager</div></pre></td></tr></table></figure>
-<p>yarn服务可以通过8088端口查看，也很方便。</p>
-<h3 id="6-启动MapReduce-JobHistory-Server"><a href="#6-启动MapReduce-JobHistory-Server" class="headerlink" title="6.启动MapReduce JobHistory Server"></a>6.启动MapReduce JobHistory Server</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sbin/mr-jobhistory-daemon.sh start historyserver</div></pre></td></tr></table></figure>
-<p>默认端口19888.</p>
-<h3 id="7-web-interfaces"><a href="#7-web-interfaces" class="headerlink" title="7.web interfaces:"></a>7.web interfaces:</h3><table>
-<thead>
-<tr>
-<th>Daemon</th>
-<th>Web Interface</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NameNode</td>
-<td><a href="http://nn_host:port/" target="_blank" rel="external">http://nn_host:port/</a></td>
-<td>Default HTTP port is 50070.</td>
-</tr>
-<tr>
-<td>ResourceManager</td>
-<td><a href="http://rm_host:port/" target="_blank" rel="external">http://rm_host:port/</a></td>
-<td>Default HTTP port is 8088.</td>
-</tr>
-<tr>
-<td>MapReduce JobHistory Server</td>
-<td><a href="http://jhs_host:port/" target="_blank" rel="external">http://jhs_host:port/</a></td>
-<td>Default HTTP port is 19888</td>
-</tr>
-</tbody>
-</table>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://qinyueming.cc/2016/08/31/hadoop分布式部署/" data-id="cjc43juka000qxcuaq3gyvuvn" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hadoop/">hadoop</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <div id="page-nav">
@@ -537,7 +466,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">10</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Spring/">Spring</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/django/">django</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/docker/">docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flask/">flask</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hadoop/">hadoop</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/haproxy/">haproxy</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/java/">java</a><span class="sidebar-module-list-count">11</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/">linux</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/mysql/">mysql</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/network/">network</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nginx/">nginx</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/">python</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/redis/">redis</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/salt/">salt</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spring/">spring</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tcp/">tcp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/zabbix/">zabbix</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/负载均衡/">负载均衡</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -546,7 +475,7 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 12px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
+      <a href="/tags/Spring/" style="font-size: 14px;">Spring</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/django/" style="font-size: 14px;">django</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flask/" style="font-size: 14px;">flask</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/haproxy/" style="font-size: 12px;">haproxy</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 18px;">mysql</a> <a href="/tags/network/" style="font-size: 12px;">network</a> <a href="/tags/nginx/" style="font-size: 16px;">nginx</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/salt/" style="font-size: 10px;">salt</a> <a href="/tags/spring/" style="font-size: 18px;">spring</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/zabbix/" style="font-size: 16px;">zabbix</a> <a href="/tags/负载均衡/" style="font-size: 12px;">负载均衡</a>
     </p>
   </div>
 
@@ -554,7 +483,7 @@ ga('send', 'pageview');
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/01/">January 2018</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/12/">December 2017</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/11/">November 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/10/">October 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/08/">August 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/07/">July 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/06/">June 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/05/">May 2017</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/04/">April 2017</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/02/">February 2017</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2017/01/">January 2017</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/12/">December 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/11/">November 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/10/">October 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/09/">September 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/08/">August 2016</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/07/">July 2016</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">4</span></li></ul>
   </div>
 
 
@@ -563,6 +492,14 @@ ga('send', 'pageview');
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2018/01/31/spring-restfull/">spring-restfull</a>
+        </li>
+      
+        <li>
+          <a href="/2018/01/30/spring-jpa-h2/">spring data JPA</a>
+        </li>
       
         <li>
           <a href="/2018/01/17/java-gson/">java-gson简单应用</a>
@@ -574,14 +511,6 @@ ga('send', 'pageview');
       
         <li>
           <a href="/2018/01/06/redis-benchmark-with-ssdb/">redis与ssdb对比压测</a>
-        </li>
-      
-        <li>
-          <a href="/2018/01/04/redis-basic/">redis基础</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/25/spring-jdbcTemplate/">spring jdbcTemplate配置</a>
         </li>
       
     </ul>
